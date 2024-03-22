@@ -25,8 +25,5 @@ namespace WebAPI.ViewModels
         public Guid IdTipoUsuario { get; set; }
 
         public string? Foto { get; set; }
-
-
-
     }
 }
