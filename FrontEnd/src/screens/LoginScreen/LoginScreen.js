@@ -7,7 +7,7 @@ import UnsignedLink from '../../components/UnsignedLink'
 import UnsignedButton from '../../components/UnsignedButton'
 import { UnsignedButtonsWrapper } from '../../components/UnsignedButton/style'
 
-import api from '../../service/Service'
+import api, {apiUrlLocal} from '../../service/Service'
 
 export default function LoginScreen({ navigation }) {
 
@@ -16,11 +16,16 @@ export default function LoginScreen({ navigation }) {
 
 
   async function login() { 
-    const response = await api.post('/login', {
-    email: email, 
-    senha : senha 
-  })
-  console.log(response);
+    try {
+      const response = await api.post(apiUrlLocal + '/Login', {
+        email: email, 
+        senha : senha 
+      });
+  
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
     // navigation.replace('Main');
   }
 

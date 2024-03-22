@@ -6,10 +6,10 @@ const portaApi = '4466'
 
 //declarar o ip da maquina 
 
-const ip = '192.168.21.123'
+const ip = '172.16.7.105'
 
 // defdinir a base da url de acesso da api 
-const apiUrlLocal = `http://${ip}:${portaApi}/api`
+export const apiUrlLocal = `http://${ip}:${portaApi}/api`
 
 //configurar axios 
 const api = axios.create({
