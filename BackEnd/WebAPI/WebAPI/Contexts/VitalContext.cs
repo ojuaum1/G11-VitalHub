@@ -152,7 +152,7 @@ public partial class VitalContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
             entity.Property(e => e.Crm)
-                .HasMaxLength(10)
+                .HasMaxLength(13)
                 .IsUnicode(false)
                 .HasColumnName("CRM");
             entity.Property(e => e.EspecialidadeId).HasColumnName("EspecialidadeID");
