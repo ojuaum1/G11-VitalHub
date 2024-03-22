@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Container } from '../../components/Container/style'
 import Logo from '../../components/Logo'
 import { Title } from '../../components/Title/style'
@@ -7,11 +7,23 @@ import UnsignedLink from '../../components/UnsignedLink'
 import UnsignedButton from '../../components/UnsignedButton'
 import { UnsignedButtonsWrapper } from '../../components/UnsignedButton/style'
 
+import api from '../../service/Service'
+
 export default function LoginScreen({ navigation }) {
 
-  async function login() {
-    navigation.replace('Main');
+  const [email, setEmail] =  useState('')
+  const [senha, setSenha] =  useState('')
+
+
+  async function login() { 
+    const response = await api.post('/login', {
+    email: email, 
+    senha : senha 
+  })
+  console.log(response);
+    // navigation.replace('Main');
   }
+
 
   function forgotPassword() {
     navigation.navigate('recoverPassword');
@@ -21,6 +33,7 @@ export default function LoginScreen({ navigation }) {
     navigation.navigate('createAccount');
   }
 
+ 
   return (
     <Container>
       <Logo />
@@ -29,11 +42,14 @@ export default function LoginScreen({ navigation }) {
       </Title>
       <BasicInputWrapper>
         <BasicInput 
-          placeholder='Usuário ou E-mail'
+          placeholder='e-mail'
+          value={email}
+          onChangeText={(txt) => setEmail(txt)}
         />
         <BasicInput
-          placeholder='Senha'
-          secureTextEntry
+          value={senha}
+          placeholder= "senha"
+          onChangeText={(txt) => setSenha(txt)}
         />
       </BasicInputWrapper>
       <UnsignedLink 
