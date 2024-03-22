@@ -278,3 +278,6 @@ REFERENCES [dbo].[TiposUsuario] ([ID])
 GO
 ALTER TABLE [dbo].[Usuarios] CHECK CONSTRAINT [FK_Usuarios_TiposUsuario]
 GO
+
+ALTER TABLE [dbo].[Medicos]
+ALTER COLUMN [CRM] CHAR(13);
