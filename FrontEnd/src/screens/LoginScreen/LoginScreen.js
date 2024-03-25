@@ -8,6 +8,7 @@ import UnsignedButton from '../../components/UnsignedButton'
 import { UnsignedButtonsWrapper } from '../../components/UnsignedButton/style'
 import AsyncStorage from'@react-native-async-storage/async-storage'
 import api, {apiUrlLocal} from '../../service/Service'
+import { token } from 'stylis'
 
 export default function LoginScreen({ navigation }) {
 
@@ -21,6 +22,7 @@ export default function LoginScreen({ navigation }) {
         email: email, 
         senha : senha 
       });
+
 
   //guardar token na asyncstorage
       await AsyncStorage.setItem('token', JSON.stringify(response.data))

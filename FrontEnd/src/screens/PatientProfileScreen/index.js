@@ -8,9 +8,9 @@ import UnsignedButton from '../../components/UnsignedButton'
 import { UnsignedButtonsWrapper } from '../../components/UnsignedButton/style'
 import { ScrollContainer } from '../../components/ScrollContainer/style';
 import { SplitedTextAreasContainer } from '../../components/InternalTextArea/style'
-import { userDecodeToken } from '../../utils/Auth'
+import { logout, userDecodeToken } from '../../utils/Auth'
 
-export default function PatientProfileScreen() {
+export default function PatientProfileScreen({ navigation }) {
     const [userName, setUserName] = useState("");
     const [email, setEmail] = useState("");
 
@@ -69,6 +69,13 @@ export default function PatientProfileScreen() {
               />
               <UnsignedButton 
                   buttonText='Editar'
+              />
+              <UnsignedButton 
+                handleClickFn={() => {
+                    logout();
+                    navigation.replace('login');
+                }}
+                buttonText='Sair'
               />
           </UnsignedButtonsWrapper>
       </Container>

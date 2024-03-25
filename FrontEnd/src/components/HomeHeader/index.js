@@ -10,7 +10,7 @@ export default function HomeHeader({ userImageUri, navigation}) {
     async function profileLoad() {
         const token = await userDecodeToken();
         setUserName(token.name);
-        console.log(token)
+      
     }
 
     useEffect(()=>{

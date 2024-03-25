@@ -29,3 +29,8 @@ export const userDecodeToken = async () =>{
         email: decoded.email
     };
 }
+
+export const logout = async () => {
+    await AsyncStorage.removeItem('token');
+    const token = await AsyncStorage.getItem('token');
+}
