@@ -26,6 +26,13 @@ namespace WebAPI.Controllers
         }
 
         [Authorize]
+        [HttpGet("BuscarPorID/doctorId:Guid")]
+        public IActionResult BuscarPorID([FromRoute] Guid doctorId)
+        {
+            return Ok(_medicoRepository.BuscarPorId(doctorId));
+        }
+
+        [Authorize]
         [HttpPut]
         public IActionResult AtualizarPerfil(MedicoViewModel medico)
         {

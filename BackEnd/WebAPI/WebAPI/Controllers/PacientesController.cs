@@ -55,7 +55,6 @@ namespace WebAPI.Controllers
             return Ok(pacienteRepository.BuscarPorId(idUsuario));
         }
 
-        [Authorize]
         [HttpGet("BuscarPorID/pacienteId:Guid")]
         public IActionResult BuscarPorID([FromRoute] Guid patientId)
         {
