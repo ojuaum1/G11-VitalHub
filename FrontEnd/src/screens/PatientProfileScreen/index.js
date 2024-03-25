@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import UserMainInfo from '../../components/UserMainInfo'
 import { UserProfileImage } from '../../components/UserImage/style'
 import { Container } from '../../components/Container/style'
@@ -8,8 +8,22 @@ import UnsignedButton from '../../components/UnsignedButton'
 import { UnsignedButtonsWrapper } from '../../components/UnsignedButton/style'
 import { ScrollContainer } from '../../components/ScrollContainer/style';
 import { SplitedTextAreasContainer } from '../../components/InternalTextArea/style'
+import { userDecodeToken } from '../../utils/Auth'
 
 export default function PatientProfileScreen() {
+    const [userName, setUserName] = useState("");
+    const [email, setEmail] = useState("");
+
+    async function loadToken() {
+        const token = await userDecodeToken();
+        setUserName(token.name);
+        setEmail(token.email);
+    }
+
+    useEffect(() => {
+        loadToken();
+    }, [])
+    
   return (
     <ScrollContainer>
       <UserProfileImage 
@@ -18,9 +32,9 @@ export default function PatientProfileScreen() {
       />
       <Container>
           <UserMainInfo 
-              username='Richard Kosta'
+              username={userName}
               infoArr={[ 
-                  'richard.kosta@gmail.com'
+                  email
               ]}
           />
           <InternalInputsWrapper>

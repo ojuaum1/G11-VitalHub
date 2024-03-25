@@ -1,8 +1,21 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Header, NameText, UserContainer, UserImage, UserInfoContainer, WelcomeText } from './style';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function HomeHeader({ userName, userImageUri, navigation}) {
+import { userDecodeToken } from '../../utils/Auth';
+
+export default function HomeHeader({ userImageUri, navigation}) {
+    const [userName, setUserName] = useState("");
+
+    async function profileLoad() {
+        const token = await userDecodeToken();
+        setUserName(token.name);
+        console.log(token)
+    }
+
+    useEffect(()=>{
+        profileLoad()
+    }, [])
   return (
     <Header
         colors={['#60BFC5', '#496BBA']}

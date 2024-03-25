@@ -6,13 +6,13 @@ import { BasicInput, BasicInputWrapper } from '../../components/BasicInput/style
 import UnsignedLink from '../../components/UnsignedLink'
 import UnsignedButton from '../../components/UnsignedButton'
 import { UnsignedButtonsWrapper } from '../../components/UnsignedButton/style'
-
+import AsyncStorage from'@react-native-async-storage/async-storage'
 import api, {apiUrlLocal} from '../../service/Service'
 
 export default function LoginScreen({ navigation }) {
 
-  const [email, setEmail] =  useState('')
-  const [senha, setSenha] =  useState('')
+  const [email, setEmail] =  useState('caio.raul.silva@laramjeirabaumann.com.br')
+  const [senha, setSenha] =  useState('12345678')
 
 
   async function login() { 
@@ -21,12 +21,14 @@ export default function LoginScreen({ navigation }) {
         email: email, 
         senha : senha 
       });
-  
-      console.log(response);
+
+  //guardar token na asyncstorage
+      await AsyncStorage.setItem('token', JSON.stringify(response.data))
+
+      navigation.replace('Main');
     } catch (error) {
       console.log(error);
     }
-    // navigation.replace('Main');
   }
 
 

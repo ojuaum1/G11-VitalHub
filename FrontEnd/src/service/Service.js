@@ -6,7 +6,7 @@ const portaApi = '4466'
 
 //declarar o ip da maquina 
 
-const ip = '172.16.7.105'
+const ip = '192.168.21.123'
 
 // defdinir a base da url de acesso da api 
 export const apiUrlLocal = `http://${ip}:${portaApi}/api`
