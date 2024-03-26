@@ -48,7 +48,22 @@ namespace WebAPI.Repositories
 
         public Paciente BuscarPorId(Guid Id)
         {
-            return ctx.Pacientes.FirstOrDefault(x => x.Id == Id);
+            return ctx.Pacientes
+                .AsNoTracking()
+                .Select(paciente => new Paciente
+                {
+                    Id = paciente.Id,
+                    DataNascimento = paciente.DataNascimento,
+                    Rg = paciente.Rg,
+                    Cpf = paciente.Cpf,
+                    EnderecoId = paciente.EnderecoId,
+                    Endereco = new Endereco
+                    {
+                        Cep = paciente.Endereco!.Cep,
+                        Numero = paciente.Endereco.Numero,
+                        Logradouro = paciente.Endereco.Logradouro
+                    }
+                }).FirstOrDefault(x => x.Id == Id)!;
         }
 
         public List<Consulta> BuscarRealizadas(Guid Id)

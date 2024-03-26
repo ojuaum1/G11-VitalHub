@@ -55,10 +55,27 @@ namespace WebAPI.Controllers
             return Ok(pacienteRepository.BuscarPorId(idUsuario));
         }
 
-        [HttpGet("BuscarPorID/pacienteId:Guid")]
+        [HttpGet("BuscarPorID/{patientId:Guid}")]
         public IActionResult BuscarPorID([FromRoute] Guid patientId)
         {
-            return Ok(pacienteRepository.BuscarPorId(patientId));
+            var unformattedPatient = pacienteRepository.BuscarPorId(patientId);
+
+            string formattedBirthDate = unformattedPatient.DataNascimento.ToString()!.Substring(0, 10);
+            string formattedCpf = $"{unformattedPatient.Cpf!.Substring(0, 3)}********";
+            string formattedAddress = $"{unformattedPatient.Endereco!.Logradouro}, {unformattedPatient.Endereco.Numero}";
+            string formattedCep = Convert.ToUInt64(unformattedPatient.Endereco.Cep).ToString(@"00000\-000");
+
+            var response = new GetPatientByIdViewModel(
+                patientId: unformattedPatient.Id,
+                birthDate: formattedBirthDate,
+                cpf: formattedCpf,
+                address: formattedAddress,
+                cep: formattedCep,
+                "Moema-SP"
+            );
+
+
+            return Ok(response);
         }
 
         [HttpPost]
