@@ -38,6 +38,7 @@ export default function PatientProfileScreen({ navigation }) {
               ]}
           />
           <InternalInputsWrapper>
+           
             <InternalTextArea 
                 inputText="Data de nascimento:"
                 textArea="04/05/1999"

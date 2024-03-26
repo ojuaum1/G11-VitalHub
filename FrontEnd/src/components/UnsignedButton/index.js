@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { ButtonText, ButtonContainer, GoogleButtonContainer, GoogleButtonText, GoogleIcon } from './style'
-
-export default function UnsignedButton({ buttonText, isGoogleButton = false, handleClickFn = null }) {
+import { ActivityIndicator } from 'react-native'
+export default function UnsignedButton({ buttonText, isGoogleButton = false, handleClickFn = null, }) {
   if (isGoogleButton) {
     return (
       <GoogleButtonContainer onPress={handleClickFn}>
@@ -14,12 +14,21 @@ export default function UnsignedButton({ buttonText, isGoogleButton = false, han
       </GoogleButtonContainer>
     )
   }
-
+ const [isLoading, setisLoading] = useState(false);
   return (
-    <ButtonContainer onPress={handleClickFn}>
-      <ButtonText>
-        { buttonText }
-      </ButtonText>
+    <ButtonContainer disabled={isLoading} onPress={() => {
+      if (isLoading)
+        return;
+
+      setisLoading(true);
+      handleClickFn();
+ 
+    }}>
+          {isLoading ? (
+            <ActivityIndicator color="#FFF" />
+          ) : (
+            <ButtonText>{buttonText}</ButtonText>
+          )}
     </ButtonContainer>
   )
 }
