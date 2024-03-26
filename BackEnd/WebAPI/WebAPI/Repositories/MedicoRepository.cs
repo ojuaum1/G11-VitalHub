@@ -39,7 +39,19 @@ namespace WebAPI.Repositories
 
         public Medico BuscarPorId(Guid Id)
         {
-            return ctx.Medicos.FirstOrDefault(x => x.Id == Id);
+            return ctx.Medicos
+                .AsNoTracking()
+                .Select(medico => new Medico
+                {
+                    Id = medico.Id,
+                    Crm = medico.Crm,
+                    EspecialidadeId = medico.EspecialidadeId,
+                    Especialidade = new Especialidade { 
+                        Id = medico.Especialidade!.Id,
+                        Especialidade1 = medico.Especialidade!.Especialidade1
+                    }
+                })
+                .FirstOrDefault(x => x.Id == Id)!;
         }
 
         public void Cadastrar(Usuario user)
