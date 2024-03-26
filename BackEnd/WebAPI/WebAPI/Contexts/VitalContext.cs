@@ -117,6 +117,9 @@ public partial class VitalContext : DbContext
             entity.Property(e => e.Logradouro)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.Cidade)
+                .HasMaxLength(50)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Especialidade>(entity =>

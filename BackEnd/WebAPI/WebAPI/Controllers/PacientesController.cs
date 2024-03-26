@@ -71,7 +71,7 @@ namespace WebAPI.Controllers
                 cpf: formattedCpf,
                 address: formattedAddress,
                 cep: formattedCep,
-                "Moema-SP"
+                city: unformattedPatient.Endereco.Cidade!
             );
 
 
