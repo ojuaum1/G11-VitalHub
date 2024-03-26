@@ -25,6 +25,19 @@ namespace WebAPI.Controllers
             return Ok(_medicoRepository.ListarTodos());
         }
 
+        [HttpGet("BuscarPorID/{doctorId:Guid}")]
+        public IActionResult BuscarPorID([FromRoute] Guid doctorId)
+        {
+            var unformattedDoctor = _medicoRepository.BuscarPorId(doctorId);
+            var response = new GetDoctorByIdViewModel(
+                doctorId: unformattedDoctor.Id,
+                specialty: unformattedDoctor.Especialidade!.Especialidade1!,
+                crm: unformattedDoctor.Crm!
+            );
+
+            return Ok(response);
+        }
+
         [Authorize]
         [HttpPut]
         public IActionResult AtualizarPerfil(MedicoViewModel medico)
