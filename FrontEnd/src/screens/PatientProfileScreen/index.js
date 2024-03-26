@@ -9,19 +9,24 @@ import { UnsignedButtonsWrapper } from '../../components/UnsignedButton/style'
 import { ScrollContainer } from '../../components/ScrollContainer/style';
 import { SplitedTextAreasContainer } from '../../components/InternalTextArea/style'
 import { logout, userDecodeToken } from '../../utils/Auth'
+import { BuscarPacientePorId } from '../../service/userService'
 
 export default function PatientProfileScreen({ navigation }) {
     const [userName, setUserName] = useState("");
     const [email, setEmail] = useState("");
+    const [id, setId] = useState("");
 
     async function loadToken() {
         const token = await userDecodeToken();
         setUserName(token.name);
         setEmail(token.email);
+        setID(token.id)
     }
 
     useEffect(() => {
         loadToken();
+        const resp = BuscarPacientePorId(id);
+        console.log(resp);
     }, [])
     
   return (
