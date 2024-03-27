@@ -25,10 +25,10 @@ namespace WebAPI.Repositories
                 medicoBuscado.EspecialidadeId = medico.EspecialidadeId;
 
             if (medico.Senha != null)
-                medicoBuscado.IdNavigation.Senha = medico.Senha;
+                medicoBuscado.Usuario.Senha = medico.Senha;
 
             if (medico.Foto != null)
-                medicoBuscado.IdNavigation.Foto = medico.Foto;
+                medicoBuscado.Usuario.Foto = medico.Foto;
 
             ctx.Medicos.Update(medicoBuscado);
             ctx.SaveChanges();
@@ -63,7 +63,19 @@ namespace WebAPI.Repositories
 
         public List<Medico> ListarTodos()
         {
-            return ctx.Medicos.ToList();
+            return ctx.Medicos.Select(medico => new Medico
+            {
+                Id = medico.Id,
+                Especialidade = new Especialidade
+                {
+                    Especialidade1 = medico.Especialidade!.Especialidade1
+                },
+                Usuario = new Usuario
+                {
+                    Nome = medico.Usuario!.Nome,
+                    Foto = medico.Usuario!.Foto
+                }
+            }).ToList();
         }
     }
 }

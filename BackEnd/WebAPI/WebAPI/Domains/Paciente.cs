@@ -19,5 +19,5 @@ public partial class Paciente
 
     public virtual Endereco? Endereco { get; set; }
 
-    public virtual Usuario IdNavigation { get; set; } = null!;
+    public virtual Usuario Usuario { get; set; } = null!;
 }

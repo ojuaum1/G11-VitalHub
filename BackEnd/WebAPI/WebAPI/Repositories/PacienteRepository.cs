@@ -19,7 +19,7 @@ namespace WebAPI.Repositories
                 pacienteBuscado.DataNascimento = paciente.DataNascimento;
 
             if (paciente.Senha != null)
-                pacienteBuscado.IdNavigation.Senha = paciente.Senha;
+                pacienteBuscado.Usuario.Senha = paciente.Senha;
 
             if (paciente.Cep != null)
                 pacienteBuscado.Endereco.Cep = paciente.Cep;

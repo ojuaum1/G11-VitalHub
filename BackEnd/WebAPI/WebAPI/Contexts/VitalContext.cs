@@ -44,7 +44,7 @@ public partial class VitalContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=NOTE12-SALA21\\SQLEXPRESS; initial catalog=VitalHub_G11M; user Id = sa; pwd=Senai@134; TrustServerCertificate=true");
+        => optionsBuilder.UseSqlServer("Data Source=NOTE12-SALA21\\SQLEXPRESS; initial catalog=VitalHub_G11; user Id = sa; pwd=Senai@134; TrustServerCertificate=true");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -60,14 +60,15 @@ public partial class VitalContext : DbContext
             entity.Property(e => e.Email)
                 .HasMaxLength(225)
                 .IsUnicode(false);
-            entity.Property(e => e.Latitude).HasColumnType("decimal(8, 6)");
-            entity.Property(e => e.Longitude).HasColumnType("decimal(9, 6)");
             entity.Property(e => e.NomeFantasia)
                 .HasMaxLength(150)
                 .IsUnicode(false);
             entity.Property(e => e.RazaoSocial)
                 .HasMaxLength(150)
                 .IsUnicode(false);
+            entity.HasOne(d => d.Endereco).WithMany(p => p.Clinicas)
+                .HasForeignKey(d => d.EnderecoId)
+                .HasConstraintName("FK_Clinicas_Enderecos");
         });
 
         modelBuilder.Entity<Consulta>(entity =>
@@ -120,6 +121,8 @@ public partial class VitalContext : DbContext
             entity.Property(e => e.Cidade)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.Latitude).HasColumnType("decimal(8, 6)");
+            entity.Property(e => e.Longitude).HasColumnType("decimal(9, 6)");
         });
 
         modelBuilder.Entity<Especialidade>(entity =>
@@ -164,7 +167,13 @@ public partial class VitalContext : DbContext
                 .HasForeignKey(d => d.EspecialidadeId)
                 .HasConstraintName("FK_Medicos_Especialidades");
 
-            entity.HasOne(d => d.IdNavigation).WithOne(p => p.Medico)
+            entity.Property(e => e.EnderecoId).HasColumnName("EnderecoID");
+
+            entity.HasOne(d => d.Endereco).WithMany(p => p.Medicos)
+               .HasForeignKey(d => d.EnderecoId)
+               .HasConstraintName("FK_Medicos_Enderecos");
+
+            entity.HasOne(d => d.Usuario).WithOne(p => p.Medico)
                 .HasForeignKey<Medico>(d => d.Id)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Medicos_Usuarios");
@@ -220,7 +229,7 @@ public partial class VitalContext : DbContext
                 .HasForeignKey(d => d.EnderecoId)
                 .HasConstraintName("FK_Pacientes_Enderecos");
 
-            entity.HasOne(d => d.IdNavigation).WithOne(p => p.Paciente)
+            entity.HasOne(d => d.Usuario).WithOne(p => p.Paciente)
                 .HasForeignKey<Paciente>(d => d.Id)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Pacientes_Usuarios");
