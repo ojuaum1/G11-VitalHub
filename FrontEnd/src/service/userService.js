@@ -1,5 +1,7 @@
-import {api,apiUrlLocal} from "../service/Service"
+import api, {apiUrlLocal} from "../service/Service"
 
 export const BuscarPacientePorId = async userId => {
-    return await api.get(`${apiUrlLocal}/Pacientes/BuscarPorID/${userId}`);
+    const url = `${apiUrlLocal}/Pacientes/BuscarPorID/${userId}`;
+    const response = (await api.get(url)).data;
+    return response;
 }

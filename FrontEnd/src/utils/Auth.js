@@ -21,12 +21,15 @@ export const userDecodeToken = async () =>{
     if (token === null) {
         return null; 
     }
+
     
     const decoded = jwtDecode(token)
+   
     return {
         name: decoded.name,
         role: decoded.role,
-        email: decoded.email
+        email: decoded.email,
+        id: decoded.jti
     };
 }
 

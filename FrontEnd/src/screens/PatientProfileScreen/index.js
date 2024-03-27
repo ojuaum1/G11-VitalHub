@@ -16,17 +16,29 @@ export default function PatientProfileScreen({ navigation }) {
     const [email, setEmail] = useState("");
     const [id, setId] = useState("");
 
-    async function loadToken() {
+    const [address, setAddress] = useState('');
+    const [birthDate, setBirthDate] = useState('');
+    const [cep, setCep] = useState('');
+    const [cpf, setCpf] = useState('');
+    const [city, setCity] = useState('Moema-SP');
+
+    async function loadData() {
         const token = await userDecodeToken();
         setUserName(token.name);
         setEmail(token.email);
-        setID(token.id)
+        setId(token.id);
+        
+        const patientData = await BuscarPacientePorId(token.id);
+
+        setAddress(patientData.address);
+        setBirthDate(patientData.birthDate);
+        setCep(patientData.cep);
+        setCpf(patientData.cpf);
+
     }
 
     useEffect(() => {
-        loadToken();
-        const resp = BuscarPacientePorId(id);
-        console.log(resp);
+        loadData();
     }, [])
     
   return (
@@ -46,26 +58,26 @@ export default function PatientProfileScreen({ navigation }) {
            
             <InternalTextArea 
                 inputText="Data de nascimento:"
-                textArea="04/05/1999"
+                textArea={birthDate}
             />
             <InternalTextArea 
                 inputText="CPF"
-                textArea="859********"
+                textArea={cpf}
             />
             <InternalTextArea 
                 inputText="Endereço"
-                textArea="Rua Vicenso Silva, 987"
+                textArea={address}
             />
             <SplitedTextAreasContainer>
                 <InternalTextArea 
                     widthPercentage={45}
                     inputText="Cep"
-                    textArea="06548-909"
+                    textArea={cep}
                 />
                 <InternalTextArea 
                     widthPercentage={45}
                     inputText="Cidade"
-                    textArea="Moema-SP"
+                    textArea={city}
                 />
             </SplitedTextAreasContainer>
           </InternalInputsWrapper>
