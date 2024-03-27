@@ -13,6 +13,7 @@ export const InfoTextWrapper = styled.View`
 export const DoctorNameText = styled.Text`
     font-family: 'MontserratAlternates_600SemiBold';
     font-size: 16px;
+    maxLength:
 `;
 
 export const DoctorSpecialtiesText = styled.Text`
