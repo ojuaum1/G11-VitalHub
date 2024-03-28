@@ -12,7 +12,7 @@ import { token } from 'stylis'
 
 export default function LoginScreen({ navigation }) {
 
-  const [email, setEmail] =  useState('laura_flavia_rezende@artedaserra.com.br')
+  const [email, setEmail] =  useState('martin_ferreira@gmail.com')
   const [senha, setSenha] =  useState('12345')
 
 
