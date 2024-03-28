@@ -10,9 +10,10 @@ import { CardsList, TouchableCard } from '../../components/Card/style'
 import api, { apiUrlLocal } from '../../service/Service'
 
 export default function ClinicSelectionScreen({ navigation, route }) {
-    const { clinicCity } = route.params;
+    const { clinicCity, consultationType } = route.params;
 
     const [selectedClinicId, setSelectedClinicId] = useState('');
+    const [selectedClinicLocation, setSelectedClinicLocation] = useState('');
     const [clinicsData, setClinicsData] = useState([]);
 
     async function getClinicsByCity() {
@@ -48,7 +49,10 @@ export default function ClinicSelectionScreen({ navigation, route }) {
                     keyExtractor={clinic => clinic.clinicId}
                     contentContainerStyle={{ gap: 12}}
                     renderItem={({ item }) =>
-                        <TouchableCard onPress={() => setSelectedClinicId(item.clinicId)}>
+                        <TouchableCard onPress={() => {
+                            setSelectedClinicId(item.clinicId)
+                            setSelectedClinicLocation(item.clinicLocation)
+                        }}>
                             <ClinicCard
                                 clinicName={item.clinicName}
                                 clinicLocation={item.clinicLocation}
@@ -63,7 +67,7 @@ export default function ClinicSelectionScreen({ navigation, route }) {
             <ButtonLinkWrapper>
                 <UnsignedButton 
                     buttonText='Continuar'
-                    handleClickFn={() => navigation.navigate('doctorSelection')}
+                    handleClickFn={() => navigation.navigate('doctorSelection', { clinicLocation: selectedClinicLocation, consultationType })}
                 />
                 <UnsignedLink 
                     linkText='Cancelar'

@@ -35,7 +35,7 @@ export default function ScheduleConsultationModal({ active = true, disableModalF
                 return;
 
               disableModalFn();
-              navigation.navigate('clinicSelection', { clinicCity });
+              navigation.navigate('clinicSelection', { clinicCity, consultationType: consultationLevel });
             }}
         />
 

@@ -10,7 +10,9 @@ import FullCalender from '../../components/FullCalendar'
 import ScheduleBriefModal from '../../components/ScheduleBriefModal'
 import { Host } from 'react-native-portalize'
 
-export default function DateSelectionScreen({ navigation }) {
+export default function DateSelectionScreen({ navigation, route }) {
+    const { doctorName, doctorSpecialty, consultationLocation, consultationType } = route.params;
+
     const [selectedDate, setSelectedDate] = useState();
     const [selectedTime, setSelectedTime] = useState();
 
@@ -27,6 +29,11 @@ export default function DateSelectionScreen({ navigation }) {
                     setIsScheduleBriefActive(false);
                     navigation.navigate('Main');
                 }}
+                consultationDate={selectedDate}
+                doctorName={doctorName}
+                doctorSpecialty={doctorSpecialty}
+                consultationLocation={consultationLocation}
+                consultationType={consultationType}
             />
             <Container>
                 <Title>Selecionar data</Title>

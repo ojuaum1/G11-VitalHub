@@ -11,8 +11,12 @@ import { ScrollContainer } from "../../components/ScrollContainer/style";
 import api, {apiUrlLocal} from "../../service/Service";
 
 
-export default function DoctorSelectionScreen({ navigation }) {
+export default function DoctorSelectionScreen({ navigation, route }) {
+  const {clinicLocation, consultationType} = route.params;
+
   const [selectedDoctorId, setSelectedDoctorId] = useState(0);
+  const [selectedDoctorName, setSelectedDoctorName] = useState(0);
+  const [selectedDoctorSpecialty, setSelectedDoctorSpecialty] = useState(0);
 
   const [medicosLista, setMedicosLista] = useState([{ usuario: { id: '', foto: '', nome: '' }, especialidade: {especialidade1: ''} }]);
 
@@ -43,7 +47,11 @@ export default function DoctorSelectionScreen({ navigation }) {
           renderItem={({ item: medico }) => {
             console.log(medico);
            return(<TouchableOpacity
-              onPress={() => setSelectedDoctorId(medico.usuario.id)}
+              onPress={() => {
+                setSelectedDoctorId(medico.usuario.id)
+                setSelectedDoctorName(medico.usuario.nome)
+                setSelectedDoctorSpecialty(medico.especialidade.especialidade1)
+              }}
             >
               <DoctorCard
                 doctorImageUri={''}
@@ -62,7 +70,7 @@ export default function DoctorSelectionScreen({ navigation }) {
       <ButtonLinkWrapper>
         <UnsignedButton
           buttonText="Continuar"
-          handleClickFn={() => navigation.navigate("dateSelection")}
+          handleClickFn={() => navigation.navigate("dateSelection", { doctorName: selectedDoctorName, doctorSpecialty: selectedDoctorSpecialty, clinicLocation, consultationType })}
         />
         <UnsignedLink
           linkText="Cancelar"
