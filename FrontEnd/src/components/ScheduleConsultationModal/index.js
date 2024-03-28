@@ -17,19 +17,13 @@ export default function ScheduleConsultationModal({ active = true, disableModalF
     <BottomModal active={active} modalHeightPercentage={80}>
         <Title>Agendar consulta</Title>
 
-        <SelectInput  
-          labelText='Informe o tipo de consulta'
-          defaultText='Tipo de consulta'
-          handleSelectedFn={setConsultationType}
-        />
-
         <ButtonSelectInput 
           selectedButtonId={consultationLevel}
           handleChangeSelectedFn={setConsultationLevel}
         />
 
         <InternalInput 
-          inputText='Prescrição médica'
+          inputText='Cidade em deseja buscar a clínica'
           inputTextFontSize={14}
           placeholder='Prescrição médica'
         />

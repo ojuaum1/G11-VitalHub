@@ -8,4 +8,5 @@ export const TopBlackBox = styled(BlackBox)`
 export const BottomModalContainer = styled(ModalContainer)`
     border-radius: 15px 15px 0 0;
     width: 100%;
+    padding-bottom: 20%;
 `;
