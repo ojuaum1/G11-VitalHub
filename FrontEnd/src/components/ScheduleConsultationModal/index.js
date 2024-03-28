@@ -3,14 +3,12 @@ import React, { useState } from 'react'
 import BottomModal from '../BottomModal'
 import { Title } from '../Title/style'
 import UnsignedButton from '../UnsignedButton'
-import { ButtonText } from '../UnsignedButton/style'
 import UnsignedLink from '../UnsignedLink'
-import SelectInput from '../SelectInput'
 import ButtonSelectInput from '../ButtonSelectInput'
 import InternalInput from '../InternalInput'
 
 export default function ScheduleConsultationModal({ active = true, disableModalFn = null, navigation = null }) {
-  const [consultationType, setConsultationType] = useState('');
+  const [clinicCity, setClinicCity] = useState('');
   const [consultationLevel, setConsultationLevel] = useState('');
 
   return (
@@ -25,16 +23,22 @@ export default function ScheduleConsultationModal({ active = true, disableModalF
         <InternalInput 
           inputText='Cidade em deseja buscar a clínica'
           inputTextFontSize={14}
-          placeholder='Prescrição médica'
+          placeholder='Cidade...'
+          handleChangeText={setClinicCity}
+          value={clinicCity}
         />
 
         <UnsignedButton 
             buttonText='Continuar'
             handleClickFn={() => {
+              if (clinicCity === '' || consultationLevel === '')
+                return;
+
               disableModalFn();
-              navigation.navigate('clinicSelection');
+              navigation.navigate('clinicSelection', { clinicCity });
             }}
         />
+
         <UnsignedLink
             linkText='Cancelar'
             handleClickFn={disableModalFn}
