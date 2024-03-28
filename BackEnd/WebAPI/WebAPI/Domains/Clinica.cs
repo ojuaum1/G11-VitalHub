@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace WebAPI.Domains;
+﻿namespace WebAPI.Domains;
 
 public partial class Clinica
 {
