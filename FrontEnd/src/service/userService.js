@@ -5,3 +5,7 @@ export const BuscarPacientePorId = async userId => {
     const response = (await api.get(url)).data;
     return response;
 }
+
+export const BuscarConsultaPelaData = async (userId, date) => {
+    
+}

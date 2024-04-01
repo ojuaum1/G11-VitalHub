@@ -48,10 +48,14 @@ export default function PatientConsultScreen({ navigation, route }) {
     },
   ]);
 
+  async function getConsultationsFromDate(date) {
+    
+  }
+
   function filterConsultationsByStatus() {
-    const isScheduledConsultation = consultation => consultation.consultationStatus == 'scheduled';
-    const isPerformedConsultation = consultation => consultation.consultationStatus == 'performed';
-    const isCanceledConsultation = consultation => consultation.consultationStatus == 'canceled';
+    const isScheduledConsultation = consultation => consultation.consultationStatus == 'Pendentes';
+    const isPerformedConsultation = consultation => consultation.consultationStatus == 'Realizadas';
+    const isCanceledConsultation = consultation => consultation.consultationStatus == 'Cancelados';
 
     switch(selectedConsultationType) {
       case 0:
