@@ -36,6 +36,14 @@ namespace WebAPI.Repositories
             return pacienteBuscado;
         }
 
+        public List<Consulta> BuscarPorData(DateTime dataConsulta, Guid idPaciente)
+        {
+            return ctx.Consultas
+                 .Include(x => x.Situacao)
+                 .Where(x => x.PacienteId == idPaciente && EF.Functions.DateDiffDay(x.DataConsulta, dataConsulta) == 0)
+                 .ToList();
+        }
+
         public List<Consulta> BuscarAgendadas(Guid Id)
         {
             return ctx.Consultas.Include(x => x.Situacao).Where(x => x.PacienteId == Id && x.Situacao.Situacao == "Agendada").ToList();

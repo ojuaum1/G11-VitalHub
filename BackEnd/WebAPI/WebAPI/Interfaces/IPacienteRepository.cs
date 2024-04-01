@@ -14,6 +14,7 @@ namespace WebAPI.Interfaces
         public List<Consulta> BuscarAgendadas(Guid Id);
         public List<Consulta> BuscarRealizadas(Guid Id);
         public List<Consulta> BuscarCanceladas(Guid Id);
+        public List<Consulta> BuscarPorData(DateTime dataConsulta, Guid id);
 
         public Paciente BuscarPorId(Guid Id);
 
