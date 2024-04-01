@@ -62,7 +62,8 @@ namespace WebAPI.Repositories
                         Cep = paciente.Endereco!.Cep,
                         Numero = paciente.Endereco.Numero,
                         Logradouro = paciente.Endereco.Logradouro
-                    }
+                    },
+                    Usuario = paciente.Usuario
                 }).FirstOrDefault(x => x.Id == Id)!;
         }
 
