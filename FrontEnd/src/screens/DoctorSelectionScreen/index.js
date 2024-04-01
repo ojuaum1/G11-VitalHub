@@ -12,7 +12,7 @@ import api, {apiUrlLocal} from "../../service/Service";
 
 
 export default function DoctorSelectionScreen({ navigation, route }) {
-  const {clinicLocation, consultationType} = route.params;
+  const {consultationLocation, consultationType} = route.params;
 
   const [selectedDoctorId, setSelectedDoctorId] = useState(0);
   const [selectedDoctorName, setSelectedDoctorName] = useState(0);
@@ -70,7 +70,7 @@ export default function DoctorSelectionScreen({ navigation, route }) {
       <ButtonLinkWrapper>
         <UnsignedButton
           buttonText="Continuar"
-          handleClickFn={() => navigation.navigate("dateSelection", { doctorName: selectedDoctorName, doctorSpecialty: selectedDoctorSpecialty, clinicLocation, consultationType })}
+          handleClickFn={() => navigation.navigate("dateSelection", { doctorName: selectedDoctorName, doctorSpecialty: selectedDoctorSpecialty, consultationLocation, consultationType })}
         />
         <UnsignedLink
           linkText="Cancelar"

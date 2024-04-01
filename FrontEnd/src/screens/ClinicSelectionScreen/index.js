@@ -50,6 +50,7 @@ export default function ClinicSelectionScreen({ navigation, route }) {
                     contentContainerStyle={{ gap: 12}}
                     renderItem={({ item }) =>
                         <TouchableCard onPress={() => {
+                            console.log(item);
                             setSelectedClinicId(item.clinicId)
                             setSelectedClinicLocation(item.clinicLocation)
                         }}>
@@ -67,7 +68,7 @@ export default function ClinicSelectionScreen({ navigation, route }) {
             <ButtonLinkWrapper>
                 <UnsignedButton 
                     buttonText='Continuar'
-                    handleClickFn={() => navigation.navigate('doctorSelection', { clinicLocation: selectedClinicLocation, consultationType })}
+                    handleClickFn={() => navigation.navigate('doctorSelection', { consultationLocation: selectedClinicLocation, consultationType })}
                 />
                 <UnsignedLink 
                     linkText='Cancelar'
