@@ -14,16 +14,18 @@ const BottomTab = createBottomTabNavigator();
 export const Main = ({ route }) => {
     const [userType, setUserType] = useState('patient');
 
-    useEffect(() => { 
-        const SaveToken = userDecodeToken();
+    const getUserType = async () => { 
+        const SaveToken = await userDecodeToken();
+
         if (SaveToken) { 
             setUserType(SaveToken.role); 
         } else {
-            setUserType('patient');
+            setUserType('Paciente');
         }
-    }, [route.params]);
+    }
 
     useEffect(() => {
+        getUserType();
         notify();
     }, []);
 
@@ -68,7 +70,7 @@ export const Main = ({ route }) => {
             >
                 <BottomTab.Screen
                     name='Home'
-                    component={userType === 'paciente' ? PatientConsultScreen : DoctorConsultScreen}
+                    component={userType === 'Paciente' ? PatientConsultScreen : DoctorConsultScreen}
                 />
                 <BottomTab.Screen
                     name='PatientProfile'
