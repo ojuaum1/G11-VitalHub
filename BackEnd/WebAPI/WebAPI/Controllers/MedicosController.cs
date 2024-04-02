@@ -29,10 +29,17 @@ namespace WebAPI.Controllers
         public IActionResult BuscarPorID([FromRoute] Guid doctorId)
         {
             var unformattedDoctor = _medicoRepository.BuscarPorId(doctorId);
+
+            string formattedAddress = $"{unformattedDoctor.Endereco!.Logradouro}, {unformattedDoctor.Endereco.Numero}";
+            string formattedCep = Convert.ToUInt64(unformattedDoctor.Endereco.Cep).ToString(@"00000\-000");
+
             var response = new GetDoctorByIdViewModel(
                 doctorId: unformattedDoctor.Id,
                 specialty: unformattedDoctor.Especialidade!.Especialidade1!,
-                crm: unformattedDoctor.Crm!
+                crm: unformattedDoctor.Crm!,
+                address: formattedAddress,
+                cep: formattedCep,
+                city: unformattedDoctor.Endereco!.Cidade!
             );
 
             return Ok(response);

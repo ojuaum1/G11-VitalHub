@@ -4,6 +4,9 @@
     (
         Guid doctorId,
         string crm,
-        string specialty
+        string specialty,
+         string address,
+        string cep,
+        string city
     );
 }

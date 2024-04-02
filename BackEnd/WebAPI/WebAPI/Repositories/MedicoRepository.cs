@@ -41,16 +41,8 @@ namespace WebAPI.Repositories
         {
             return ctx.Medicos
                 .AsNoTracking()
-                .Select(medico => new Medico
-                {
-                    Id = medico.Id,
-                    Crm = medico.Crm,
-                    EspecialidadeId = medico.EspecialidadeId,
-                    Especialidade = new Especialidade { 
-                        Id = medico.Especialidade!.Id,
-                        Especialidade1 = medico.Especialidade!.Especialidade1
-                    }
-                })
+                .Include(x => x.Endereco)
+                .Include(x => x.Especialidade)
                 .FirstOrDefault(x => x.Id == Id)!;
         }
 
