@@ -4,7 +4,7 @@ import moment from 'moment';
 import { StyledCalendar } from './style'
 import { MontserratAlternates_600SemiBold, useFonts } from '@expo-google-fonts/montserrat-alternates';
 
-export default function Calendar() {
+export default function Calendar({ setSelectedDate }) {
     useFonts({ MontserratAlternates_600SemiBold });
 
     moment.updateLocale("pt-br", {
@@ -24,6 +24,8 @@ export default function Calendar() {
 
             iconLeftStyle={styles.icons}
             iconRight={styles.icons}
+
+            onDateSelected={date => setSelectedDate(moment(date).format('YYYY-MM-DD'))}
 
             selectedDate={currentDate}
             startingDate={moment()}
