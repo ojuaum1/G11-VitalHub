@@ -7,22 +7,22 @@ import UnsignedLink from '../UnsignedLink'
 import ButtonSelectInput from '../ButtonSelectInput'
 import InternalInput from '../InternalInput'
 
+export function getConsultationLevelById(consultationId) {
+  switch (consultationId) {
+    case 1:
+      return 'Rotina'; 
+    case 2:
+      return 'Exame';
+    case 3: 
+      return 'Urgência';
+    default:
+      return 'Inválido';
+  }
+}
+
 export default function ScheduleConsultationModal({ active = true, disableModalFn = null, navigation = null }) {
   const [clinicCity, setClinicCity] = useState('');
   const [consultationLevel, setConsultationLevel] = useState('');
-
-  function getConsultationLevelById(consultationId) {
-    switch (consultationId) {
-      case 1:
-        return 'Rotina'; 
-      case 2:
-        return 'Exame';
-      case 3: 
-        return 'Urgência';
-      default:
-        return 'Inválido';
-    }
-  }
 
   return (
     <BottomModal active={active} modalHeightPercentage={80}>

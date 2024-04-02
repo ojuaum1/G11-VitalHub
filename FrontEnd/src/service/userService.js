@@ -7,5 +7,7 @@ export const BuscarPacientePorId = async userId => {
 }
 
 export const BuscarConsultaPelaData = async (userId, date) => {
-    
+    const url = `${apiUrlLocal}/Pacientes/BuscarPorData?data=${date}&id=${userId}`;
+    const response = (await api.get(url)).data;
+    return response;
 }

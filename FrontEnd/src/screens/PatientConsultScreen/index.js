@@ -9,9 +9,13 @@ import ConsultationCard from '../../components/ConsultationCard';
 import CancelConsultationModal from '../../components/CancelConsultationModal';
 import { ScheduleConsultationButton } from './style';
 import { FontAwesome6 } from '@expo/vector-icons';
-import ScheduleConsultationModal from '../../components/ScheduleConsultationModal';
+import ScheduleConsultationModal, { getConsultationLevelById } from '../../components/ScheduleConsultationModal';
 import ViewConsultationLocationModal from '../../components/ViewConsultationLocationModal';
 import { Host } from 'react-native-portalize';
+import { BuscarConsultaPelaData } from '../../service/userService';
+import { userDecodeToken } from '../../utils/Auth';
+import { Text } from 'react-native';
+import moment from 'moment'
 
 export default function PatientConsultScreen({ navigation, route }) {
   const [isCancelConsultationModalActive, setIsCancelConsultationModalActive] = useState(false);
@@ -23,33 +27,31 @@ export default function PatientConsultScreen({ navigation, route }) {
 
   const [selectedConsultationType, setSelectedConsultationType] = useState(0);
   const [selectedConsultationData, setSelectedConsultationData] = useState([]);
-  const [consultationsData, setConsultationData] = useState([
-    {
-      consultationId: 1,
-      doctorName: 'Dr. Lucas',
-      doctorEmail: 'doctor.lucas@email.com',
-      doctorAge: '22 anos',
-      doctorCRM: 'CRM/SP-9485',
-      selectedDoctorSpecialty: 'Cardiologista',
-      consultationType: 'Rotina',
-      consultationTime: '14:00',
-      consultationStatus: 'scheduled'
-    },
-    {
-      consultationId: 2,
-      doctorName: 'Dr. Lucas',
-      doctorEmail: 'doctor.lucas@email.com',
-      doctorAge: '22 anos',
-      doctorCRM: 'CRM/SP-9485',
-      selectedDoctorSpecialty: 'Cardiologista',
-      consultationType: 'Rotina',
-      consultationTime: '14:00',
-      consultationStatus: 'performed'
-    },
-  ]);
+  const [consultationsData, setConsultationData] = useState([]);
+
+  const [selectedDate, setSelectedDate] = useState(moment().format('YYYY-MM-DD'));
 
   async function getConsultationsFromDate(date) {
+    const token = await userDecodeToken();
+    const userId = token.id;
+
+    const response = await BuscarConsultaPelaData(userId, date);
+
+    const consultations = response.map(item => ({
+      consultationId: item.id,
+      doctorName: item.medicoClinica.medico.usuario.nome,
+      doctorEmail: item.medicoClinica.medico.usuario.email,
+      doctorAge: item.medicoClinica.medico.crm,
+      doctorCRM: item.medicoClinica.medico.crm,
+      selectedDoctorSpecialty: item.medicoClinica.medico.especialidade.especialidade1,
+      consultationType: getConsultationLevelById(item.prioridade.prioridade),
+      consultationTime: moment(item.dataConsulta).format('HH:mm'),
+      consultationStatus: item.situacao.situacao
+    }))
+
+    console.log(consultations);
     
+    setSelectedConsultationData(consultations);
   }
 
   function filterConsultationsByStatus() {
@@ -79,6 +81,10 @@ export default function PatientConsultScreen({ navigation, route }) {
     filterConsultationsByStatus();
   }, [selectedConsultationType]);
 
+  useEffect(() => {
+    getConsultationsFromDate(selectedDate)
+  }, [selectedDate]);
+
   return (
     <>
       <CancelConsultationModal 
@@ -102,7 +108,9 @@ export default function PatientConsultScreen({ navigation, route }) {
       />
       <ScreenContainer>
           <HomeHeader navigation={navigation} userName='Richard Kosta' userImageUri='https://avatars.githubusercontent.com/u/125266412?v=4' />
-          <Calendar />
+          <Calendar 
+            setSelectedDate={setSelectedDate}
+          />
           <Container>
               <ConsultationBar 
                   selectedType={selectedConsultationType}
