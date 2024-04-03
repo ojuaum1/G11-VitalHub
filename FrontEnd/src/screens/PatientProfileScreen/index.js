@@ -9,17 +9,26 @@ import { UnsignedButtonsWrapper } from '../../components/UnsignedButton/style'
 import { ScrollContainer } from '../../components/ScrollContainer/style';
 import { SplitedTextAreasContainer } from '../../components/InternalTextArea/style'
 import { logout, userDecodeToken } from '../../utils/Auth'
-import { BuscarPacientePorId } from '../../service/userService'
+import { BuscarMedicoPorId, BuscarPacientePorId } from '../../service/userService'
 
 export default function PatientProfileScreen({ navigation }) {
+    // User data
     const [userName, setUserName] = useState("");
     const [email, setEmail] = useState("");
     const [id, setId] = useState("");
+    const [role, setRole] = useState("");
 
-    const [address, setAddress] = useState('');
+    // Patient data
     const [birthDate, setBirthDate] = useState('');
-    const [cep, setCep] = useState('');
     const [cpf, setCpf] = useState('');
+
+    // Doctor data
+    const [specialty, setSpecialty] = useState('');
+    const [crm, setCrm] = useState('');
+
+    // General data
+    const [address, setAddress] = useState('');
+    const [cep, setCep] = useState('');
     const [city, setCity] = useState('Moema-SP');
 
     async function loadData() {
@@ -27,76 +36,107 @@ export default function PatientProfileScreen({ navigation }) {
         setUserName(token.name);
         setEmail(token.email);
         setId(token.id);
+        setRole(token.role)
         
-        const patientData = await BuscarPacientePorId(token.id);
+        if (token.role == 'Paciente') {
+            const patientData = await BuscarPacientePorId(token.id);
 
-        setAddress(patientData.address);
-        setBirthDate(patientData.birthDate);
-        setCep(patientData.cep);
-        setCpf(patientData.cpf);
+            setBirthDate(patientData.birthDate);
+            setCpf(patientData.cpf);
 
+            setAddress(patientData.address);
+            setCep(patientData.cep);
+            setCity(patientData.city)
+        } else if (token.role == 'Medico') {
+            const doctorData = await BuscarMedicoPorId(token.id)
+
+            setCrm(doctorData.crm)
+            setSpecialty(doctorData.specialty)
+            
+            setAddress(doctorData.address);
+            setCep(doctorData.cep);
+            setCity(doctorData.city)
+        } else {
+            alert('Invalid role!')
+        }
     }
 
     useEffect(() => {
         loadData();
     }, [])
     
-  return (
-    <ScrollContainer>
-      <UserProfileImage 
-          resizeMode="cover"
-          source={require('../../assets/user-profile-image.png')} 
-      />
-      <Container>
-          <UserMainInfo 
-              username={userName}
-              infoArr={[ 
-                  email
-              ]}
-          />
-          <InternalInputsWrapper>
-           
-            <InternalTextArea 
-                inputText="Data de nascimento:"
-                textArea={birthDate}
+    return (
+        <ScrollContainer>
+        <UserProfileImage 
+            resizeMode="cover"
+            source={require('../../assets/user-profile-image.png')} 
+        />
+        <Container>
+            <UserMainInfo 
+                username={userName}
+                infoArr={[ 
+                    email
+                ]}
             />
-            <InternalTextArea 
-                inputText="CPF"
-                textArea={cpf}
-            />
-            <InternalTextArea 
-                inputText="Endereço"
-                textArea={address}
-            />
-            <SplitedTextAreasContainer>
+            <InternalInputsWrapper>
+                {
+                    role === 'Paciente' ? (
+                        <>
+                            <InternalTextArea 
+                                inputText="Data de nascimento:"
+                                textArea={birthDate}
+                            />
+                            <InternalTextArea 
+                                inputText="CPF"
+                                textArea={cpf}
+                            />
+                        </>
+                    ) : (
+                        <>
+                            <InternalTextArea 
+                                inputText="Especialidade:"
+                                textArea={specialty}
+                            />
+                            <InternalTextArea 
+                                inputText="CRM"
+                                textArea={crm}
+                            />
+                        </>
+                    )
+                }
                 <InternalTextArea 
-                    widthPercentage={45}
-                    inputText="Cep"
-                    textArea={cep}
+                    inputText="Endereço"
+                    textArea={address}
                 />
-                <InternalTextArea 
-                    widthPercentage={45}
-                    inputText="Cidade"
-                    textArea={city}
+                <SplitedTextAreasContainer>
+                    <InternalTextArea 
+                        widthPercentage={45}
+                        inputText="Cep"
+                        textArea={cep}
+                    />
+                    <InternalTextArea 
+                        widthPercentage={45}
+                        inputText="Cidade"
+                        textArea={city}
+                    />
+                </SplitedTextAreasContainer>
+            </InternalInputsWrapper>
+            <UnsignedButtonsWrapper>
+                <UnsignedButton 
+                    buttonText='Salvar'
                 />
-            </SplitedTextAreasContainer>
-          </InternalInputsWrapper>
-          <UnsignedButtonsWrapper>
-              <UnsignedButton 
-                  buttonText='Salvar'
-              />
-              <UnsignedButton 
-                  buttonText='Editar'
-              />
-              <UnsignedButton 
-                handleClickFn={() => {
-                    logout();
-                    navigation.replace('login');
-                }}
-                buttonText='Sair'
-              />
-          </UnsignedButtonsWrapper>
-      </Container>
-    </ScrollContainer>
-  )
+                <UnsignedButton 
+                    buttonText='Editar'
+                />
+                <UnsignedButton 
+                    handleClickFn={() => {
+                        logout();
+                        navigation.replace('login');
+                    }}
+                    buttonText='Sair'
+                />
+            </UnsignedButtonsWrapper>
+        </Container>
+        </ScrollContainer>
+    )
 }
