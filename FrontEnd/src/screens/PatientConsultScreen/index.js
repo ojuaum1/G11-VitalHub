@@ -43,6 +43,8 @@ export default function PatientConsultScreen({ navigation, route }) {
       doctorEmail: item.medicoClinica.medico.usuario.email,
       doctorAge: item.medicoClinica.medico.crm,
       doctorCRM: item.medicoClinica.medico.crm,
+      longitude: item.medicoClinica.clinica.endereco.longitude,
+      latitude: item.medicoClinica.clinica.endereco.latitude,
       selectedDoctorSpecialty: item.medicoClinica.medico.especialidade.especialidade1,
       consultationType: getConsultationLevelById(item.prioridade.prioridade),
       consultationTime: moment(item.dataConsulta).format('HH:mm'),
@@ -102,9 +104,12 @@ export default function PatientConsultScreen({ navigation, route }) {
         doctorData={{ 
           doctorName: currentConsultationData.doctorName,
           doctorSpecialty: currentConsultationData.selectedDoctorSpecialty,
-          doctorCRM: currentConsultationData.doctorCRM
+          doctorCRM: currentConsultationData.doctorCRM,
+          latitude: currentConsultationData.latitude,
+          longitude: currentConsultationData.longitude
          }}
          navigation={navigation}
+
       />
       <ScreenContainer>
           <HomeHeader navigation={navigation} userName='Richard Kosta' userImageUri='https://avatars.githubusercontent.com/u/125266412?v=4' />
@@ -133,11 +138,10 @@ export default function PatientConsultScreen({ navigation, route }) {
                     setCurrentUserDataFn={() => {}}
                     handleCardClick={() => {
                       setCurrentConsultationData(item);
-                      if (item.consultationStatus === 'scheduled') {
+                      if (item.consultationStatus === 'Pendentes') {
                         setIsViewConsultationLocationActive(true);
                       }
                     }}
-                    navigatiton={navigation}
                   />
                 }
               />
