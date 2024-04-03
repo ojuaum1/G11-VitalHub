@@ -17,7 +17,7 @@ export default function ConsultationCard({ userName, userEmail, userAge, consult
                     <FontAwesome name="circle" size={5} color="#D9D9D9" />
                     <ConsultationTypeText>{ consultationType }</ConsultationTypeText>
                 </SubtitleInfoWrapper>
-                { cardType == 'scheduled' ? (
+                { cardType == 'Pendentes' ? (
                     <TimeContainer>
                         <Entypo name="back-in-time" size={18} color="#49B3BA" />
                         <TimeText>{ consultationTime }</TimeText>
@@ -30,7 +30,7 @@ export default function ConsultationCard({ userName, userEmail, userAge, consult
                 ) }
             </CardInfoContainer>
 
-            { cardType == 'performed' ? (
+            { cardType == 'Realizadas' ? (
                 <MedicalRecordLink onPress={() => {
                     activeInsertMedicalRecordModalFn()
                     setCurrentUserDataFn({
@@ -42,7 +42,7 @@ export default function ConsultationCard({ userName, userEmail, userAge, consult
                 }>Ver prontuário</MedicalRecordLink>
             ) : null}
 
-            { cardType == 'scheduled' ? (
+            { cardType == 'Pendentes' ? (
                 <CancelationLink onPress={activeCancelingModalFn}>Cancelar</CancelationLink>
             ) : null}
             

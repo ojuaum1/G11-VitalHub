@@ -138,7 +138,7 @@ export default function PatientConsultScreen({ navigation, route }) {
                     setCurrentUserDataFn={() => {}}
                     handleCardClick={() => {
                       setCurrentConsultationData(item);
-                      if (item.consultationStatus === 'scheduled') {
+                      if (item.consultationStatus === 'Pendentes') {
                         setIsViewConsultationLocationActive(true);
                       }
                     }}
