@@ -7,37 +7,39 @@ import { SplitedTextAreasContainer } from '../../components/InternalTextArea/sty
 import Map from '../../components/Map';
 import UnsignedLink from '../../components/UnsignedLink';
 
-export default function ConsultationLocationScreen({ navigation }) {
-  return (
-    <>
-        <Map />
-        <LocationContainer>
-            <Title marginTop={10}>Clínica Natureh</Title>
-            <SecondSubtitle>São Paulo, SP</SecondSubtitle>
-            
-            <InternalInputsWrapper>
-                <InternalTextArea 
-                    inputText='Endereço'
-                    textArea='Rua Vicenso Silva, 987'
-                />
-                <SplitedTextAreasContainer>
+export default function ConsultationLocationScreen({ navigation, route }) {
+    const { latitude, longitude } = route.params;
+
+    return (
+        <>
+            <Map latitude={latitude} longitude={longitude} /> 
+            <LocationContainer>
+                <Title marginTop={10}>Clínica Natureh</Title>
+                <SecondSubtitle>São Paulo, SP</SecondSubtitle>
+                
+                <InternalInputsWrapper>
                     <InternalTextArea 
-                        widthPercentage={45} 
-                        inputText='Número'
-                        textArea='578'
+                        inputText='Endereço'
+                        textArea='Rua Vicenso Silva, 987'
                     />
-                    <InternalTextArea 
-                        widthPercentage={45} 
-                        inputText='Bairro'
-                        textArea='Moema-SP'
+                    <SplitedTextAreasContainer>
+                        <InternalTextArea 
+                            widthPercentage={45} 
+                            inputText='Número'
+                            textArea='578'
+                        />
+                        <InternalTextArea 
+                            widthPercentage={45} 
+                            inputText='Bairro'
+                            textArea='Moema-SP'
+                        />
+                    </SplitedTextAreasContainer>
+                    <UnsignedLink 
+                        linkText='Cancelar'
+                        handleClickFn={() => navigation.replace('Main')}
                     />
-                </SplitedTextAreasContainer>
-                <UnsignedLink 
-                    linkText='Cancelar'
-                    handleClickFn={() => navigation.replace('Main')}
-                />
-            </InternalInputsWrapper>
-        </LocationContainer>
-    </>
-  )
+                </InternalInputsWrapper>
+            </LocationContainer>
+        </>
+    );
 }

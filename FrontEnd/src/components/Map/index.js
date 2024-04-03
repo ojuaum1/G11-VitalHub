@@ -5,14 +5,15 @@ import { MapContainer } from './style';
 import { requestForegroundPermissionsAsync, getCurrentPositionAsync, watchPositionAsync, LocationAccuracy } from 'expo-location';
 import MapViewDirections from 'react-native-maps-directions';
 import { mapskey } from '../../../utils/mapsApiKey';
+import api from '../../service/Service';
 
-export default function Map() {
+export default function Map({latitude = 0,longitude = 0}) {
+  
   const mapReference = useRef(null)
-
   const [initialPosition, setInitialPosition] = useState(null);
   const [finalPosition, setFinalPosition] = useState({
-    latitude: -23.6020,
-    longitude: -46.6721,
+    latitude: latitude ,
+    longitude: longitude ,
     latitudeDelta: 0,
     longitudeDelta: 0
   })
