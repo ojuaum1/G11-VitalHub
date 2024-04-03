@@ -6,6 +6,17 @@ export const BuscarPacientePorId = async userId => {
     return response;
 }
 
+export const CreateUser = async (userEmail, userPassword) => {
+    const url = `${apiUrlLocal}/Pacientes`;
+    console.log(url + userEmail + userPassword);
+    const response = await api.post(url, { 
+        email: userEmail, 
+        senha: userPassword,
+        idTipoUsuario: '6B810955-8D69-4416-9A04-CAD05BE687BA'
+    });
+    console.log(response);
+}
+
 export const BuscarMedicoPorId = async userId => {
     const url = `${apiUrlLocal}/Medicos/BuscarPorID/${userId}`;
     const response = (await api.get(url)).data;

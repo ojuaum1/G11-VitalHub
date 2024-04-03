@@ -12,6 +12,7 @@ import { ButtonText, UnsignedButtonsWrapper } from "../../components/UnsignedBut
 import UnsignedLink from "../../components/UnsignedLink";
 import { ActivityIndicator } from "react-native";
 import { Icon } from "@rneui/themed";
+import { CreateUser } from "../../service/userService";
 // import { createUser } from "../../services/userService"; // Importe a função para criar usuário
 
 export default function CreateAccountScreen({ navigation }) {
@@ -26,24 +27,18 @@ export default function CreateAccountScreen({ navigation }) {
       alert("As senhas não coincidem");
       return;
     }
-
-  
-
     
     setLoading(true);
 
 
-    createUser(email, password)
+    CreateUser(email, password)
       .then(() => {
-      
         navigation.navigate("login");
       })
       .catch((error) => {
-      
         alert("Erro ao criar usuário: " + error.message);
       })
       .finally(() => {
-        
         setLoading(false);
       });
   }
@@ -61,7 +56,7 @@ export default function CreateAccountScreen({ navigation }) {
       </CommandText>
       <BasicInputWrapper>
         <BasicInput
-          placeholder="Usuário ou E-mail"
+          placeholder="E-mail"
           value={email}
           onChangeText={setEmail}
         />

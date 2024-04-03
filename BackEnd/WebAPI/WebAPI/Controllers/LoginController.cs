@@ -36,6 +36,7 @@ namespace WebAPI.Controllers
                     return StatusCode(401, "Email ou senha inválidos!");
                 }
 
+                string nomeUsuario = usuarioBuscado.Nome == null ? "" : usuarioBuscado.Nome;
 
                 //caso encontre, prossegue para a criação do token
 
@@ -43,7 +44,7 @@ namespace WebAPI.Controllers
                 var claims = new[]
                 {
                     new Claim(JwtRegisteredClaimNames.Email, usuarioBuscado.Email!),
-                    new Claim(JwtRegisteredClaimNames.Name,usuarioBuscado.Nome!),
+                    new Claim(JwtRegisteredClaimNames.Name, nomeUsuario),
                     new Claim(JwtRegisteredClaimNames.Jti, usuarioBuscado.Id.ToString()),
                     new Claim("role", usuarioBuscado.TipoUsuario!.TipoUsuario!)
                 };
