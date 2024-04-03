@@ -104,9 +104,12 @@ export default function PatientConsultScreen({ navigation, route }) {
         doctorData={{ 
           doctorName: currentConsultationData.doctorName,
           doctorSpecialty: currentConsultationData.selectedDoctorSpecialty,
-          doctorCRM: currentConsultationData.doctorCRM
+          doctorCRM: currentConsultationData.doctorCRM,
+          latitude: currentConsultationData.latitude,
+          longitude: currentConsultationData.longitude
          }}
          navigation={navigation}
+
       />
       <ScreenContainer>
           <HomeHeader navigation={navigation} userName='Richard Kosta' userImageUri='https://avatars.githubusercontent.com/u/125266412?v=4' />
@@ -139,7 +142,6 @@ export default function PatientConsultScreen({ navigation, route }) {
                         setIsViewConsultationLocationActive(true);
                       }
                     }}
-                    navigatiton={navigation}
                   />
                 }
               />

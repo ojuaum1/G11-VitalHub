@@ -12,7 +12,9 @@ export default function ViewConsultationLocationModal({
     doctorData = {
         doctorName: '',
         doctorSpecialty: '',
-        doctorCRM: ''
+        doctorCRM: '',
+        latitude: '', 
+        longitude: ''
     },
     navigation
 }) {
@@ -31,8 +33,10 @@ export default function ViewConsultationLocationModal({
             />
             <UnsignedButton 
                 buttonText='Ver local da consulta'
-                handleClickFn={() => navigation.navigate('consultationLocation')}
+                handleClickFn={() => navigation.navigate('consultationLocation',{ latitude: doctorData.latitude , longitude: doctorData.longitude })}
             />
+            
+
             <UnsignedLink 
                 linkText='Cancelar'
                 handleClickFn={disableModalFn}
@@ -40,3 +44,6 @@ export default function ViewConsultationLocationModal({
         </Modal>
     )
 }
+
+
+
