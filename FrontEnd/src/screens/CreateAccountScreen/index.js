@@ -17,6 +17,7 @@ import { CreateUser } from "../../service/userService";
 
 export default function CreateAccountScreen({ navigation }) {
   const [loading, setLoading] = useState(false); 
+  const [name, setName] = useState("");
   const [email, setEmail] = useState(""); 
   const [password, setPassword] = useState(""); 
   const [confirmPassword, setConfirmPassword] = useState(""); 
@@ -30,8 +31,7 @@ export default function CreateAccountScreen({ navigation }) {
     
     setLoading(true);
 
-
-    CreateUser(email, password)
+    CreateUser(name, email, password)
       .then(() => {
         navigation.navigate("login");
       })
@@ -56,12 +56,17 @@ export default function CreateAccountScreen({ navigation }) {
       </CommandText>
       <BasicInputWrapper>
         <BasicInput
-          placeholder="E-mail"
+          placeholder="Nome:"
+          value={name}
+          onChangeText={setName}
+        />
+        <BasicInput
+          placeholder="E-mail:"
           value={email}
           onChangeText={setEmail}
         />
         <BasicInput
-          placeholder="Senha"
+          placeholder="Senha:"
           secureTextEntry
           value={password}
           onChangeText={setPassword}
