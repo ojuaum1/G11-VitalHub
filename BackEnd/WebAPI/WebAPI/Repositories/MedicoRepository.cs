@@ -82,5 +82,29 @@ namespace WebAPI.Repositories
                 .Where(x => x.MedicoClinica!.MedicoId == idMedico && EF.Functions.DateDiffDay(x.DataConsulta, dataConsulta) == 0)
                 .ToList();
         }
+
+        public List<Medico> ListarPorClinica(Guid id)
+        {
+            List<Medico> medicos = ctx.MedicosClinicas
+
+                .Where(mc => mc.ClinicaId == id)
+
+                .Select(mc => new Medico
+                {
+                    Id = mc.Id,
+                    Crm = mc.Medico!.Crm,
+                    Especialidade = mc.Medico.Especialidade,
+                    Usuario = new Usuario
+                    {
+                        Id = mc.Medico.Usuario.Id,
+                        Nome = mc.Medico.Usuario.Nome,
+                        Email = mc.Medico.Usuario.Email,
+                        Foto = mc.Medico.Usuario.Foto
+                    }
+                })
+                .ToList();
+
+            return medicos;
+        }
     }
 }

@@ -12,7 +12,7 @@ import api, {apiUrlLocal} from "../../service/Service";
 
 
 export default function DoctorSelectionScreen({ navigation, route }) {
-  const {consultationLocation, consultationType} = route.params;
+  const {consultationLocation, consultationType, clinicId} = route.params;
 
   const [selectedDoctorId, setSelectedDoctorId] = useState(0);
   const [selectedDoctorName, setSelectedDoctorName] = useState(0);
@@ -22,7 +22,7 @@ export default function DoctorSelectionScreen({ navigation, route }) {
 
   async function ListarMedicos() {
     //instanciar chamada da api
-    const url = `${apiUrlLocal}/Medicos`;
+    const url = `${apiUrlLocal}/Medicos/BuscarPorIdClinica?id=${clinicId}`;
     const data = (await api.get(url)).data;
 
     console.log(url);

@@ -68,7 +68,7 @@ export default function ClinicSelectionScreen({ navigation, route }) {
             <ButtonLinkWrapper>
                 <UnsignedButton 
                     buttonText='Continuar'
-                    handleClickFn={() => navigation.navigate('doctorSelection', { consultationLocation: selectedClinicLocation, consultationType })}
+                    handleClickFn={() => navigation.navigate('doctorSelection', { consultationLocation: selectedClinicLocation, consultationType, clinicId: selectedClinicId })}
                 />
                 <UnsignedLink 
                     linkText='Cancelar'
