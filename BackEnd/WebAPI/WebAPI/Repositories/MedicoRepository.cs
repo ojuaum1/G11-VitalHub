@@ -69,5 +69,18 @@ namespace WebAPI.Repositories
                 }
             }).ToList();
         }
+
+        public List<Consulta> ListarConsultasPorData(DateTime dataConsulta, Guid idMedico)
+        {
+            return ctx.Consultas
+                .Include(x => x.Situacao)
+                .Include(x => x.Prioridade)
+                .Include(x => x.MedicoClinica)
+                .Include(x => x.MedicoClinica!.Medico)
+                .Include(x => x.Paciente)
+                .Include(x => x.Paciente!.Usuario)
+                .Where(x => x.MedicoClinica!.MedicoId == idMedico && EF.Functions.DateDiffDay(x.DataConsulta, dataConsulta) == 0)
+                .ToList();
+        }
     }
 }
