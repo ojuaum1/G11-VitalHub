@@ -81,11 +81,12 @@ export default function PatientConsultScreen({ navigation, route }) {
 
   useEffect(() => {
     getConsultationsFromDate(selectedDate)
+    filterConsultationsByStatus();
   }, [selectedDate]);
 
   useEffect(() => {
     filterConsultationsByStatus();
-  }, [selectedConsultationType]);
+  }, [selectedConsultationType, selectedDate]);
 
   return (
     <>
