@@ -12,7 +12,7 @@ import { FontAwesome6 } from '@expo/vector-icons';
 import ScheduleConsultationModal, { getConsultationLevelById } from '../../components/ScheduleConsultationModal';
 import ViewConsultationLocationModal from '../../components/ViewConsultationLocationModal';
 import { Host } from 'react-native-portalize';
-import { BuscarConsultaPelaData } from '../../service/userService';
+import { BuscarConsultaPelaData, BuscarConsultaPelaDataPaciente } from '../../service/userService';
 import { userDecodeToken } from '../../utils/Auth';
 import { Text } from 'react-native';
 import moment from 'moment'
@@ -35,7 +35,7 @@ export default function PatientConsultScreen({ navigation, route }) {
     const token = await userDecodeToken();
     const userId = token.id;
 
-    const response = await BuscarConsultaPelaData(userId, date);
+    const response = await BuscarConsultaPelaDataPaciente(userId, date);
 
     const consultations = response.map(item => ({
       consultationId: item.id,
@@ -53,7 +53,7 @@ export default function PatientConsultScreen({ navigation, route }) {
 
     console.log(consultations);
     
-    setSelectedConsultationData(consultations);
+    setConsultationData(consultations);
   }
 
   function filterConsultationsByStatus() {
@@ -80,12 +80,12 @@ export default function PatientConsultScreen({ navigation, route }) {
   }
 
   useEffect(() => {
-    filterConsultationsByStatus();
-  }, [selectedConsultationType]);
-
-  useEffect(() => {
     getConsultationsFromDate(selectedDate)
   }, [selectedDate]);
+
+  useEffect(() => {
+    filterConsultationsByStatus();
+  }, [selectedConsultationType]);
 
   return (
     <>

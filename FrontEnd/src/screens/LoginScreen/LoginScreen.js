@@ -14,7 +14,7 @@ export default function LoginScreen({ navigation }) {
 
   // martin_ferreira@gmail.com
   // carlos.roque@gmail.com
-  const [email, setEmail] =  useState('martin_ferreira@gmail.com')
+  const [email, setEmail] =  useState('lucas.portal@gmail.com')
   const [senha, setSenha] =  useState('12345')
 
 

@@ -9,6 +9,10 @@ import { ConsultationCarList } from '../../components/ConsultationCardList/style
 import CancelConsultationModal from '../../components/CancelConsultationModal'
 import InsertMedicalRecordModal from '../../components/InsertMedicalRecordModal'
 import { Host } from 'react-native-portalize'
+import { BuscarConsultaPelaDataMedico } from '../../service/userService'
+import { userDecodeToken } from '../../utils/Auth'
+import moment from 'moment'
+import { getConsultationLevelById } from '../../components/ScheduleConsultationModal'
 
 export default function DoctorConsultScreen({ navigation }) {
   const [isCancelConsultationModalActive, setIsCancelConsultationModalActive] = useState(false);
@@ -18,59 +22,14 @@ export default function DoctorConsultScreen({ navigation }) {
 
   const [selectedConsultationType, setSelectedConsultationType] = useState(0);
   const [selectedConsultationData, setSelectedConsultationData] = useState([]);
-  const [consultationsData, setConsultationData] = useState([
-    {
-      consultationId: 1,
-      patientName: 'Niccole Sarga',
-      patientEmail: 'niccole.sarga@email.com',
-      patientAge: '22 anos',
-      consultationType: 'Rotina',
-      consultationTime: '14:00',
-      consultationStatus: 'scheduled'
-    },
-    {
-      consultationId: 2,
-      patientName: 'Richard Kosta',
-      patientEmail: 'richard.kosta@email.com',
-      patientAge: '28 anos',
-      consultationType: 'Urgência',
-      consultationTime: '15:00',
-      consultationStatus: 'scheduled'
-    },
-    {
-      consultationId: 3,
-      patientName: 'Elisa',
-      patientEmail: 'elisa@email.com',
-      patientAge: '22 anos',
-      consultationType: 'Rotina',
-      consultationTime: '16:00',
-      consultationStatus: 'performed'
-    },
-    {
-      consultationId: 4,
-      patientName: 'Elisangela',
-      patientEmail: 'elisangela@email.com',
-      patientAge: '28 anos',
-      consultationType: 'Urgência',
-      consultationTime: '15:00',
-      consultationStatus: 'performed'
-    },
-    {
-      consultationId: 5,
-      patientName: 'Sandra',
-      patientEmail: 'sandra@email.com',
-      patientAge: '28 anos',
-      consultationType: 'Urgência',
-      consultationTime: '15:00',
-      consultationStatus: 'canceled'
-    },
-  ]);
+  const [consultationsData, setConsultationData] = useState([]);
 
+  const [selectedDate, setSelectedDate] = useState(moment().format('YYYY-MM-DD'));
   
   function filterConsultationsByStatus() {
-    const isScheduledConsultation = consultation => consultation.consultationStatus == 'scheduled';
-    const isPerformedConsultation = consultation => consultation.consultationStatus == 'performed';
-    const isCanceledConsultation = consultation => consultation.consultationStatus == 'canceled';
+    const isScheduledConsultation = consultation => consultation.consultationStatus == 'Pendentes';
+    const isPerformedConsultation = consultation => consultation.consultationStatus == 'Realizadas';
+    const isCanceledConsultation = consultation => consultation.consultationStatus == 'Cancelados';
 
     switch(selectedConsultationType) {
       case 0:
@@ -90,9 +49,42 @@ export default function DoctorConsultScreen({ navigation }) {
     }
   }
 
+  function convertBirthDateToAge(birthDateText) {
+    const currentDate = moment();
+    const birthDate = moment(birthDateText);
+
+    const diff = currentDate.diff(birthDate, 'years');
+
+    return diff;
+  }
+
+  async function getConsultationFromDate(date) {
+    const token = await userDecodeToken();
+    const userId = token.id;
+
+    const response = await BuscarConsultaPelaDataMedico(userId, date);
+
+    const consultations = response.map(item => ({
+      consultationId: item.id,
+      patientName: item.paciente.usuario.nome,
+      patientEmail: item.paciente.usuario.email,
+      patientAge: convertBirthDateToAge(item.paciente.dataNascimento),
+      consultationType: getConsultationLevelById(item.prioridade.prioridade),
+      consultationTime: moment(item.dataConsulta).format('HH:mm'),
+      consultationStatus: item.situacao.situacao
+    }))
+
+    setConsultationData(consultations);
+  }
+
   useEffect(() => {
     filterConsultationsByStatus();
-  }, [selectedConsultationType]);
+  }, [selectedConsultationType, selectedDate]);
+
+  useEffect(() => {
+    getConsultationFromDate(selectedDate)
+    filterConsultationsByStatus();
+  }, [selectedDate])
 
   return (
     <>
@@ -108,7 +100,9 @@ export default function DoctorConsultScreen({ navigation }) {
       />
       <ScreenContainer>
           <HomeHeader navigation={navigation} userName='Dr. Lucas' userImageUri='https://avatars.githubusercontent.com/u/125275518?v=4' />
-          <Calendar />
+          <Calendar 
+            setSelectedDate={setSelectedDate}
+          />
           <Container>
             <ConsultationBar
               selectedType={ selectedConsultationType }
