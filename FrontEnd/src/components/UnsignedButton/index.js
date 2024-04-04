@@ -24,7 +24,7 @@ export default function UnsignedButton({ buttonText, isGoogleButton = false, han
 
       setisLoading(true);
       setTimeout(() => setisLoading(false), 4000);
-      handleClickFn();
+      handleClickFn(setisLoading);
     }}>
           {isLoading ? (
             <ActivityIndicator color="#FFF" />

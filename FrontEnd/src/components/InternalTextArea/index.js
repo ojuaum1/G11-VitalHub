@@ -3,13 +3,10 @@ import React from 'react';
 import { TextArea } from './style'
 import { InputContainer, InputText } from '../InternalInput/style'
 
-export default function InternalTextArea({ inputText = '', textArea = 'Text', widthPercentage }) {
+export default function InternalTextArea({ labelText = '', textArea = 'Não preenchido', widthPercentage }) {
     return (
         <InputContainer widthPercentage={widthPercentage}>
-            {
-                inputText != '' ? <InputText fontSize={16}>{ inputText }</InputText> : null
-            
-            }
+            <InputText fontSize={16}>{ labelText }</InputText>
             <TextArea>
                 { textArea }
             </TextArea>

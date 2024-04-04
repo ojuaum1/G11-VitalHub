@@ -31,6 +31,8 @@ export default function PatientProfileScreen({ navigation }) {
     const [cep, setCep] = useState('');
     const [city, setCity] = useState('Moema-SP');
 
+    const [isEditing, setIsEditing] = useState(false);
+
     async function loadData() {
         const token = await userDecodeToken();
         setUserName(token.name);
@@ -83,51 +85,64 @@ export default function PatientProfileScreen({ navigation }) {
                     role === 'Paciente' ? (
                         <>
                             <InternalTextArea 
-                                inputText="Data de nascimento:"
+                                labelText="Data de nascimento:"
                                 textArea={birthDate}
                             />
                             <InternalTextArea 
-                                inputText="CPF"
+                                labelText="CPF"
                                 textArea={cpf}
                             />
                         </>
                     ) : (
                         <>
                             <InternalTextArea 
-                                inputText="Especialidade:"
+                                labelText="Especialidade:"
                                 textArea={specialty}
                             />
                             <InternalTextArea 
-                                inputText="CRM"
+                                labelText="CRM"
                                 textArea={crm}
                             />
                         </>
                     )
                 }
                 <InternalTextArea 
-                    inputText="Endereço"
+                    labelText="Endereço"
                     textArea={address}
                 />
                 <SplitedTextAreasContainer>
                     <InternalTextArea 
                         widthPercentage={45}
-                        inputText="Cep"
+                        labelText="Cep"
                         textArea={cep}
                     />
                     <InternalTextArea 
                         widthPercentage={45}
-                        inputText="Cidade"
+                        labelText="Cidade"
                         textArea={city}
                     />
                 </SplitedTextAreasContainer>
             </InternalInputsWrapper>
             <UnsignedButtonsWrapper>
-                <UnsignedButton 
-                    buttonText='Salvar'
-                />
-                <UnsignedButton 
-                    buttonText='Editar'
-                />
+                {
+                    isEditing ? (
+                        <UnsignedButton 
+                            buttonText='Salvar'
+                            handleClickFn={setIsLoading => {
+                                setIsEditing(false)
+                                setIsLoading(false);
+                            }}
+                        />
+                    ) : (
+                        <UnsignedButton 
+                            buttonText='Editar'
+                            handleClickFn={setIsLoading => {
+                                setIsEditing(true)
+                                setIsLoading(false);
+                            }}
+                        />
+                    )
+                }
                 <UnsignedButton 
                     handleClickFn={() => {
                         logout();
