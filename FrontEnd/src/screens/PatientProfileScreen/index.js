@@ -9,7 +9,7 @@ import { UnsignedButtonsWrapper } from '../../components/UnsignedButton/style'
 import { ScrollContainer } from '../../components/ScrollContainer/style';
 import { SplitedTextAreasContainer } from '../../components/InternalTextArea/style'
 import { logout, userDecodeToken } from '../../utils/Auth'
-import { BuscarMedicoPorId, BuscarPacientePorId } from '../../service/userService'
+import { AtualizarPerfilPaciente, BuscarMedicoPorId, BuscarPacientePorId } from '../../service/userService'
 
 export default function PatientProfileScreen({ navigation }) {
     // User data
@@ -27,9 +27,11 @@ export default function PatientProfileScreen({ navigation }) {
     const [crm, setCrm] = useState('');
 
     // General data
-    const [address, setAddress] = useState('');
+    const [neighborhood, setNeighborhood] = useState('')
+    const [number, setNumber] = useState('')
     const [cep, setCep] = useState('');
-    const [city, setCity] = useState('Moema-SP');
+    const [city, setCity] = useState('');
+    const [token, setToken] = useState('');
 
     const [isEditing, setIsEditing] = useState(false);
 
@@ -38,15 +40,19 @@ export default function PatientProfileScreen({ navigation }) {
         setUserName(token.name);
         setEmail(token.email);
         setId(token.id);
-        setRole(token.role)
+        setRole(token.role);
+        setToken(token.token);
         
         if (token.role == 'Paciente') {
             const patientData = await BuscarPacientePorId(token.id);
 
+            console.log(patientData);
+
             setBirthDate(patientData.birthDate);
             setCpf(patientData.cpf);
 
-            setAddress(patientData.address);
+            setNeighborhood(patientData.neighborhood);
+            setNumber(patientData.number);
             setCep(patientData.cep);
             setCity(patientData.city)
         } else if (token.role == 'Medico') {
@@ -87,10 +93,14 @@ export default function PatientProfileScreen({ navigation }) {
                             <InternalTextArea 
                                 labelText="Data de nascimento:"
                                 textArea={birthDate}
+                                handleChangeFn={setBirthDate}
+                                isEditing={isEditing}
                             />
                             <InternalTextArea 
                                 labelText="CPF"
                                 textArea={cpf}
+                                handleChangeFn={setCpf}
+                                isEditing={isEditing}
                             />
                         </>
                     ) : (
@@ -98,28 +108,48 @@ export default function PatientProfileScreen({ navigation }) {
                             <InternalTextArea 
                                 labelText="Especialidade:"
                                 textArea={specialty}
+                                handleChangeFn={setSpecialty}
+                                isEditing={isEditing}
                             />
                             <InternalTextArea 
                                 labelText="CRM"
                                 textArea={crm}
+                                handleChangeFn={setCrm}
+                                isEditing={isEditing}
                             />
                         </>
                     )
                 }
-                <InternalTextArea 
-                    labelText="Endereço"
-                    textArea={address}
-                />
+                <SplitedTextAreasContainer>
+                    <InternalTextArea 
+                        labelText="Logradouro"
+                        textArea={neighborhood}
+                        widthPercentage={45}
+                        handleChangeFn={setNeighborhood}
+                        isEditing={isEditing}
+                    />
+                    <InternalTextArea 
+                        labelText="Número"
+                        textArea={number}
+                        widthPercentage={45}
+                        handleChangeFn={setNumber}
+                        isEditing={isEditing}
+                    />
+                </SplitedTextAreasContainer>
                 <SplitedTextAreasContainer>
                     <InternalTextArea 
                         widthPercentage={45}
                         labelText="Cep"
                         textArea={cep}
+                        handleChangeFn={setCep}
+                        isEditing={isEditing}
                     />
                     <InternalTextArea 
                         widthPercentage={45}
                         labelText="Cidade"
                         textArea={city}
+                        handleChangeFn={setCity}
+                        isEditing={isEditing}
                     />
                 </SplitedTextAreasContainer>
             </InternalInputsWrapper>
@@ -128,8 +158,18 @@ export default function PatientProfileScreen({ navigation }) {
                     isEditing ? (
                         <UnsignedButton 
                             buttonText='Salvar'
-                            handleClickFn={setIsLoading => {
-                                setIsEditing(false)
+                            handleClickFn={async setIsLoading => {
+                                setIsEditing(false);
+
+                                const response = await AtualizarPerfilPaciente(
+                                    token,
+                                    birthDate,
+                                    neighborhood,
+                                    number,
+                                    cep,
+                                    city    
+                                )
+
                                 setIsLoading(false);
                             }}
                         />

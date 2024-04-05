@@ -34,3 +34,21 @@ export const BuscarConsultaPelaDataMedico = async (userId, date) => {
     const response = (await api.get(url)).data;
     return response;
 }
+
+export const AtualizarPerfilPaciente = async (userToken, birthDate, neighborhood, number, CEP, city) => {
+    const url = `${apiUrlLocal}/Pacientes/`
+
+    console.log(userToken);
+
+    const config = {
+        headers: { Authorization: `Bearer ${userToken}` }
+    };
+
+    const response = await api.put(url, {
+        dataNascimento: birthDate,
+        logradouro: neighborhood,
+        numero: number,
+        cep: CEP,
+        cidade: city
+    }, config)
+}

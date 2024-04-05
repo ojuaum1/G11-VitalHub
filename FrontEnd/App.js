@@ -48,7 +48,7 @@ Notifications.setNotificationHandler({
 })
 
 export default function App() {
-    useFonts({
+    const [fontsLoaded, fontsError] = useFonts({
         MontserratAlternates_500Medium,
         MontserratAlternates_600SemiBold,
         MontserratAlternates_700Bold,
@@ -56,6 +56,10 @@ export default function App() {
         Quicksand_500Medium,
         Quicksand_600SemiBold
     });
+
+    if (!fontsLoaded) {
+        return null;
+    }
 
     return (
         <NavigationContainer>
