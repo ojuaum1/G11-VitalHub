@@ -9,7 +9,8 @@ import { UnsignedButtonsWrapper } from '../../components/UnsignedButton/style'
 import { ScrollContainer } from '../../components/ScrollContainer/style';
 import { SplitedTextAreasContainer } from '../../components/InternalTextArea/style'
 import { logout, userDecodeToken } from '../../utils/Auth'
-import { AtualizarPerfilMedico, AtualizarPerfilPaciente, BuscarMedicoPorId, BuscarPacientePorId } from '../../service/userService'
+import { AtualizarPerfilMedico, AtualizarPerfilPaciente, BuscarMedicoPorId, BuscarPacientePorId, GetSpecialties } from '../../service/userService'
+import { SelectList } from 'react-native-dropdown-select-list'
 
 export default function PatientProfileScreen({ navigation }) {
     // User data
@@ -24,7 +25,9 @@ export default function PatientProfileScreen({ navigation }) {
 
     // Doctor data
     const [specialty, setSpecialty] = useState('');
+    const [specialtyId, setSpecialtyId] = useState('');
     const [crm, setCrm] = useState('');
+    const [selectSpecialtiesData, setSelectSpecialtiesData] = useState([])
 
     // General data
     const [neighborhood, setNeighborhood] = useState('')
@@ -55,6 +58,16 @@ export default function PatientProfileScreen({ navigation }) {
             setCity(patientData.city)
         } else if (token.role == 'Medico') {
             const doctorData = await BuscarMedicoPorId(token.id)
+            const specialtiesData = await GetSpecialties();
+
+            const specialtiesSelectData = specialtiesData.map(specialty => ({
+                key: specialty.id,
+                value: specialty.especialidade1
+            }))
+
+            console.log(specialtiesSelectData);
+
+            setSelectSpecialtiesData(specialtiesSelectData);
 
             setCrm(doctorData.crm)
             setSpecialty(doctorData.specialty)
@@ -104,12 +117,24 @@ export default function PatientProfileScreen({ navigation }) {
                         </>
                     ) : (
                         <>
-                            <InternalTextArea 
-                                labelText="Especialidade:"
-                                textArea={specialty}
-                                handleChangeFn={setSpecialty}
-                                isEditing={isEditing}
-                            />
+                            {
+                                isEditing ? (
+                                    <SelectList 
+                                        setSelected={key => {
+                                            setSelectSpecialtiesData(key)
+                                        }} 
+                                        data={selectSpecialtiesData} 
+                                        save="key"
+                                    />
+                                ) : (
+                                    <InternalTextArea 
+                                        labelText="Especialidade:"
+                                        textArea={specialty}
+                                        handleChangeFn={setSpecialty}
+                                        isEditing={isEditing}
+                                    />
+                                )
+                            }
                             <InternalTextArea 
                                 labelText="CRM"
                                 textArea={crm}
@@ -173,7 +198,7 @@ export default function PatientProfileScreen({ navigation }) {
                                 } else if (role == 'Medico') {
                                     await AtualizarPerfilMedico(
                                         token,
-                                        'E5188D04-9D71-4B94-96E5-45CE1C9E8AD9',
+                                        specialtyId,
                                         crm,
                                         neighborhood,
                                         number,

@@ -67,3 +67,11 @@ export const AtualizarPerfilMedico = async (userToken, specialtyId, CRM, neighbo
         cidade: city
     }, config)
 }
+
+export const GetSpecialties = async () => {
+    const url = `${apiUrlLocal}/Especialidade`;
+
+    const response = await api.get(url);
+
+    return response.data;
+}
