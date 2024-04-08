@@ -58,7 +58,7 @@ export default function PatientConsultScreen({ navigation, route }) {
 
   function filterConsultationsByStatus() {
     const isScheduledConsultation = consultation => consultation.consultationStatus == 'Pendentes';
-    const isPerformedConsultation = consultation => consultation.consultationStatus == 'Realizadas';
+    const isPerformedConsultation = consultation => consultation.consultationStatus == 'Realizados';
     const isCanceledConsultation = consultation => consultation.consultationStatus == 'Cancelados';
 
     switch(selectedConsultationType) {

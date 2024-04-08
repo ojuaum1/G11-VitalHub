@@ -30,7 +30,7 @@ export default function ConsultationCard({ userName, userEmail, userAge, consult
                 ) }
             </CardInfoContainer>
 
-            { cardType == 'Realizadas' ? (
+            { cardType == 'Realizados' ? (
                 <MedicalRecordLink onPress={() => {
                     activeInsertMedicalRecordModalFn()
                     setCurrentUserDataFn({
