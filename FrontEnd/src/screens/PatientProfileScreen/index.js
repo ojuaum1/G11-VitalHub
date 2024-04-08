@@ -9,7 +9,7 @@ import { UnsignedButtonsWrapper } from '../../components/UnsignedButton/style'
 import { ScrollContainer } from '../../components/ScrollContainer/style';
 import { SplitedTextAreasContainer } from '../../components/InternalTextArea/style'
 import { logout, userDecodeToken } from '../../utils/Auth'
-import { AtualizarPerfilPaciente, BuscarMedicoPorId, BuscarPacientePorId } from '../../service/userService'
+import { AtualizarPerfilMedico, AtualizarPerfilPaciente, BuscarMedicoPorId, BuscarPacientePorId } from '../../service/userService'
 
 export default function PatientProfileScreen({ navigation }) {
     // User data
@@ -55,8 +55,6 @@ export default function PatientProfileScreen({ navigation }) {
             setCity(patientData.city)
         } else if (token.role == 'Medico') {
             const doctorData = await BuscarMedicoPorId(token.id)
-
-            console.log(doctorData.cep);
 
             setCrm(doctorData.crm)
             setSpecialty(doctorData.specialty)
@@ -162,14 +160,27 @@ export default function PatientProfileScreen({ navigation }) {
                             handleClickFn={async setIsLoading => {
                                 setIsEditing(false);
 
-                                const response = await AtualizarPerfilPaciente(
-                                    token,
-                                    birthDate,
-                                    neighborhood,
-                                    number,
-                                    cep,
-                                    city    
-                                )
+
+                                if (role == 'Paciente') {
+                                    await AtualizarPerfilPaciente(
+                                        token,
+                                        birthDate,
+                                        neighborhood,
+                                        number,
+                                        cep,
+                                        city    
+                                    )
+                                } else if (role == 'Medico') {
+                                    await AtualizarPerfilMedico(
+                                        token,
+                                        'E5188D04-9D71-4B94-96E5-45CE1C9E8AD9',
+                                        crm,
+                                        neighborhood,
+                                        number,
+                                        cep,
+                                        city
+                                    )
+                                }
 
                                 setIsLoading(false);
                             }}
