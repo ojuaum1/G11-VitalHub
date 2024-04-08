@@ -5,7 +5,8 @@
         Guid doctorId,
         string crm,
         string specialty,
-         string address,
+        string neighborhood,
+        int? number,
         string cep,
         string city
     );

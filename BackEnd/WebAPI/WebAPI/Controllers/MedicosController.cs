@@ -30,15 +30,13 @@ namespace WebAPI.Controllers
         {
             var unformattedDoctor = _medicoRepository.BuscarPorId(doctorId);
 
-            string formattedAddress = $"{unformattedDoctor.Endereco!.Logradouro}, {unformattedDoctor.Endereco.Numero}";
-            string formattedCep = Convert.ToUInt64(unformattedDoctor.Endereco.Cep).ToString(@"00000\-000");
-
             var response = new GetDoctorByIdViewModel(
                 doctorId: unformattedDoctor.Id,
                 specialty: unformattedDoctor.Especialidade!.Especialidade1!,
                 crm: unformattedDoctor.Crm!,
-                address: formattedAddress,
-                cep: formattedCep,
+                neighborhood: unformattedDoctor.Endereco!.Logradouro!,
+                number: unformattedDoctor.Endereco!.Numero,
+                cep: unformattedDoctor.Endereco!.Cep!,
                 city: unformattedDoctor.Endereco!.Cidade!
             );
 

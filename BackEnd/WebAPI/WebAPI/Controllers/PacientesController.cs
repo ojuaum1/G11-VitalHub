@@ -61,16 +61,14 @@ namespace WebAPI.Controllers
             var unformattedPatient = pacienteRepository.BuscarPorId(patientId);
 
             string formattedBirthDate = unformattedPatient.DataNascimento.ToString()!.Substring(0, 10);
-            string formattedCpf = $"{unformattedPatient.Cpf!.Substring(0, 3)}********";
-            string formattedAddress = $"{unformattedPatient.Endereco!.Logradouro}, {unformattedPatient.Endereco.Numero}";
-            string formattedCep = Convert.ToUInt64(unformattedPatient.Endereco.Cep).ToString(@"00000\-000");
 
             var response = new GetPatientByIdViewModel(
                 patientId: unformattedPatient.Id,
                 birthDate: formattedBirthDate,
-                cpf: formattedCpf,
-                address: formattedAddress,
-                cep: formattedCep,
+                cpf: unformattedPatient.Cpf!,
+                neighborhood: unformattedPatient.Endereco!.Logradouro!,
+                number: unformattedPatient.Endereco!.Numero,
+                cep: unformattedPatient.Endereco!.Cep!,
                 city: unformattedPatient.Endereco.Cidade!
             );
 
@@ -110,6 +108,27 @@ namespace WebAPI.Controllers
         public IActionResult BuscarPorData(DateTime data, Guid id)
         {
             return Ok(pacienteRepository.BuscarPorData(data, id));
+        }
+
+        [Authorize]
+        [HttpPut]
+        public IActionResult AtualizarPerfil(PacienteViewModel paciente)
+        {
+
+            try
+            {
+                Guid idUsuario = Guid.Parse(HttpContext.User.Claims.First(c => c.Type == JwtRegisteredClaimNames.Jti).Value);
+                return Ok(pacienteRepository.AtualizarPerfil(idUsuario, paciente));
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+            
+            
+
+            
         }
     }
 }

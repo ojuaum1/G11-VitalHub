@@ -5,7 +5,8 @@
         Guid patientId,
         string birthDate,
         string cpf,
-        string address,
+        string neighborhood,
+        int? number,
         string cep,
         string city
     );

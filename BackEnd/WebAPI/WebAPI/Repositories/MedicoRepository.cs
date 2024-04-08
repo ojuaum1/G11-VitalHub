@@ -24,11 +24,20 @@ namespace WebAPI.Repositories
             if (medico.EspecialidadeId != null)
                 medicoBuscado.EspecialidadeId = medico.EspecialidadeId;
 
-            if (medico.Senha != null)
-                medicoBuscado.Usuario.Senha = medico.Senha;
-
             if (medico.Foto != null)
                 medicoBuscado.Usuario.Foto = medico.Foto;
+
+            if (medico.Cep != null)
+                medicoBuscado.Endereco.Cep = medico.Cep;
+
+            if (medico.Logradouro != null)
+                medicoBuscado.Endereco.Logradouro = medico.Logradouro;
+
+            if (medico.Numero != null)
+                medicoBuscado.Endereco.Numero = medico.Numero;
+
+            if (medico.Cidade != null)
+                medicoBuscado.Endereco.Cidade = medico.Cidade;
 
             ctx.Medicos.Update(medicoBuscado);
             ctx.SaveChanges();
