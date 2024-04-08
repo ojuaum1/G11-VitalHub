@@ -28,7 +28,7 @@ export default function DoctorConsultScreen({ navigation }) {
   
   function filterConsultationsByStatus() {
     const isScheduledConsultation = consultation => consultation.consultationStatus == 'Pendentes';
-    const isPerformedConsultation = consultation => consultation.consultationStatus == 'Realizadas';
+    const isPerformedConsultation = consultation => consultation.consultationStatus == 'Realizados';
     const isCanceledConsultation = consultation => consultation.consultationStatus == 'Cancelados';
 
     switch(selectedConsultationType) {
@@ -73,7 +73,7 @@ export default function DoctorConsultScreen({ navigation }) {
       consultationTime: moment(item.dataConsulta).format('HH:mm'),
       consultationStatus: item.situacao.situacao
     }))
-
+    console.log(consultations);
     setConsultationData(consultations);
   }
 

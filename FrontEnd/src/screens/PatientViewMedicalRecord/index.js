@@ -12,65 +12,54 @@ import * as MediaLibrary from 'expo-media-library';
 
 export default function PatientViewMedicalRecord({ navigation, route }) {
     const [photosUri, setPhotosUri] = useState([]);
-    const { newPhotoUri } = route.params;
-
+    const { newPhotoUri, descricao, diagnostico, Receita } = route.params;
+    
+    const { medicamento, observacoes } = Receita || {};
+    var stringText = `${medicamento} \n ${observacoes}`
     useEffect(() => {
-        if (newPhotoUri != '') {
-            setPhotosUri(
-                [
-                    ...photosUri,
-                    newPhotoUri
-                ]
-            )
+      
+        if (newPhotoUri !== '') {
+            setPhotosUri([...photosUri, newPhotoUri]);
         }
     }, [newPhotoUri]);
 
-  return (
-    <ScrollContainer>
-        <UserProfileImage 
-            source={require('../../assets/doctor-image-extended.png')}
-        />
-        <Container>
-            <UserMainInfo 
-                username='Dr. Claudio'
-                infoArr={[
-                    'Cliníco geral',
-                    'CRM-15286'
-                ]}
-            />
+    // Extrair dados da receita
 
-            <InternalInputsWrapper>
-                <InternalTextArea 
-                    inputText="Descrição da consulta"
-                    textArea="O paciente possuí uma infecção no ouvido. Necessário repouse de 2 dias e acompanhamento médico constante"
-                />
-                <InternalTextArea 
-                    inputText="Descrição da consulta"
-                    textArea="Infecção no ouvido"
-                />
-                <InternalTextArea 
-                    inputText="Prescrição médica"
-                    textArea="Medicamento: Advil
-                    Dosagem: 50 mg
-                    Frequência: 3 vezes ao dia
-                    Duração: 3 dias"
-                />
-            </InternalInputsWrapper>
-
-            <MedicalExams
-                handleSendClick={async () => {
-                    await Camera.requestCameraPermissionsAsync();
-                    await MediaLibrary.requestPermissionsAsync();
-                    navigation.navigate('Camera')
-                }}
-                photosUri={photosUri}
+    return (
+        <ScrollContainer>
+            <UserProfileImage 
+                source={require('../../assets/doctor-image-extended.png')}
             />
+            <Container>
+                <UserMainInfo 
+                    username='Dr. Claudio'
+                    infoArr={[
+                        'Clínico geral',
+                        'CRM-15286'
+                    ]}
+                />
 
-            <UnsignedLink 
-                linkText='Voltar'
-                handleClickFn={() => navigation.navigate('Main')}
-            />
-        </Container>
-    </ScrollContainer>
-  )
+                <InternalInputsWrapper>
+                    <InternalTextArea inputText="Descrição da consulta" textArea={descricao} />
+                    <InternalTextArea inputText="Diagnóstico" textArea={diagnostico} />
+                    <InternalTextArea inputText="Medicamento" textArea={stringText} />
+                    
+                </InternalInputsWrapper>
+
+                <MedicalExams
+                    handleSendClick={async () => {
+                        await Camera.requestCameraPermissionsAsync();
+                        await MediaLibrary.requestPermissionsAsync();
+                        navigation.navigate('Camera');
+                    }}
+                    photosUri={photosUri}
+                />
+
+                <UnsignedLink 
+                    linkText='Voltar'
+                    handleClickFn={() => navigation.navigate('Main')}
+                />
+            </Container>
+        </ScrollContainer>
+    );
 }

@@ -14,21 +14,16 @@ import ViewConsultationLocationModal from '../../components/ViewConsultationLoca
 import { Host } from 'react-native-portalize';
 import { BuscarConsultaPelaData, BuscarConsultaPelaDataPaciente } from '../../service/userService';
 import { userDecodeToken } from '../../utils/Auth';
-import { Text } from 'react-native';
-import moment from 'moment'
+import moment from 'moment';
 
 export default function PatientConsultScreen({ navigation, route }) {
   const [isCancelConsultationModalActive, setIsCancelConsultationModalActive] = useState(false);
-
   const [isSchedulingConsultationActive, setIsSchedulingConsultationActive] = useState(false);
-
   const [isViewConsultationLocationActive, setIsViewConsultationLocationActive] = useState(false);
   const [currentConsultationData, setCurrentConsultationData] = useState({});
-
   const [selectedConsultationType, setSelectedConsultationType] = useState(0);
   const [selectedConsultationData, setSelectedConsultationData] = useState([]);
   const [consultationsData, setConsultationData] = useState([]);
-
   const [selectedDate, setSelectedDate] = useState(moment().format('YYYY-MM-DD'));
 
   async function getConsultationsFromDate(date) {
@@ -43,44 +38,44 @@ export default function PatientConsultScreen({ navigation, route }) {
       doctorEmail: item.medicoClinica.medico.usuario.email,
       doctorAge: item.medicoClinica.medico.crm,
       doctorCRM: item.medicoClinica.medico.crm,
+      description: item.descricao,
+      diagnostic: item.diagnostico,
+      receita: item.receita, // Incluindo receita aqui
       longitude: item.medicoClinica.clinica.endereco.longitude,
       latitude: item.medicoClinica.clinica.endereco.latitude,
       selectedDoctorSpecialty: item.medicoClinica.medico.especialidade.especialidade1,
       consultationType: getConsultationLevelById(item.prioridade.prioridade),
       consultationTime: moment(item.dataConsulta).format('HH:mm'),
       consultationStatus: item.situacao.situacao
-    }))
+    }));
 
     console.log(consultations);
-    
+
     setConsultationData(consultations);
   }
 
   function filterConsultationsByStatus() {
-    const isScheduledConsultation = consultation => consultation.consultationStatus == 'Pendentes';
-    const isPerformedConsultation = consultation => consultation.consultationStatus == 'Realizados';
-    const isCanceledConsultation = consultation => consultation.consultationStatus == 'Cancelados';
+    const isScheduledConsultation = consultation => consultation.consultationStatus === 'Pendentes';
+    const isPerformedConsultation = consultation => consultation.consultationStatus === 'Realizados';
+    const isCanceledConsultation = consultation => consultation.consultationStatus === 'Cancelados';
 
-    switch(selectedConsultationType) {
+    switch (selectedConsultationType) {
       case 0:
-        const scheduledConsultations = consultationsData.filter(isScheduledConsultation);
-        setSelectedConsultationData(scheduledConsultations);
+        setSelectedConsultationData(consultationsData.filter(isScheduledConsultation));
         break;
       case 1:
-        const performedConsultations = consultationsData.filter(isPerformedConsultation);
-        setSelectedConsultationData(performedConsultations);
+        setSelectedConsultationData(consultationsData.filter(isPerformedConsultation));
         break;
       case 2:
-        const canceledConsultations = consultationsData.filter(isCanceledConsultation);
-        setSelectedConsultationData(canceledConsultations);
+        setSelectedConsultationData(consultationsData.filter(isCanceledConsultation));
         break;
       default:
-        console.log('Hey programmer, there is no state after 2 or before 0');
+        console.log('Invalid consultation type');
     }
   }
 
   useEffect(() => {
-    getConsultationsFromDate(selectedDate)
+    getConsultationsFromDate(selectedDate);
     filterConsultationsByStatus();
   }, [selectedDate]);
 
@@ -110,46 +105,52 @@ export default function PatientConsultScreen({ navigation, route }) {
           longitude: currentConsultationData.longitude
          }}
          navigation={navigation}
-
       />
       <ScreenContainer>
-          <HomeHeader navigation={navigation} userName='Richard Kosta' userImageUri='https://avatars.githubusercontent.com/u/125266412?v=4' />
-          <Calendar 
-            setSelectedDate={setSelectedDate}
+        <HomeHeader navigation={navigation} userName='Richard Kosta' userImageUri='https://avatars.githubusercontent.com/u/125266412?v=4' />
+        <Calendar 
+          setSelectedDate={setSelectedDate}
+        />
+        <Container>
+          <ConsultationBar 
+            selectedType={selectedConsultationType}
+            changeSelectedType={setSelectedConsultationType}
           />
-          <Container>
-              <ConsultationBar 
-                  selectedType={selectedConsultationType}
-                  changeSelectedType={setSelectedConsultationType}
+          <ConsultationCarList
+            data={selectedConsultationData}
+            contentContainerStyle={{ gap: 12 }}
+            keyExtractor={item => item.consultationId}
+            renderItem={({ item }) => (
+              <ConsultationCard 
+                userName={item.doctorName}
+                userAge={item.doctorAge}
+                userEmail={item.doctorEmail}
+                consultationType={item.consultationType}
+                consultationTime={item.consultationTime}
+                cardType={item.consultationStatus}
+                activeCancelingModalFn={() => setIsCancelConsultationModalActive(true)}
+                activeInsertMedicalRecordModalFn={() => navigation.navigate('patientViewMedicalRecord', {
+                  descricao: item.description,
+                  diagnostico: item.diagnostic,
+                  Receita: {
+                    medicamento: item.receita?.medicamento,
+                    observacoes: item.receita?.observacoes
+                  }
+                })}
+                setCurrentUserDataFn={() => {}}
+                handleCardClick={() => {
+                  setCurrentConsultationData(item);
+                  if (item.consultationStatus === 'Pendentes') {
+                    setIsViewConsultationLocationActive(true);
+                  }
+                }}
               />
-              <ConsultationCarList
-                data={selectedConsultationData}
-                contentContainerStyle={{ gap: 12 }}
-                keyExtractor={item => item.consultationId}
-                renderItem={({ item }) => 
-                  <ConsultationCard 
-                    userName={item.doctorName}
-                    userAge={item.doctorAge}
-                    userEmail={item.doctorEmail}
-                    consultationType={item.consultationType}
-                    consultationTime={item.consultationTime}
-                    cardType={item.consultationStatus}
-                    activeCancelingModalFn={() => setIsCancelConsultationModalActive(true)}
-                    activeInsertMedicalRecordModalFn={() => navigation.navigate('patientViewMedicalRecord')}
-                    setCurrentUserDataFn={() => {}}
-                    handleCardClick={() => {
-                      setCurrentConsultationData(item);
-                      if (item.consultationStatus === 'Pendentes') {
-                        setIsViewConsultationLocationActive(true);
-                      }
-                    }}
-                  />
-                }
-              />
-              <ScheduleConsultationButton onPress={() => setIsSchedulingConsultationActive(true)}>
-                <FontAwesome6 name="stethoscope" size={32} color="#FBFBFB" />
-              </ScheduleConsultationButton>
-          </Container>
+            )}
+          />
+          <ScheduleConsultationButton onPress={() => setIsSchedulingConsultationActive(true)}>
+            <FontAwesome6 name="stethoscope" size={32} color="#FBFBFB" />
+          </ScheduleConsultationButton>
+        </Container>
       </ScreenContainer>
     </>
   );
