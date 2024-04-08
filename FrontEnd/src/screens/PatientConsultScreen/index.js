@@ -52,7 +52,7 @@ export default function PatientConsultScreen({ navigation, route }) {
     }))
 
     console.log(consultations);
-    
+
     setConsultationData(consultations);
   }
 

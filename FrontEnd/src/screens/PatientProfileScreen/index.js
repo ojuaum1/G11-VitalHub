@@ -46,8 +46,6 @@ export default function PatientProfileScreen({ navigation }) {
         if (token.role == 'Paciente') {
             const patientData = await BuscarPacientePorId(token.id);
 
-            console.log(patientData);
-
             setBirthDate(patientData.birthDate);
             setCpf(patientData.cpf);
 
@@ -58,10 +56,13 @@ export default function PatientProfileScreen({ navigation }) {
         } else if (token.role == 'Medico') {
             const doctorData = await BuscarMedicoPorId(token.id)
 
+            console.log(doctorData.cep);
+
             setCrm(doctorData.crm)
             setSpecialty(doctorData.specialty)
             
-            setAddress(doctorData.address);
+            setNeighborhood(doctorData.neighborhood);
+            setNumber(doctorData.number);
             setCep(doctorData.cep);
             setCity(doctorData.city)
         } else {
