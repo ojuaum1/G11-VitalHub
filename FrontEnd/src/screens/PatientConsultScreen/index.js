@@ -45,6 +45,7 @@ export default function PatientConsultScreen({ navigation, route }) {
       doctorEmail: item.medicoClinica.medico.usuario.email,
       doctorAge: item.medicoClinica.medico.crm,
       doctorCRM: item.medicoClinica.medico.crm,
+      clinicId: item.medicoClinica.clinica.id,
       longitude: item.medicoClinica.clinica.endereco.longitude,
       latitude: item.medicoClinica.clinica.endereco.latitude,
       selectedDoctorSpecialty: item.medicoClinica.medico.especialidade.especialidade1,
@@ -114,6 +115,7 @@ export default function PatientConsultScreen({ navigation, route }) {
           doctorName: currentConsultationData.doctorName,
           doctorSpecialty: currentConsultationData.selectedDoctorSpecialty,
           doctorCRM: currentConsultationData.doctorCRM,
+          clinicId: currentConsultationData.clinicId,
           latitude: currentConsultationData.latitude,
           longitude: currentConsultationData.longitude
          }}
