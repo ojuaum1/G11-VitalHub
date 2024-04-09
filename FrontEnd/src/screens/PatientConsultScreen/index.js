@@ -29,9 +29,11 @@ export default function PatientConsultScreen({ navigation, route }) {
   const [selectedConsultationData, setSelectedConsultationData] = useState([]);
   const [consultationsData, setConsultationData] = useState([]);
 
+  const [selectedConsultationId, setSelectedConsultationId] = useState();
+
   const [selectedDate, setSelectedDate] = useState(moment().format('YYYY-MM-DD'));
 
-  async function getConsultationsFromDate(date) {
+  async function getConsultationFromDate(date) {
     const token = await userDecodeToken();
     const userId = token.id;
 
@@ -79,9 +81,13 @@ export default function PatientConsultScreen({ navigation, route }) {
     }
   }
 
-  useEffect(() => {
-    getConsultationsFromDate(selectedDate)
+  async function UpdateConsultations() {
+    await getConsultationFromDate(selectedDate);
     filterConsultationsByStatus();
+  }
+
+  useEffect(() => {
+    UpdateConsultations();
   }, [selectedDate]);
 
   useEffect(() => {
@@ -93,6 +99,8 @@ export default function PatientConsultScreen({ navigation, route }) {
       <CancelConsultationModal 
         active={isCancelConsultationModalActive} 
         disableModalFn={() => setIsCancelConsultationModalActive(false)}
+        consultationId={selectedConsultationId}
+        updateConsultations={UpdateConsultations}
       />
       <ScheduleConsultationModal 
         active={isSchedulingConsultationActive}
@@ -134,7 +142,10 @@ export default function PatientConsultScreen({ navigation, route }) {
                     consultationType={item.consultationType}
                     consultationTime={item.consultationTime}
                     cardType={item.consultationStatus}
-                    activeCancelingModalFn={() => setIsCancelConsultationModalActive(true)}
+                    activeCancelingModalFn={() => {
+                      setSelectedConsultationId(item.consultationId)
+                      setIsCancelConsultationModalActive(true)
+                    }}
                     activeInsertMedicalRecordModalFn={() => navigation.navigate('patientViewMedicalRecord')}
                     setCurrentUserDataFn={() => {}}
                     handleCardClick={() => {

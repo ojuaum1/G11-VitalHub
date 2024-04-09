@@ -14,8 +14,8 @@ export default function CancelConsultationModal({ active, disableModalFn = null,
       <UnsignedButton 
         handleClickFn={async setIsLoading => {
           await CancelConsultation(consultationId);
+          await updateConsultations();
           setIsLoading(false);
-          updateConsultations();
           disableModalFn();
         }}
         buttonText='Confirmar'

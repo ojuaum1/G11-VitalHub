@@ -83,7 +83,7 @@ export default function DoctorConsultScreen({ navigation }) {
 
   useEffect(() => {
     filterConsultationsByStatus();
-  }, [selectedConsultationType, selectedDate]);
+  }, [selectedConsultationType, selectedDate, consultationsData, selectedConsultationData]);
 
   async function UpdateConsultations() {
     await getConsultationFromDate(selectedDate)
