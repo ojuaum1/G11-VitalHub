@@ -32,6 +32,7 @@ namespace WebAPI.Controllers
 
             var response = new GetDoctorByIdViewModel(
                 doctorId: unformattedDoctor.Id,
+                specialtyId: unformattedDoctor.EspecialidadeId,
                 specialty: unformattedDoctor.Especialidade!.Especialidade1!,
                 crm: unformattedDoctor.Crm!,
                 neighborhood: unformattedDoctor.Endereco!.Logradouro!,

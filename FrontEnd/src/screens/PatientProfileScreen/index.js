@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import UserMainInfo from '../../components/UserMainInfo'
 import { UserProfileImage } from '../../components/UserImage/style'
 import { Container } from '../../components/Container/style'
-import { InternalInputsWrapper } from '../../components/InternalInput/style'
+import { InputText, InternalInputsWrapper } from '../../components/InternalInput/style'
 import InternalTextArea from '../../components/InternalTextArea'
 import UnsignedButton from '../../components/UnsignedButton'
 import { UnsignedButtonsWrapper } from '../../components/UnsignedButton/style'
@@ -65,11 +65,10 @@ export default function PatientProfileScreen({ navigation }) {
                 value: specialty.especialidade1
             }))
 
-            console.log(specialtiesSelectData);
-
             setSelectSpecialtiesData(specialtiesSelectData);
 
             setCrm(doctorData.crm)
+            setSpecialtyId(doctorData.specialtyId)
             setSpecialty(doctorData.specialty)
             
             setNeighborhood(doctorData.neighborhood);
@@ -119,13 +118,17 @@ export default function PatientProfileScreen({ navigation }) {
                         <>
                             {
                                 isEditing ? (
-                                    <SelectList 
-                                        setSelected={key => {
-                                            setSelectSpecialtiesData(key)
-                                        }} 
-                                        data={selectSpecialtiesData} 
-                                        save="key"
-                                    />
+                                    <>
+                                        <InputText fontSize={16}>Especialidade:</InputText>
+                                        <SelectList 
+                                            setSelected={key => {
+                                                setSpecialtyId(key)
+                                            }} 
+                                            data={selectSpecialtiesData} 
+                                            save="key"
+                                            defaultOption={{ key: specialtyId, value: specialty }}
+                                        />
+                                    </>
                                 ) : (
                                     <InternalTextArea 
                                         labelText="Especialidade:"
@@ -206,6 +209,8 @@ export default function PatientProfileScreen({ navigation }) {
                                         city
                                     )
                                 }
+
+                                await loadData()
 
                                 setIsLoading(false);
                             }}
