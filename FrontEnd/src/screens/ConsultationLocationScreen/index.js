@@ -16,7 +16,7 @@ export default function ConsultationLocationScreen({ navigation, route }) {
             <LocationContainer>
                 <Title marginTop={10}>Clínica Natureh</Title>
                 <SecondSubtitle>São Paulo, SP</SecondSubtitle>
-                '
+                
                 <InternalInputsWrapper>
                     <InternalTextArea 
                         inputText='Endereço'

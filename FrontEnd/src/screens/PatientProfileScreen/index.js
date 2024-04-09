@@ -10,6 +10,9 @@ import { ScrollContainer } from '../../components/ScrollContainer/style';
 import { SplitedTextAreasContainer } from '../../components/InternalTextArea/style'
 import { logout, userDecodeToken } from '../../utils/Auth'
 import { AtualizarPerfilPaciente, BuscarMedicoPorId, BuscarPacientePorId } from '../../service/userService'
+import { ButtonCam, ScheduleConsultationButton } from '../PatientConsultScreen/style'
+import { FontAwesome6 } from '@expo/vector-icons';
+
 
 export default function PatientProfileScreen({ navigation }) {
     // User data
@@ -34,7 +37,8 @@ export default function PatientProfileScreen({ navigation }) {
     const [token, setToken] = useState('');
 
     const [isEditing, setIsEditing] = useState(false);
-
+    
+    
     async function loadData() {
         const token = await userDecodeToken();
         setUserName(token.name);
@@ -74,12 +78,19 @@ export default function PatientProfileScreen({ navigation }) {
     }, [])
     
     return (
+        
         <ScrollContainer>
+             
         <UserProfileImage 
             resizeMode="cover"
             source={require('../../assets/user-profile-image.png')} 
         />
+        
+        <ButtonCam>
+        <FontAwesome6 name="pen" size={32} color="#FBFBFB" />
+        </ButtonCam>
         <Container>
+           
             <UserMainInfo 
                 username={userName}
                 infoArr={[ 
@@ -191,6 +202,7 @@ export default function PatientProfileScreen({ navigation }) {
                     buttonText='Sair'
                 />
             </UnsignedButtonsWrapper>
+            
         </Container>
         </ScrollContainer>
     )

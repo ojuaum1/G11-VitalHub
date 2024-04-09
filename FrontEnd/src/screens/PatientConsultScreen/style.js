@@ -11,3 +11,18 @@ export const ScheduleConsultationButton = styled.TouchableOpacity`
     right: 20px;
     bottom: 20px;
 `;
+
+export const ButtonCam = styled.TouchableOpacity`
+    background-color: #49B3BA;
+    width: 60px;
+    height: 60px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    position: relative;
+    right: -300px;
+    bottom: 30px;
+    
+    
+    
+`;
