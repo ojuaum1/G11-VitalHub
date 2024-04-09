@@ -24,6 +24,8 @@ export default function DoctorConsultScreen({ navigation }) {
   const [selectedConsultationData, setSelectedConsultationData] = useState([]);
   const [consultationsData, setConsultationData] = useState([]);
 
+  const [selectedConsultationId, setSelectedConsultationId] = useState();
+
   const [selectedDate, setSelectedDate] = useState(moment().format('YYYY-MM-DD'));
   
   function filterConsultationsByStatus() {
@@ -83,9 +85,13 @@ export default function DoctorConsultScreen({ navigation }) {
     filterConsultationsByStatus();
   }, [selectedConsultationType, selectedDate]);
 
-  useEffect(() => {
-    getConsultationFromDate(selectedDate)
+  async function UpdateConsultations() {
+    await getConsultationFromDate(selectedDate)
     filterConsultationsByStatus();
+  }
+
+  useEffect(() => {
+    UpdateConsultations()
   }, [selectedDate])
 
   return (
@@ -93,6 +99,8 @@ export default function DoctorConsultScreen({ navigation }) {
       <CancelConsultationModal 
         active={isCancelConsultationModalActive} 
         disableModalFn={() => setIsCancelConsultationModalActive(false)}
+        consultationId={selectedConsultationId}
+        updateConsultations={UpdateConsultations}
       />
       <InsertMedicalRecordModal 
         active={isInsertMedicalRecordModalActive} 
@@ -122,7 +130,10 @@ export default function DoctorConsultScreen({ navigation }) {
                   consultationType={item.consultationType}
                   consultationTime={item.consultationTime}
                   cardType={item.consultationStatus}
-                  activeCancelingModalFn={() => setIsCancelConsultationModalActive(true)}
+                  activeCancelingModalFn={() => {
+                    setSelectedConsultationId(item.consultationId)
+                    setIsCancelConsultationModalActive(true)
+                  }}
                   activeInsertMedicalRecordModalFn={() => setIsInsertMedicalRecordModalActive(true)}
                   setCurrentUserDataFn={setSelectedUserData}
                 />
