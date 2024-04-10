@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { LocationContainer } from './style';
 import { SecondSubtitle, Title } from '../../components/Title/style';
 import InternalTextArea from '../../components/InternalTextArea';
@@ -6,32 +6,59 @@ import { InternalInputsWrapper } from '../../components/InternalInput/style';
 import { SplitedTextAreasContainer } from '../../components/InternalTextArea/style';
 import Map from '../../components/Map';
 import UnsignedLink from '../../components/UnsignedLink';
+import { GetClinicById } from '../../service/clinicService';
 
 export default function ConsultationLocationScreen({ navigation, route }) {
-    const { latitude, longitude } = route.params;
+    const { latitude, longitude, clinicId } = route.params;
+
+    const [clinicName, setClinicName] = useState('');
+    const [neighborhood, setNeighborhood] = useState('');
+    const [number, setNumber] = useState('');
+    const [city, setCity] = useState('');
+    const [cep, setCep] = useState('');
+
+    async function loadData() {
+        const response = await GetClinicById(clinicId);
+
+        setClinicName(response.nomeFantasia);
+        setNeighborhood(response.endereco.logradouro);
+        setNumber(response.endereco.numero)
+        setCity(response.endereco.cidade);
+        setCep(response.endereco.cep);
+
+        console.log(response);
+    }
+
+    useEffect(() => {
+        loadData()
+    }, [clinicId]);
 
     return (
         <>
             <Map latitude={latitude} longitude={longitude} /> 
             <LocationContainer>
-                <Title marginTop={10}>Clínica Natureh</Title>
-                <SecondSubtitle>São Paulo, SP</SecondSubtitle>
+                <Title marginTop={10}>{clinicName}</Title>
+                <SecondSubtitle>{city}</SecondSubtitle>
                 
                 <InternalInputsWrapper>
                     <InternalTextArea 
-                        inputText='Endereço'
+                        inputText='Logradouro'
+<<<<<<< HEAD
+                        textArea={neighborhood}
+=======
                         textArea='Rua Vicenso Silva, 987'
+>>>>>>> c7bd722bd528a41eb758cfc562e7261c46d92382
                     />
                     <SplitedTextAreasContainer>
                         <InternalTextArea 
                             widthPercentage={45} 
                             inputText='Número'
-                            textArea='578'
+                            textArea={number}
                         />
                         <InternalTextArea 
                             widthPercentage={45} 
-                            inputText='Bairro'
-                            textArea='Moema-SP'
+                            inputText='CEP'
+                            textArea={cep}
                         />
                     </SplitedTextAreasContainer>
                     <UnsignedLink 

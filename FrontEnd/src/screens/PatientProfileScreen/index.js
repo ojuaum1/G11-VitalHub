@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react'
 import UserMainInfo from '../../components/UserMainInfo'
 import { UserProfileImage } from '../../components/UserImage/style'
 import { Container } from '../../components/Container/style'
-import { InternalInputsWrapper } from '../../components/InternalInput/style'
+import { InputText, InternalInputsWrapper } from '../../components/InternalInput/style'
 import InternalTextArea from '../../components/InternalTextArea'
 import UnsignedButton from '../../components/UnsignedButton'
 import { UnsignedButtonsWrapper } from '../../components/UnsignedButton/style'
 import { ScrollContainer } from '../../components/ScrollContainer/style';
 import { SplitedTextAreasContainer } from '../../components/InternalTextArea/style'
 import { logout, userDecodeToken } from '../../utils/Auth'
-import { AtualizarPerfilPaciente, BuscarMedicoPorId, BuscarPacientePorId } from '../../service/userService'
+import { AtualizarPerfilMedico, AtualizarPerfilPaciente, BuscarMedicoPorId, BuscarPacientePorId, GetSpecialties } from '../../service/userService'
+import { SelectList } from 'react-native-dropdown-select-list'
 
 export default function PatientProfileScreen({ navigation }) {
     // User data
@@ -24,7 +25,9 @@ export default function PatientProfileScreen({ navigation }) {
 
     // Doctor data
     const [specialty, setSpecialty] = useState('');
+    const [specialtyId, setSpecialtyId] = useState('');
     const [crm, setCrm] = useState('');
+    const [selectSpecialtiesData, setSelectSpecialtiesData] = useState([])
 
     // General data
     const [neighborhood, setNeighborhood] = useState('')
@@ -46,8 +49,6 @@ export default function PatientProfileScreen({ navigation }) {
         if (token.role == 'Paciente') {
             const patientData = await BuscarPacientePorId(token.id);
 
-            console.log(patientData);
-
             setBirthDate(patientData.birthDate);
             setCpf(patientData.cpf);
 
@@ -57,11 +58,21 @@ export default function PatientProfileScreen({ navigation }) {
             setCity(patientData.city)
         } else if (token.role == 'Medico') {
             const doctorData = await BuscarMedicoPorId(token.id)
+            const specialtiesData = await GetSpecialties();
+
+            const specialtiesSelectData = specialtiesData.map(specialty => ({
+                key: specialty.id,
+                value: specialty.especialidade1
+            }))
+
+            setSelectSpecialtiesData(specialtiesSelectData);
 
             setCrm(doctorData.crm)
+            setSpecialtyId(doctorData.specialtyId)
             setSpecialty(doctorData.specialty)
             
-            setAddress(doctorData.address);
+            setNeighborhood(doctorData.neighborhood);
+            setNumber(doctorData.number);
             setCep(doctorData.cep);
             setCity(doctorData.city)
         } else {
@@ -105,12 +116,28 @@ export default function PatientProfileScreen({ navigation }) {
                         </>
                     ) : (
                         <>
-                            <InternalTextArea 
-                                labelText="Especialidade:"
-                                textArea={specialty}
-                                handleChangeFn={setSpecialty}
-                                isEditing={isEditing}
-                            />
+                            {
+                                isEditing ? (
+                                    <>
+                                        <InputText fontSize={16}>Especialidade:</InputText>
+                                        <SelectList 
+                                            setSelected={key => {
+                                                setSpecialtyId(key)
+                                            }} 
+                                            data={selectSpecialtiesData} 
+                                            save="key"
+                                            defaultOption={{ key: specialtyId, value: specialty }}
+                                        />
+                                    </>
+                                ) : (
+                                    <InternalTextArea 
+                                        labelText="Especialidade:"
+                                        textArea={specialty}
+                                        handleChangeFn={setSpecialty}
+                                        isEditing={isEditing}
+                                    />
+                                )
+                            }
                             <InternalTextArea 
                                 labelText="CRM"
                                 textArea={crm}
@@ -161,14 +188,29 @@ export default function PatientProfileScreen({ navigation }) {
                             handleClickFn={async setIsLoading => {
                                 setIsEditing(false);
 
-                                const response = await AtualizarPerfilPaciente(
-                                    token,
-                                    birthDate,
-                                    neighborhood,
-                                    number,
-                                    cep,
-                                    city    
-                                )
+
+                                if (role == 'Paciente') {
+                                    await AtualizarPerfilPaciente(
+                                        token,
+                                        birthDate,
+                                        neighborhood,
+                                        number,
+                                        cep,
+                                        city    
+                                    )
+                                } else if (role == 'Medico') {
+                                    await AtualizarPerfilMedico(
+                                        token,
+                                        specialtyId,
+                                        crm,
+                                        neighborhood,
+                                        number,
+                                        cep,
+                                        city
+                                    )
+                                }
+
+                                await loadData()
 
                                 setIsLoading(false);
                             }}

@@ -32,11 +32,11 @@ namespace WebAPI.Repositories
             ctx.SaveChanges();
         }
 
-        public void EditarStatus(Consulta consulta)
+        public void EditarStatus(Guid consultaId, Guid situacaoId)
         {
-            Consulta buscada = ctx.Consultas.Find(consulta.Id);
+            Consulta buscada = ctx.Consultas.Find(consultaId)!;
             
-            buscada.SituacaoId = consulta.SituacaoId;
+            buscada.SituacaoId = situacaoId;
             ctx.Update(buscada);
             ctx.SaveChanges();
         }

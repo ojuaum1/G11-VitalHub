@@ -24,11 +24,13 @@ export default function DoctorConsultScreen({ navigation }) {
   const [selectedConsultationData, setSelectedConsultationData] = useState([]);
   const [consultationsData, setConsultationData] = useState([]);
 
+  const [selectedConsultationId, setSelectedConsultationId] = useState();
+
   const [selectedDate, setSelectedDate] = useState(moment().format('YYYY-MM-DD'));
   
   function filterConsultationsByStatus() {
     const isScheduledConsultation = consultation => consultation.consultationStatus == 'Pendentes';
-    const isPerformedConsultation = consultation => consultation.consultationStatus == 'Realizadas';
+    const isPerformedConsultation = consultation => consultation.consultationStatus == 'Realizados';
     const isCanceledConsultation = consultation => consultation.consultationStatus == 'Cancelados';
 
     switch(selectedConsultationType) {
@@ -73,17 +75,23 @@ export default function DoctorConsultScreen({ navigation }) {
       consultationTime: moment(item.dataConsulta).format('HH:mm'),
       consultationStatus: item.situacao.situacao
     }))
+    
+    console.log(consultations);
 
     setConsultationData(consultations);
   }
 
   useEffect(() => {
     filterConsultationsByStatus();
-  }, [selectedConsultationType, selectedDate]);
+  }, [selectedConsultationType, selectedDate, consultationsData, selectedConsultationData]);
+
+  async function UpdateConsultations() {
+    await getConsultationFromDate(selectedDate)
+    filterConsultationsByStatus();
+  }
 
   useEffect(() => {
-    getConsultationFromDate(selectedDate)
-    filterConsultationsByStatus();
+    UpdateConsultations()
   }, [selectedDate])
 
   return (
@@ -91,6 +99,8 @@ export default function DoctorConsultScreen({ navigation }) {
       <CancelConsultationModal 
         active={isCancelConsultationModalActive} 
         disableModalFn={() => setIsCancelConsultationModalActive(false)}
+        consultationId={selectedConsultationId}
+        updateConsultations={UpdateConsultations}
       />
       <InsertMedicalRecordModal 
         active={isInsertMedicalRecordModalActive} 
@@ -120,7 +130,10 @@ export default function DoctorConsultScreen({ navigation }) {
                   consultationType={item.consultationType}
                   consultationTime={item.consultationTime}
                   cardType={item.consultationStatus}
-                  activeCancelingModalFn={() => setIsCancelConsultationModalActive(true)}
+                  activeCancelingModalFn={() => {
+                    setSelectedConsultationId(item.consultationId)
+                    setIsCancelConsultationModalActive(true)
+                  }}
                   activeInsertMedicalRecordModalFn={() => setIsInsertMedicalRecordModalActive(true)}
                   setCurrentUserDataFn={setSelectedUserData}
                 />
