@@ -43,7 +43,11 @@ export default function ConsultationLocationScreen({ navigation, route }) {
                 <InternalInputsWrapper>
                     <InternalTextArea 
                         inputText='Logradouro'
+<<<<<<< HEAD
                         textArea={neighborhood}
+=======
+                        textArea='Rua Vicenso Silva, 987'
+>>>>>>> c7bd722bd528a41eb758cfc562e7261c46d92382
                     />
                     <SplitedTextAreasContainer>
                         <InternalTextArea 
