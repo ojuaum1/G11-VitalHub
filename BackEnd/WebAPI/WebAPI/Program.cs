@@ -102,6 +102,7 @@ builder.Services.AddSwaggerGen(options =>
 
 // Configure EmailSettings
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection(nameof(EmailSettings)));
+builder.Services.AddScoped<EmailSendingService>();
 
 // Registrando o serviço de e-mail como uma instância transitória, que é criada cada vez que é solicitada
 builder.Services.AddTransient<IEmailService, EmailService>();
