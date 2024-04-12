@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using WebAPI.Domains;
 using WebAPI.Interfaces;
 using WebAPI.Repositories;
+using WebAPI.Utils.BlobStorage;
 using WebAPI.ViewModels;
 
 namespace WebAPI.Controllers
@@ -45,28 +46,40 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(MedicoViewModel medicoModel)
+        public async Task<IActionResult> PostAsync([FromForm] MedicoViewModel medicoModel)
         {
-            Usuario user = new Usuario();
-            user.Nome = medicoModel.Nome;
-            user.Email = medicoModel.Email;
-            user.TipoUsuarioId = medicoModel.IdTipoUsuario;
-            user.Foto = medicoModel.Foto;
-            user.Senha = medicoModel.Senha;
+            try
+            {
+                Usuario user = new Usuario();
+                user.Nome = medicoModel.Nome;
+                user.Email = medicoModel.Email;
+                user.TipoUsuarioId = medicoModel.IdTipoUsuario;
 
-            user.Medico = new Medico();
-            user.Medico.Crm = medicoModel.Crm;
-            user.Medico.EspecialidadeId = medicoModel.EspecialidadeId;
+                var connectionString = "";
+                var containerName = "vitalhubcontainermatheus";
+
+                user.Foto = await AzureBlobStorageHelper.UploadImageAsync(medicoModel.FotoArquivo!, connectionString, containerName);
+
+                user.Senha = medicoModel.Senha;
+
+                user.Medico = new Medico();
+                user.Medico.Crm = medicoModel.Crm;
+                user.Medico.EspecialidadeId = medicoModel.EspecialidadeId;
 
 
-            user.Medico.Endereco = new Endereco();
-            user.Medico.Endereco.Logradouro = medicoModel.Logradouro;
-            user.Medico.Endereco.Numero = medicoModel.Numero;
-            user.Medico.Endereco.Cep = medicoModel.Cep;
+                user.Medico.Endereco = new Endereco();
+                user.Medico.Endereco.Logradouro = medicoModel.Logradouro;
+                user.Medico.Endereco.Numero = medicoModel.Numero;
+                user.Medico.Endereco.Cep = medicoModel.Cep;
 
-            _medicoRepository.Cadastrar(user);
+                _medicoRepository.Cadastrar(user);
 
-            return Ok();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("BuscarPorIdClinica")]
