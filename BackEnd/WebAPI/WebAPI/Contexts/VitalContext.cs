@@ -273,7 +273,6 @@ public partial class VitalContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false);
             entity.Property(e => e.Foto)
-                .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.Nome)
                 .HasMaxLength(50)
