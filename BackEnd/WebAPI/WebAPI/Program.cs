@@ -2,7 +2,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using System.Reflection;
+using WebAPI.Interfaces;
+using WebAPI.Repositories;
 using WebAPI.Utils.Mail;
+using WebAPI.Utils.OCR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -103,6 +106,8 @@ builder.Services.AddSwaggerGen(options =>
 // Configure EmailSettings
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection(nameof(EmailSettings)));
 builder.Services.AddScoped<EmailSendingService>();
+builder.Services.AddScoped<OcrService>();
+builder.Services.AddScoped<IExameRepository, ExameRepository>();
 
 // Registrando o serviço de e-mail como uma instância transitória, que é criada cada vez que é solicitada
 builder.Services.AddTransient<IEmailService, EmailService>();
