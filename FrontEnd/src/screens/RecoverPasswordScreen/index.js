@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { Container } from '../../components/Container/style'
 import Logo from '../../components/Logo'
 import { Title } from '../../components/Title/style'
@@ -7,10 +7,19 @@ import { BasicInput, BasicInputWrapper } from '../../components/BasicInput/style
 import { UnsignedButtonsWrapper } from '../../components/UnsignedButton/style'
 import UnsignedButton from '../../components/UnsignedButton'
 import { CommandText } from '../../components/CommandText/style'
+import api, {apiUrlLocal} from '../../service/Service';
 
 export default function RecoverPasswordScreen({ navigation }) {
-    function passToEmailCode() {
-        navigation.navigate('emailCode');
+    const [email, setEmail] = useState('');
+
+    async function passToEmailCode() {
+        try {
+            await api.post(`${apiUrlLocal}/RecuperarSenha?email=${email}`);
+    
+            navigation.navigate('emailCode', { email });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
   return (
@@ -24,7 +33,9 @@ export default function RecoverPasswordScreen({ navigation }) {
         </CommandText>
         <BasicInputWrapper>
             <BasicInput 
-                placeholder='Usuário ou E-mail'
+                placeholder='E-mail'
+                value={email}
+                onChangeText={setEmail}
             />
         </BasicInputWrapper>
         <UnsignedButtonsWrapper>

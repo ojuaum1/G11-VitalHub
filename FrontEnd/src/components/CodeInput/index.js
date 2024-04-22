@@ -27,12 +27,12 @@ export default function CodeInput({ code, setCode }) {
                 keyboardType="number-pad"
                 textContentType="oneTimeCode"
                 renderCell={({index, symbol, isFocused}) => (
-                <Cell
-                    key={index}
-                    onLayout={getCellOnLayoutHandler(index)}
-                >
-                    {symbol || (isFocused ? <Cursor/> : null)}
-                </Cell>
+                    <Cell
+                        key={index}
+                        onLayout={getCellOnLayoutHandler(index)}
+                    >
+                        {symbol || (isFocused ? <Cursor/> : null)}
+                    </Cell>
                 )}
             />
         </CellWrapper>

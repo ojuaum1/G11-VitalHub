@@ -39,6 +39,8 @@ export default function PatientConsultScreen({ navigation, route }) {
 
     const response = await BuscarConsultaPelaDataPaciente(userId, date);
 
+    console.log(response);
+
     const consultations = response.map(item => ({
       consultationId: item.id,
       doctorName: item.medicoClinica.medico.usuario.nome,

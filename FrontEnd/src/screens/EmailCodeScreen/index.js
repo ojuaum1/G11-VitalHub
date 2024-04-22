@@ -7,12 +7,22 @@ import { UnsignedButtonsWrapper } from '../../components/UnsignedButton/style';
 import UnsignedButton from '../../components/UnsignedButton';
 import UnsignedLink from '../../components/UnsignedLink';
 import CodeInput from '../../components/CodeInput';
+import api, { apiUrlLocal } from '../../service/Service';
 
-export default function EmailCodeScreen({ navigation }) {
+export default function EmailCodeScreen({ navigation, route }) {
+    const { email } = route.params;
     const [code, setCode] = useState('');
 
-    function passToRedefinePassword() {
-        navigation.navigate('redefinePassword');
+    async function passToRedefinePassword() {
+        try {
+            const url = `${apiUrlLocal}/RecuperarSenha/ValidateRecoveryCode?email=${email}&code=${code}`;
+
+            await api.post(url)
+    
+            navigation.navigate('redefinePassword', { email });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return (
@@ -22,8 +32,8 @@ export default function EmailCodeScreen({ navigation }) {
                 Verifique seu e-mail
             </Title>
             <CommandText>
-                Digite o código de 4 dígitos enviado para
-                <CommandTextHighlight> username@email.com</CommandTextHighlight>
+                Digite o código de 4 dígitos enviado para 
+                <CommandTextHighlight> {email}</CommandTextHighlight>
             </CommandText>
             <CodeInput 
                 code={code}
