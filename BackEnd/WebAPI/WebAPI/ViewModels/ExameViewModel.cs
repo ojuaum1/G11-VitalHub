@@ -13,8 +13,4 @@ namespace WebAPI.ViewModels
 
         public string? Descricao { get; set; }
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> develop
