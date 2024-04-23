@@ -63,6 +63,11 @@ namespace WebAPI.Repositories
                      .Include(x => x.Situacao)
                      .Include(x => x.Prioridade)
                      .Include(x => x.MedicoClinica)
+                     .Include(x => x.MedicoClinica!.Medico)
+                     .Include(x => x.MedicoClinica!.Medico!.Especialidade)
+                     .Include(x => x.MedicoClinica!.Medico!.Usuario)
+                     .Include(x => x.MedicoClinica!.Clinica)
+                     .Include(x => x.MedicoClinica!.Clinica!.Endereco)
                      .Include(x => x.Paciente!.Usuario)
 
                      // diferença em dias entre a Data da Consulta e a dataConsulta é igual a 0.
@@ -83,6 +88,7 @@ namespace WebAPI.Repositories
                 Medico medicoBuscado = ctx.Medicos
                     .Include(m => m.Usuario)
                     .Include(m => m.Endereco)
+                    .Include(x => x.Especialidade)
                     .FirstOrDefault(m => m.Id == Id)!;
 
                 return medicoBuscado;

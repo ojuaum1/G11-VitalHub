@@ -58,7 +58,13 @@ namespace WebAPI.Repositories
                 return ctx.Consultas
                  .Include(x => x.Situacao)
                  .Include(x => x.Prioridade)
+                 .Include(x => x.MedicoClinica)
+                 .Include(x => x.MedicoClinica!.Medico)
                  .Include(x => x.MedicoClinica!.Medico!.Usuario)
+                 .Include(x => x.MedicoClinica!.Medico!.Especialidade)
+                 .Include(x => x.MedicoClinica!.Medico!.Usuario)
+                 .Include(x => x.MedicoClinica!.Clinica)
+                 .Include(x => x.MedicoClinica!.Clinica!.Endereco)
                  .Include(x => x.MedicoClinica!.Medico!.Especialidade)
 
                  // diferença em dias entre a Data da Consulta e a dataConsulta é igual a 0.
@@ -76,9 +82,23 @@ namespace WebAPI.Repositories
             try
             {
                 return ctx.Pacientes
-                .Include(x => x.Usuario)
-                .Include(x => x.Endereco)
-                .FirstOrDefault(x => x.Id == Id)!;
+                    .AsNoTracking()
+                    .Select(paciente => new Paciente
+                    {
+                        Id = paciente.Id,
+                        DataNascimento = paciente.DataNascimento,
+                        Rg = paciente.Rg,
+                        Cpf = paciente.Cpf,
+                        EnderecoId = paciente.EnderecoId,
+                        Endereco = new Endereco
+                        {
+                            Cep = paciente.Endereco!.Cep,
+                            Numero = paciente.Endereco.Numero,
+                            Logradouro = paciente.Endereco.Logradouro,
+                            Cidade = paciente.Endereco.Cidade
+                        },
+                        Usuario = paciente.Usuario
+                    }).FirstOrDefault(x => x.Id == Id)!;
             }
             catch (Exception)
             {

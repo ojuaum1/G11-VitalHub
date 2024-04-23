@@ -34,31 +34,34 @@ export default function PatientConsultScreen({ navigation, route }) {
   const [selectedDate, setSelectedDate] = useState(moment().format('YYYY-MM-DD'));
 
   async function getConsultationFromDate(date) {
-    const token = await userDecodeToken();
-    const userId = token.id;
-
-    const response = await BuscarConsultaPelaDataPaciente(userId, date);
-
-    console.log(response);
-
-    const consultations = response.map(item => ({
-      consultationId: item.id,
-      doctorName: item.medicoClinica.medico.usuario.nome,
-      doctorEmail: item.medicoClinica.medico.usuario.email,
-      doctorAge: item.medicoClinica.medico.crm,
-      doctorCRM: item.medicoClinica.medico.crm,
-      clinicId: item.medicoClinica.clinica.id,
-      longitude: item.medicoClinica.clinica.endereco.longitude,
-      latitude: item.medicoClinica.clinica.endereco.latitude,
-      selectedDoctorSpecialty: item.medicoClinica.medico.especialidade.especialidade1,
-      consultationType: getConsultationLevelById(item.prioridade.prioridade),
-      consultationTime: moment(item.dataConsulta).format('HH:mm'),
-      consultationStatus: item.situacao.situacao
-    }))
-
-    console.log(consultations);
-
-    setConsultationData(consultations);
+    try {
+      const token = await userDecodeToken();
+      const userId = token.id;
+  
+      const response = await BuscarConsultaPelaDataPaciente(userId, date);
+  
+      const consultations = response.map(item => ({
+        consultationId: item.id,
+        doctorName: item.medicoClinica.medico.usuario.nome,
+        doctorEmail: item.medicoClinica.medico.usuario.email,
+        doctorAge: item.medicoClinica.medico.crm,
+        doctorCRM: item.medicoClinica.medico.crm,
+        clinicId: item.medicoClinica.clinica.id,
+        longitude: item.medicoClinica.clinica.endereco.longitude,
+        latitude: item.medicoClinica.clinica.endereco.latitude,
+        selectedDoctorSpecialty: item.medicoClinica.medico.especialidade.especialidade1,
+        consultationType: getConsultationLevelById(item.prioridade.prioridade),
+        consultationTime: moment(item.dataConsulta).format('HH:mm'),
+        consultationStatus: item.situacao.situacao
+      }))
+  
+      console.log(consultations);
+  
+      setConsultationData(consultations);
+      
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   function filterConsultationsByStatus() {
