@@ -9,7 +9,7 @@ namespace WebAPI.Interfaces
 
         public Consulta BuscarPorId(Guid id);
 
-        public void EditarStatus(Consulta consulta);
+        public void EditarStatus(Guid consultaId, string situacao);
         public void EditarProntuario(Consulta consulta);
 
         public List<Consulta> ListarTodos();

@@ -4,6 +4,7 @@
     (
         Guid doctorId,
         string crm,
+        Guid? specialtyId,
         string specialty,
         string neighborhood,
         int? number,

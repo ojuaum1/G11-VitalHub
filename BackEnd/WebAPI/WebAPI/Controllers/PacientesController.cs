@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using WebAPI.Domains;
 using WebAPI.Interfaces;
 using WebAPI.Repositories;
+using WebAPI.Utils.BlobStorage;
+using WebAPI.Utils.Mail;
 using WebAPI.ViewModels;
 
 namespace WebAPI.Controllers
@@ -13,122 +13,105 @@ namespace WebAPI.Controllers
     [ApiController]
     public class PacientesController : ControllerBase
     {
-        private IPacienteRepository pacienteRepository { get; set; }
+        private readonly IPacienteRepository pacienteRepository;
+        private readonly EmailSendingService _emailSendingService;
 
-        public PacientesController()
+        public PacientesController(EmailSendingService emailSendingService)
         {
             pacienteRepository = new PacienteRepository();
-        }
-
-        [Authorize]
-        [HttpGet("ConsultasAgendadas")]
-        public IActionResult BuscarAgendadas()
-        {
-            Guid idUsuario = Guid.Parse(HttpContext.User.Claims.First(c => c.Type == JwtRegisteredClaimNames.Jti).Value);
-
-            return Ok(pacienteRepository.BuscarAgendadas(idUsuario));
-        }
-
-        [Authorize]
-        [HttpGet("ConsultasRealizadas")]
-        public IActionResult BuscarRealizadas()
-        {
-            Guid idUsuario = Guid.Parse(HttpContext.User.Claims.First(c => c.Type == JwtRegisteredClaimNames.Jti).Value);
-
-            return Ok(pacienteRepository.BuscarRealizadas(idUsuario));
-        }
-
-        [Authorize]
-        [HttpGet("ConsultasCanceladas")]
-        public IActionResult BuscarCanceladas()
-        {
-            Guid idUsuario = Guid.Parse(HttpContext.User.Claims.First(c => c.Type == JwtRegisteredClaimNames.Jti).Value);
-
-            return Ok(pacienteRepository.BuscarRealizadas(idUsuario));
+            _emailSendingService = emailSendingService;
         }
 
         [HttpGet("PerfilLogado")]
-        public IActionResult BuscarLogado()
+        public IActionResult GetLogged()
         {
-            Guid idUsuario = Guid.Parse(HttpContext.User.Claims.First(c => c.Type == JwtRegisteredClaimNames.Jti).Value);
-
-            return Ok(pacienteRepository.BuscarPorId(idUsuario));
-        }
-
-        [HttpGet("BuscarPorID/{patientId:Guid}")]
-        public IActionResult BuscarPorID([FromRoute] Guid patientId)
-        {
-            var unformattedPatient = pacienteRepository.BuscarPorId(patientId);
-
-            string formattedBirthDate = unformattedPatient.DataNascimento.ToString()!.Substring(0, 10);
-
-            var response = new GetPatientByIdViewModel(
-                patientId: unformattedPatient.Id,
-                birthDate: formattedBirthDate,
-                cpf: unformattedPatient.Cpf!,
-                neighborhood: unformattedPatient.Endereco!.Logradouro!,
-                number: unformattedPatient.Endereco!.Numero,
-                cep: unformattedPatient.Endereco!.Cep!,
-                city: unformattedPatient.Endereco.Cidade!
-            );
-
-
-            return Ok(response);
-        }
-
-        [HttpPost]
-        public IActionResult Post(PacienteViewModel pacienteModel)
-        {
-            Usuario user = new Usuario();
-
-            user.Nome = pacienteModel.Nome;
-            user.Email = pacienteModel.Email;
-            user.TipoUsuarioId = pacienteModel.IdTipoUsuario;
-            user.Foto = pacienteModel.Foto;
-            user.Senha = pacienteModel.Senha;
-
-            user.Paciente = new Paciente();
-
-            user.Paciente.DataNascimento = pacienteModel.DataNascimento;
-            user.Paciente.Rg = pacienteModel.Rg;
-            user.Paciente.Cpf = pacienteModel.Cpf;
-
-            user.Paciente.Endereco = new Endereco();
-
-            user.Paciente.Endereco.Logradouro = pacienteModel.Logradouro;
-            user.Paciente.Endereco.Numero = pacienteModel.Numero;
-            user.Paciente.Endereco.Cep = pacienteModel.Cep;
-
-            pacienteRepository.Cadastrar(user);
-
-            return Ok();
-        }
-
-        [HttpGet("BuscarPorData")]
-        public IActionResult BuscarPorData(DateTime data, Guid id)
-        {
-            return Ok(pacienteRepository.BuscarPorData(data, id));
-        }
-
-        [Authorize]
-        [HttpPut]
-        public IActionResult AtualizarPerfil(PacienteViewModel paciente)
-        {
-
             try
             {
                 Guid idUsuario = Guid.Parse(HttpContext.User.Claims.First(c => c.Type == JwtRegisteredClaimNames.Jti).Value);
+
+                return Ok(pacienteRepository.BuscarPorId(idUsuario));
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //[Authorize]
+        [HttpGet("BuscarPorId")]
+        public IActionResult BuscarPorId(Guid id)
+        {
+            return Ok(pacienteRepository.BuscarPorId(id));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post([FromForm] PacienteViewModel pacienteModel)
+        {
+            try
+            {
+                Usuario user = new Usuario();
+
+                user.Nome = pacienteModel.Nome;
+                user.Email = pacienteModel.Email;
+                user.TipoUsuarioId = pacienteModel.IdTipoUsuario;
+
+                var connectionString = "";
+                var containerName = "vitalhubcontainermatheus";
+
+                user.Foto = await AzureBlobStorageHelper.UploadImageAsync(pacienteModel.FotoArquivo!, connectionString, containerName);
+
+                user.Senha = pacienteModel.Senha;
+
+                user.Paciente = new Paciente();
+
+                user.Paciente.DataNascimento = pacienteModel.DataNascimento;
+                user.Paciente.Rg = pacienteModel.Rg;
+                user.Paciente.Cpf = pacienteModel.Cpf;
+
+                user.Paciente.Endereco = new Endereco();
+
+                user.Paciente.Endereco.Logradouro = pacienteModel.Logradouro;
+                user.Paciente.Endereco.Numero = pacienteModel.Numero;
+                user.Paciente.Endereco.Cep = pacienteModel.Cep;
+                user.Paciente.Endereco.Cidade = pacienteModel.Cidade;
+
+                pacienteRepository.Cadastrar(user);
+
+                await _emailSendingService.SendWelcomeEmail(user.Email!, user.Nome!);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("BuscarPorData")]
+        public IActionResult GetByDate(DateTime data, Guid id)
+        {
+            try
+            {
+                return Ok(pacienteRepository.BuscarPorData(data, id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        public IActionResult UpdateProfile(Guid idUsuario, PacienteViewModel paciente)
+        {
+            try
+            {
                 return Ok(pacienteRepository.AtualizarPerfil(idUsuario, paciente));
             }
             catch (Exception ex)
             {
-
                 return BadRequest(ex.Message);
             }
-            
-            
-
-            
         }
     }
 }

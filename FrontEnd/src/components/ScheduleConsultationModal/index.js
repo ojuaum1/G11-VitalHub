@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+
 import React, { useState } from 'react'
 import BottomModal from '../BottomModal'
 import { Title } from '../Title/style'

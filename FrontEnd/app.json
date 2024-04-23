@@ -21,6 +21,7 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+        
       }
     },
     "web": {
@@ -29,5 +30,8 @@
     "plugins": [
       "expo-font"
     ]
+    
   }
+
+  
 }

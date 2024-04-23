@@ -38,8 +38,6 @@ export const BuscarConsultaPelaDataMedico = async (userId, date) => {
 export const AtualizarPerfilPaciente = async (userToken, birthDate, neighborhood, number, CEP, city) => {
     const url = `${apiUrlLocal}/Pacientes/`
 
-    console.log(userToken);
-
     const config = {
         headers: { Authorization: `Bearer ${userToken}` }
     };
@@ -51,4 +49,29 @@ export const AtualizarPerfilPaciente = async (userToken, birthDate, neighborhood
         cep: CEP,
         cidade: city
     }, config)
+}
+
+export const AtualizarPerfilMedico = async (userToken, specialtyId, CRM, neighborhood, number, CEP, city) => {
+    const url = `${apiUrlLocal}/Medicos/`
+
+    const config = {
+        headers: { Authorization: `Bearer ${userToken}` }
+    };
+
+    const response = await api.put(url, {
+        especialidadeId: specialtyId,
+        crm: CRM,
+        logradouro: neighborhood,
+        numero: number,
+        cep: CEP,
+        cidade: city
+    }, config)
+}
+
+export const GetSpecialties = async () => {
+    const url = `${apiUrlLocal}/Especialidade`;
+
+    const response = await api.get(url);
+
+    return response.data;
 }

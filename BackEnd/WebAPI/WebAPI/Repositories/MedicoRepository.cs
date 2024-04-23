@@ -14,106 +14,161 @@ namespace WebAPI.Repositories
 
         public Medico AtualizarPerfil(Guid Id, MedicoViewModel medico)
         {
-            Medico medicoBuscado = ctx.Medicos.FirstOrDefault(x => x.Id == Id);
-
-            if (medicoBuscado == null) return null;
-
-            if (medico.Crm != null)
-                medicoBuscado.Crm = medico.Crm;
-
-            if (medico.EspecialidadeId != null)
-                medicoBuscado.EspecialidadeId = medico.EspecialidadeId;
-
-            if (medico.Foto != null)
-                medicoBuscado.Usuario.Foto = medico.Foto;
-
-            if (medico.Cep != null)
-                medicoBuscado.Endereco.Cep = medico.Cep;
-
-            if (medico.Logradouro != null)
-                medicoBuscado.Endereco.Logradouro = medico.Logradouro;
-
-            if (medico.Numero != null)
-                medicoBuscado.Endereco.Numero = medico.Numero;
-
-            if (medico.Cidade != null)
-                medicoBuscado.Endereco.Cidade = medico.Cidade;
-
-            ctx.Medicos.Update(medicoBuscado);
-            ctx.SaveChanges();
-
-            return medicoBuscado;   
-
-        }
-
-        public Medico BuscarPorId(Guid Id)
-        {
-            return ctx.Medicos
-                .AsNoTracking()
-                .Include(x => x.Endereco)
-                .Include(x => x.Especialidade)
-                .FirstOrDefault(x => x.Id == Id)!;
-        }
-
-        public void Cadastrar(Usuario user)
-        {
-            user.Senha = Criptografia.GerarHash(user.Senha!);
-            ctx.Usuarios.Add(user);
-            ctx.SaveChanges();
-        }
-
-        public List<Medico> ListarTodos()
-        {
-            return ctx.Medicos.Select(medico => new Medico
+            try
             {
-                Id = medico.Id,
-                Especialidade = new Especialidade
-                {
-                    Especialidade1 = medico.Especialidade!.Especialidade1
-                },
-                Usuario = new Usuario
-                {
-                    Nome = medico.Usuario!.Nome,
-                    Foto = medico.Usuario!.Foto
-                }
-            }).ToList();
+                Medico medicoBuscado = ctx.Medicos
+                    .Include(x => x.Endereco)
+                    .FirstOrDefault(x => x.Id == Id)!;
+
+
+                if (medicoBuscado == null) return null!;
+
+                //if (medico.Foto != null)
+                //    medicoBuscado.IdNavigation.Foto = medico.Foto;
+
+                if (medico.EspecialidadeId != null)
+                    medicoBuscado.EspecialidadeId = medico.EspecialidadeId;
+
+                if (medico.Crm != null)
+                    medicoBuscado.Crm = medico.Crm;
+
+                if (medico.Logradouro != null)
+                    medicoBuscado.Endereco!.Logradouro = medico.Logradouro;
+
+                if (medico.Numero != null)
+                    medicoBuscado.Endereco!.Numero = medico.Numero;
+
+                if (medico.Cep != null)
+                    medicoBuscado.Endereco!.Cep = medico.Cep;
+
+                if (medico.Cidade != null)
+                    medicoBuscado.Endereco!.Cidade = medico.Cidade;
+
+                ctx.Medicos.Update(medicoBuscado);
+                ctx.SaveChanges();
+
+                return medicoBuscado;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public List<Consulta> ListarConsultasPorData(DateTime dataConsulta, Guid idMedico)
         {
-            return ctx.Consultas
-                .Include(x => x.Situacao)
-                .Include(x => x.Prioridade)
-                .Include(x => x.MedicoClinica)
-                .Include(x => x.MedicoClinica!.Medico)
-                .Include(x => x.Paciente)
-                .Include(x => x.Paciente!.Usuario)
-                .Where(x => x.MedicoClinica!.MedicoId == idMedico && EF.Functions.DateDiffDay(x.DataConsulta, dataConsulta) == 0)
-                .ToList();
+            try
+            {
+                return ctx.Consultas
+                     .Include(x => x.Situacao)
+                     .Include(x => x.Prioridade)
+                     .Include(x => x.MedicoClinica)
+                     .Include(x => x.Paciente!.Usuario)
+
+                     // diferença em dias entre a Data da Consulta e a dataConsulta é igual a 0.
+                     .Where(x => x.MedicoClinica!.MedicoId == idMedico && EF.Functions.DateDiffDay(x.DataConsulta, dataConsulta) == 0)
+                     .ToList();
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public Medico BuscarPorId(Guid Id)
+        {
+            try
+            {
+                Medico medicoBuscado = ctx.Medicos
+                    .Include(m => m.Usuario)
+                    .Include(m => m.Endereco)
+                    .FirstOrDefault(m => m.Id == Id)!;
+
+                return medicoBuscado;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public List<Medico> ListarTodos()
+        {
+            try
+            {
+                return ctx.Medicos.
+                    Include(m => m.Usuario)
+                    .Select(m => new Medico
+                    {
+                        Id = m.Id,
+                        Crm = m.Crm,
+                        Especialidade = m.Especialidade,
+
+
+                        Usuario = new Usuario
+                        {
+                            Nome = m.Usuario.Nome,
+                            Foto = m.Usuario.Foto
+                        }
+                    })
+                    .ToList();
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public void Cadastrar(Usuario user)
+        {
+            try
+            {
+                user.Senha = Criptografia.GerarHash(user.Senha!);
+                ctx.Usuarios.Add(user);
+                ctx.SaveChanges();
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public List<Medico> ListarPorClinica(Guid id)
         {
-            List<Medico> medicos = ctx.MedicosClinicas
+            try
+            {
 
-                .Where(mc => mc.ClinicaId == id)
+                List<Medico> medicos = ctx.MedicosClinicas
 
-                .Select(mc => new Medico
-                {
-                    Id = mc.Id,
-                    Crm = mc.Medico!.Crm,
-                    Especialidade = mc.Medico.Especialidade,
-                    Usuario = new Usuario
+                    .Where(mc => mc.ClinicaId == id)
+
+                    .Select(mc => new Medico
                     {
-                        Id = mc.Medico.Usuario.Id,
-                        Nome = mc.Medico.Usuario.Nome,
-                        Email = mc.Medico.Usuario.Email,
-                        Foto = mc.Medico.Usuario.Foto
-                    }
-                })
-                .ToList();
+                        Id = mc.Id,
+                        Crm = mc.Medico!.Crm,
+                        Especialidade = mc.Medico.Especialidade,
 
-            return medicos;
+                        Usuario = new Usuario
+                        {
+                            Id = mc.Medico.Usuario.Id,
+                            Nome = mc.Medico.Usuario.Nome,
+                            Email = mc.Medico.Usuario.Email,
+                            Foto = mc.Medico.Usuario.Foto
+                        }
+                    })
+                    .ToList();
+
+                return medicos;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }
+

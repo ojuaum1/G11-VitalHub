@@ -6,7 +6,7 @@ export const Container = styled.SafeAreaView`
     background-color: #FAFAFA;
     padding: 20px;
     justify-content: space-around;
-    margin-top: -30px; 
+    /* margin-top: -30px;  */
 `;
 
 export const containerCam = styled.SafeAreaView`
@@ -16,3 +16,4 @@ export const containerCam = styled.SafeAreaView`
     padding: 20px;
     justify-content: space-around;
 `;
+

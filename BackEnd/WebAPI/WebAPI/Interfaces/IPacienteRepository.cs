@@ -11,9 +11,6 @@ namespace WebAPI.Interfaces
         /// <param name="paciente">Usuario com os dados do paciente na propriedade Paciente</param>
         public void Cadastrar(Usuario paciente);
 
-        public List<Consulta> BuscarAgendadas(Guid Id);
-        public List<Consulta> BuscarRealizadas(Guid Id);
-        public List<Consulta> BuscarCanceladas(Guid Id);
         public List<Consulta> BuscarPorData(DateTime dataConsulta, Guid id);
 
         public Paciente BuscarPorId(Guid Id);
