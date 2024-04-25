@@ -6,7 +6,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import InternalTextArea from '../InternalTextArea';
 import { Image, Text } from 'react-native';
 
-export default function MedicalExams({ handleSendClick, photosUri = [] }) {
+export default function MedicalExams({ handleSendClick, photosUri = [], ocrDescription = "Não identificado..." }) {
     return (
         <MedicalExamsContainer>
             <InputLabel fontSize={16}>Exames médicos</InputLabel>
@@ -37,7 +37,7 @@ export default function MedicalExams({ handleSendClick, photosUri = [] }) {
             <Line />
 
             <InternalTextArea 
-                textArea='Resultado do exame de sangue : tudo normal'
+                textArea={ocrDescription}
             />
         </MedicalExamsContainer>
     )

@@ -9,18 +9,45 @@ import UnsignedLink from '../../components/UnsignedLink';
 import { ScrollContainer } from '../../components/ScrollContainer/style';
 import { Camera } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
+import api, {apiUrlLocal} from '../../service/Service'
 
 export default function PatientViewMedicalRecord({ navigation, route }) {
     const [photosUri, setPhotosUri] = useState([]);
+    const [ocrDescription, setOcrDescription] = useState("");
     const { newPhotoUri, descricao, diagnostico, Receita } = route.params;
     
     const { medicamento, observacoes } = Receita || {};
     var stringText = `${medicamento} \n ${observacoes}`
+
+    async function InserirExame(){
+        try {
+            const formData =  new FormData();
+            formData.append("ConsultationId", "");
+            formData.append("Imagem", {
+                uri : uriCameraCapture,
+                name : `image.${photosUri.split('.').pop()}`,
+                type : `image/${photosUri.split('.').pop()}`
+            });
+    
+            const response = await api.post(`${apiUrlLocal}/Exame/Cadastrar`, formData, {
+                headers : {
+                    "Content-Type": "multipart/form-data"
+                }
+            })
+
+            setOcrDescription(() => ocrDescription + response.data.descricao);
+            
+        } catch (error) {
+            console.log(error);      
+        }
+    }
+
     useEffect(() => {
       
         if (newPhotoUri !== '') {
             setPhotosUri([...photosUri, newPhotoUri]);
         }
+
     }, [newPhotoUri]);
 
     // Extrair dados da receita
@@ -50,9 +77,10 @@ export default function PatientViewMedicalRecord({ navigation, route }) {
                     handleSendClick={async () => {
                         await Camera.requestCameraPermissionsAsync();
                         await MediaLibrary.requestPermissionsAsync();
-                        navigation.navigate('Camera');
+                        navigation.navigate('Camera', { getMediaLibrary : true, isProfile: false});
                     }}
                     photosUri={photosUri}
+                    ocrDescription={ocrDescription}
                 />
 
                 <UnsignedLink 

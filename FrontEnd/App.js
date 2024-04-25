@@ -96,21 +96,22 @@ export default function App() {
                     name='createAccount'
                     component={CreateAccountScreen}
                     options={{ title: 'Create Account' }}
-                />
+                    />
                 <Stack.Screen
                     name='emailCode'
                     component={EmailCodeScreen}
                     options={{ title: 'Email Code' }}
-                />
+                    />
                 <Stack.Screen
                     name='insertMedicalRecord'
                     component={InsertMedicalRecordScreen}
                     options={{ title: 'InsertMedicalRecord' }}
-                />
+                    />
                 <Stack.Screen
                     name='patientProfile'
                     component={PatientProfileScreen}
                     options={{ title: 'PatientProfile' }}
+                    initialParams={{ newPhotoUri: '' }}
                 />
                 <Stack.Screen
                     name='doctorConsult'

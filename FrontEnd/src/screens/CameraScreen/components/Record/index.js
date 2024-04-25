@@ -2,10 +2,10 @@ import React, { useRef, useState } from 'react';
 
 import { Camera } from 'expo-camera';
 import { StyleSheet } from 'react-native';
-import { CameraButton, CameraButtonsBar } from './style';
+import { CameraButton, CameraButtonsBar, LatestPhoto } from './style';
 import { FontAwesome, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 
-export default function RecordCamera({ setPhotoUri = null, openModalFn = null }) {
+export default function RecordCamera({ setPhotoUri = null, openModalFn = null , gallery = null, latestPhoto = null}) {
     const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
     const [flashOn, setFlashOn] = useState(false);
     const cameraRef = useRef(null)
@@ -41,13 +41,16 @@ export default function RecordCamera({ setPhotoUri = null, openModalFn = null })
             autoFocus={Camera.Constants.AutoFocus.on}
         >
             <CameraButtonsBar>
-                <CameraButton onPress={toggleFlash}>
+                <CameraButton onPress={gallery}>
                     {
-                        flashOn ? (
-                            <MaterialIcons name='flash-on' size={48} color='#fff' />
-                        ) : (
-                            <MaterialIcons name='flash-off' size={48} color='#fff' />
+                        latestPhoto != null
+                        ? (
+                             <LatestPhoto
+                                source={{uri : latestPhoto}}
+                            />
                         )
+                        : null
+                       
                     }
                 </CameraButton>
                 <CameraButton onPress={capturePhoto}>

@@ -29,12 +29,15 @@ import { ButtonCamera } from "./style";
 import { ScrollView } from "react-native";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from 'expo-media-library'; 
-export default function PatientProfileScreen({ navigation }) {
+import api, { apiUrlLocal } from "../../service/Service";
+
+export default function PatientProfileScreen({ navigation, route }) {
   // User data
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [id, setId] = useState("");
   const [role, setRole] = useState("");
+  const [photoUrl, setPhotoUrl] = useState("");
 
   // Patient data
   const [birthDate, setBirthDate] = useState("");
@@ -55,6 +58,8 @@ export default function PatientProfileScreen({ navigation }) {
 
   const [isEditing, setIsEditing] = useState(false);
 
+  const params = route.params;
+
   async function loadData() {
     const token = await userDecodeToken();
     setUserName(token.name);
@@ -66,13 +71,15 @@ export default function PatientProfileScreen({ navigation }) {
     if (token.role == "Paciente") {
       const patientData = await BuscarPacientePorId(token.id);
 
-      setBirthDate(patientData.birthDate);
+      setPhotoUrl(patientData.usuario.foto);
+
+      setBirthDate(patientData.dataNascimento);
       setCpf(patientData.cpf);
 
-      setNeighborhood(patientData.neighborhood);
-      setNumber(patientData.number);
-      setCep(patientData.cep);
-      setCity(patientData.city);
+      setNeighborhood(patientData.endereco.logradouro);
+      setNumber(patientData.endereco.numero);
+      setCep(patientData.endereco.cep);
+      setCity(patientData.endereco.cidade);
     } else if (token.role == "Medico") {
       const doctorData = await BuscarMedicoPorId(token.id);
       const specialtiesData = await GetSpecialties();
@@ -84,14 +91,16 @@ export default function PatientProfileScreen({ navigation }) {
 
       setSelectSpecialtiesData(specialtiesSelectData);
 
-      setCrm(doctorData.crm);
-      setSpecialtyId(doctorData.specialtyId);
-      setSpecialty(doctorData.specialty);
+      setPhotoUrl(doctorData.usuario.foto)
 
-      setNeighborhood(doctorData.neighborhood);
-      setNumber(doctorData.number);
-      setCep(doctorData.cep);
-      setCity(doctorData.city);
+      setCrm(doctorData.crm);
+      setSpecialtyId(doctorData.especialidade.id);
+      setSpecialty(doctorData.especialidade.especialidade1);
+
+      setNeighborhood(doctorData.endereco.logradouro);
+      setNumber(doctorData.endereco.numero);
+      setCep(doctorData.endereco.cep);
+      setCity(doctorData.endereco.cidade);
     } else {
       alert("Invalid role!");
     }
@@ -101,12 +110,42 @@ export default function PatientProfileScreen({ navigation }) {
     loadData();
   }, []);
 
+  useEffect(() => {
+    if (params != null)
+      if (params.newPhotoUri != null)
+        AlterarFotoPerfil(params.newPhotoUri)
+  }, [params])
+
+  async function AlterarFotoPerfil(newPhotoUri){
+    try {
+      const formData = new FormData();
+      formData.append("Arquivo", {
+        uri : newPhotoUri,
+        name : `image.${newPhotoUri.split(".").pop()}`,
+        type:  `image/${newPhotoUri.split(".").pop()}`
+      })
+
+      await api.put(`${apiUrlLocal}/Usuario/AlterarFotoPerfil?id=${id}`, formData, {
+        headers: {
+          "Content-Type" : "multipart/form-data"
+        }
+      })
+  
+      await loadData();
+
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
   return (
     <ScrollContainer>
       <ContainerImage>
         <UserProfileImage
           resizeMode="cover"
-          source={require("../../assets/user-profile-image.png")}
+          source={{
+            uri: photoUrl
+          }}
         />
 
         <ButtonCamera

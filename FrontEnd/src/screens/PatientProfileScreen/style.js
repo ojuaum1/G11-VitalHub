@@ -13,5 +13,5 @@ export const ButtonCamera = styled.TouchableOpacity.attrs({
     bottom : -10px;
     right : 15px;
     position : absolute;
-    z-index: 20000;
+    z-index : 150000
 `
