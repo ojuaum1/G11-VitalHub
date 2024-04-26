@@ -13,11 +13,18 @@ export const BuscarPacientePorId = async userId => {
 
 export const CreateUser = async (userName, userEmail, userPassword) => {
     const url = `${apiUrlLocal}/Pacientes`;
-    const response = await api.post(url, {
-        nome: userName,
-        email: userEmail, 
-        senha: userPassword,
-        idTipoUsuario: '6B810955-8D69-4416-9A04-CAD05BE687BA'
+
+    const formData = new FormData();
+
+    formData.append('nome', userName);
+    formData.append('email', userEmail);
+    formData.append('senha', userPassword);
+    formData.append('idTipoUsuario', '6B810955-8D69-4416-9A04-CAD05BE687BA');
+    
+    const response = await api.post(url, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
     });
     console.log(response);
 }
