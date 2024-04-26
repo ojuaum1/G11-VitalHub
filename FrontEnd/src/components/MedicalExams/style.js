@@ -51,7 +51,7 @@ export const SendButtonText = styled.Text`
     font-size: 14px;
 `;
 
-export const CancelationContainer = styled.View`
+export const CancelationContainer = styled.TouchableOpacity`
     justify-content: center;
     align-items: center;
     width: 45%;
