@@ -20,8 +20,9 @@ export default function PhotoModal({ photoUri, resetPhotoUriFn = null, isVisible
     }
 
     useEffect(() => {
-        console.log(isVisible);
-    }, [])
+        console.log('photoUri');
+        console.log(photoUri);
+    }, [isVisible])
 
     return (
         <Modal

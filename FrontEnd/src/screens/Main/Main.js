@@ -11,8 +11,9 @@ import { ContentIcon, TextIcon } from './style';
 
 const BottomTab = createBottomTabNavigator();
 
-export const Main = ({ route }) => {
+export const Main = ({ navigation, route }) => {
     const [userType, setUserType] = useState('patient');
+    const routeParms = route.params
 
     const getUserType = async () => { 
         const SaveToken = await userDecodeToken();
@@ -37,7 +38,8 @@ export const Main = ({ route }) => {
     return (
         <Host>
             <BottomTab.Navigator
-                initialRouteName='Home'
+                initialRouteName={routeParms != undefined ? routeParms.screen : "Home"}
+
                 screenOptions={({ route }) => ({
                     tabBarStyle: { backgroundColor: '#fff', height: 80, paddingTop: 10 },
                     tabBarActiveBackgroundColor: 'transparent',
@@ -74,8 +76,10 @@ export const Main = ({ route }) => {
                 />
                 <BottomTab.Screen
                     name='PatientProfile'
-                    component={PatientProfileScreen}
-                />
+                    initialParams={{ newPhotoUri: '' }}
+                >
+                    { (props) => <PatientProfileScreen navigation={navigation} route={route} />}
+                </BottomTab.Screen>
             </BottomTab.Navigator>
         </Host>
     );

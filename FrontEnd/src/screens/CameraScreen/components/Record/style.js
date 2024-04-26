@@ -1,3 +1,5 @@
+
+
 import styled from 'styled-components/native';
 
 export const CameraButtonsBar = styled.View`
@@ -13,3 +15,9 @@ export const CameraButtonsBar = styled.View`
 export const CameraButton = styled.TouchableOpacity`
 
 `;
+
+export const LatestPhoto = styled.Image`
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+`

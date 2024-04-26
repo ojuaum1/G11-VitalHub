@@ -4,9 +4,8 @@ import InputLabel from '../InputLabel/style';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import InternalTextArea from '../InternalTextArea';
-import { Image, Text } from 'react-native';
 
-export default function MedicalExams({ handleSendClick, photosUri = [] }) {
+export default function MedicalExams({ handleSendClick, handleCanceling, photosUri = [], ocrDescription = "Não identificado..." }) {
     return (
         <MedicalExamsContainer>
             <InputLabel fontSize={16}>Exames médicos</InputLabel>
@@ -19,7 +18,7 @@ export default function MedicalExams({ handleSendClick, photosUri = [] }) {
                 ) : (
                     <ExamPhotosContainer>
                         {
-                            photosUri.map(photoUri => <ExamPhoto source={{ uri: photoUri }} />)
+                            photosUri.map(photoUri => <ExamPhoto key={photoUri} source={{ uri: photoUri }} />)
                         }
                     </ExamPhotosContainer>
                 )
@@ -29,7 +28,7 @@ export default function MedicalExams({ handleSendClick, photosUri = [] }) {
                     <MaterialCommunityIcons name="camera-plus-outline" size={22} color="white" />
                     <SendButtonText onPress={handleSendClick}>Enviar</SendButtonText>
                 </SendButtonContainer>
-                <CancelationContainer>
+                <CancelationContainer onPress={handleCanceling}>
                     <CancelationLink>Cancelar</CancelationLink>
                 </CancelationContainer>
             </ButtonsWrapper>
@@ -37,7 +36,7 @@ export default function MedicalExams({ handleSendClick, photosUri = [] }) {
             <Line />
 
             <InternalTextArea 
-                textArea='Resultado do exame de sangue : tudo normal'
+                textArea={ocrDescription}
             />
         </MedicalExamsContainer>
     )

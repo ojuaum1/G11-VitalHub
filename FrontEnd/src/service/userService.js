@@ -1,9 +1,14 @@
 import api, {apiUrlLocal} from "../service/Service"
 
 export const BuscarPacientePorId = async userId => {
-    const url = `${apiUrlLocal}/Pacientes/BuscarPorID/${userId}`;
-    const response = (await api.get(url)).data;
-    return response;
+    try {
+        const url = `${apiUrlLocal}/Pacientes/BuscarPorId?id=${userId}`;
+        const response = (await api.get(url)).data;
+
+        return response;     
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 export const CreateUser = async (userName, userEmail, userPassword) => {
@@ -18,7 +23,7 @@ export const CreateUser = async (userName, userEmail, userPassword) => {
 }
 
 export const BuscarMedicoPorId = async userId => {
-    const url = `${apiUrlLocal}/Medicos/BuscarPorID/${userId}`;
+    const url = `${apiUrlLocal}/Medicos/BuscarPorId?id=${userId}`;
     const response = (await api.get(url)).data;
     return response;
 }

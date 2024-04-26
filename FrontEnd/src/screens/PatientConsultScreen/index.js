@@ -153,7 +153,7 @@ export default function PatientConsultScreen({ navigation, route }) {
                       setSelectedConsultationId(item.consultationId)
                       setIsCancelConsultationModalActive(true)
                     }}
-                    activeInsertMedicalRecordModalFn={() => navigation.navigate('patientViewMedicalRecord')}
+                    activeInsertMedicalRecordModalFn={() => navigation.navigate('patientViewMedicalRecord', { consultationId: item.consultationId })}
                     setCurrentUserDataFn={() => {}}
                     handleCardClick={() => {
                       setCurrentConsultationData(item);
