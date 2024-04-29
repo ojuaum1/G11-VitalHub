@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import BottomModal from '../BottomModal'
 import { Title } from '../Title/style'
 import UnsignedButton from '../UnsignedButton'
@@ -21,8 +21,17 @@ export function getConsultationLevelById(consultationId) {
 }
 
 export default function ScheduleConsultationModal({ active = true, disableModalFn = null, navigation = null }) {
-  const [clinicCity, setClinicCity] = useState('');
   const [consultationLevel, setConsultationLevel] = useState('');
+
+  const [scheduleData, setScheduleData] = useState({
+    priorityId: '',
+    priorityLabel: '',
+    clinicCity: '',
+  })
+
+  useEffect(() => {
+    console.log('Schedule:' + JSON.stringify(scheduleData));
+  }, [scheduleData])
 
   return (
     <BottomModal active={active} modalHeightPercentage={80}>
@@ -30,25 +39,35 @@ export default function ScheduleConsultationModal({ active = true, disableModalF
 
         <ButtonSelectInput 
           selectedButtonId={consultationLevel}
-          handleChangeSelectedFn={setConsultationLevel}
+          handleChangeSelectedFn={(buttonId, priorityId) => {
+            setConsultationLevel(buttonId);
+            setScheduleData({
+              ...scheduleData,
+              priorityId: priorityId,
+              priorityLabel: getConsultationLevelById(buttonId)
+            })
+          }}
         />
 
         <InternalInput 
           inputText='Cidade em deseja buscar a clínica'
           inputTextFontSize={14}
           placeholder='Cidade...'
-          handleChangeText={setClinicCity}
-          value={clinicCity}
+          handleChangeText={text => setScheduleData({
+            ...scheduleData,
+            clinicCity: text
+          })}
+          value={scheduleData.clinicCity}
         />
 
         <UnsignedButton 
             buttonText='Continuar'
             handleClickFn={() => {
-              if (clinicCity === '' || consultationLevel === '')
+              if (scheduleData.clinicCity === '' || scheduleData.priorityId === '')
                 return;
 
               disableModalFn();
-              navigation.navigate('clinicSelection', { clinicCity, consultationType: getConsultationLevelById(consultationLevel) });
+              navigation.navigate('clinicSelection', { scheduleData });
             }}
         />
 

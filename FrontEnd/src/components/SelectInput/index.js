@@ -12,7 +12,7 @@ export default function SelectInput({ data = [], defaultText = '', handleSelecte
           data={data}
           defaultButtonText={defaultText}
           onSelect={(selectedItem, index) => {
-              handleSelectedFn(index);
+              handleSelectedFn(selectedItem);
           }}  
           buttonStyle={styles.button}
           buttonTextStyle={styles.buttonText}

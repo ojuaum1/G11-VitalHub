@@ -12,28 +12,24 @@ import api, {apiUrlLocal} from "../../service/Service";
 
 
 export default function DoctorSelectionScreen({ navigation, route }) {
-  const {consultationLocation, consultationType, clinicId} = route.params;
-
-  const [selectedDoctorId, setSelectedDoctorId] = useState(0);
-  const [selectedDoctorName, setSelectedDoctorName] = useState(0);
-  const [selectedDoctorSpecialty, setSelectedDoctorSpecialty] = useState(0);
+  const [scheduleData, setScheduleData] = useState(route.params.scheduleData);
 
   const [medicosLista, setMedicosLista] = useState([{ usuario: { id: '', foto: '', nome: '' }, especialidade: {especialidade1: ''} }]);
 
   async function ListarMedicos() {
-    //instanciar chamada da api
-    const url = `${apiUrlLocal}/Medicos/BuscarPorIdClinica?id=${clinicId}`;
+    const url = `${apiUrlLocal}/Medicos/BuscarPorIdClinica?id=${scheduleData.clinicId}`;
     const data = (await api.get(url)).data;
 
-    console.log(url);
-
-    console.log(data);
     setMedicosLista(data);
   }
 
   useEffect(() => {
     ListarMedicos();
-  },[])
+  }, []);
+
+  useEffect(() => {
+    console.log(scheduleData);
+  }, [scheduleData]);
 
   return (
     <Container>
@@ -45,32 +41,32 @@ export default function DoctorSelectionScreen({ navigation, route }) {
           keyExtractor={(doctor) => doctor.usuario.id}
           contentContainerStyle={{ gap: 12 }}
           renderItem={({ item: medico }) => {
-            console.log(medico);
-           return(<TouchableOpacity
-              onPress={() => {
-                setSelectedDoctorId(medico.usuario.id)
-                setSelectedDoctorName(medico.usuario.nome)
-                setSelectedDoctorSpecialty(medico.especialidade.especialidade1)
-              }}
-            >
-              <DoctorCard
-                doctorImageUri={''}
-                isSelected={medico.usuario.id == selectedDoctorId}
-                medico={medico}
-              />
-            </TouchableOpacity>
-          )
-
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  setScheduleData({
+                    ...scheduleData,
+                    clinicDoctorId: medico.id,
+                    doctorName: medico.usuario.nome,
+                    doctorSpecialtyName: medico.especialidade.especialidade1
+                  })
+                }}
+              >
+                <DoctorCard
+                  doctorImageUri={medico.usuario.foto}
+                  isSelected={medico.id == scheduleData.clinicDoctorId}
+                  medico={medico}
+                />
+              </TouchableOpacity>
+            )
           }}
-            
-            
         />
       </ScrollContainer>
 
       <ButtonLinkWrapper>
         <UnsignedButton
           buttonText="Continuar"
-          handleClickFn={() => navigation.navigate("dateSelection", { doctorName: selectedDoctorName, doctorSpecialty: selectedDoctorSpecialty, consultationLocation, consultationType })}
+          handleClickFn={() => navigation.navigate("dateSelection", { scheduleData })}
         />
         <UnsignedLink
           linkText="Cancelar"

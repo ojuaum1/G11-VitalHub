@@ -9,11 +9,7 @@ export default function ScheduleBriefModal({
   active, 
   disableModalFn = null, 
   confirmModalFn = null,
-  consultationDate,
-  doctorName,
-  doctorSpecialty,
-  consultationLocation,
-  consultationType
+  scheduleData
 }) {
 
   function formatDate(date) {
@@ -33,20 +29,20 @@ export default function ScheduleBriefModal({
 
       <SmallGroup>
         <SmallTitle marginTop={0}>Data da consulta:</SmallTitle>
-        <SmallSubtitle>{formatDate(consultationDate)}</SmallSubtitle>
+        <SmallSubtitle>{formatDate(scheduleData.consultationDate)}</SmallSubtitle>
       </SmallGroup>
       <SmallGroup>
         <SmallTitle marginTop={0}>Médico(a) da consulta</SmallTitle>
-        <SmallSubtitle>{doctorName}</SmallSubtitle>
-        <SmallSubtitle>{doctorSpecialty}</SmallSubtitle>
+        <SmallSubtitle>{scheduleData.doctorName}</SmallSubtitle>
+        <SmallSubtitle>{scheduleData.doctorSpecialtyName}</SmallSubtitle>
       </SmallGroup>
       <SmallGroup>
         <SmallTitle marginTop={0}>Local da consulta</SmallTitle>
-        <SmallSubtitle>{consultationLocation}</SmallSubtitle>
+        <SmallSubtitle>{scheduleData.clinicCity}</SmallSubtitle>
       </SmallGroup>
       <SmallGroup>
         <SmallTitle marginTop={0}>Tipo da consulta</SmallTitle>
-        <SmallSubtitle>{consultationType}</SmallSubtitle>
+        <SmallSubtitle>{scheduleData.priorityLabel}</SmallSubtitle>
       </SmallGroup>
 
       <UnsignedButton 

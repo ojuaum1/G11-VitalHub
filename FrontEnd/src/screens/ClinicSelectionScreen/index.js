@@ -10,14 +10,12 @@ import { CardsList, TouchableCard } from '../../components/Card/style'
 import api, { apiUrlLocal } from '../../service/Service'
 
 export default function ClinicSelectionScreen({ navigation, route }) {
-    const { clinicCity, consultationType } = route.params;
+    const [scheduleData, setScheduleData] = useState(route.params.scheduleData)
 
-    const [selectedClinicId, setSelectedClinicId] = useState('');
-    const [selectedClinicLocation, setSelectedClinicLocation] = useState('');
     const [clinicsData, setClinicsData] = useState([]);
 
     async function getClinicsByCity() {
-        const response = (await api.get(`${apiUrlLocal}/Clinica/BuscarPorCidade?cidade=${clinicCity}`)).data;
+        const response = (await api.get(`${apiUrlLocal}/Clinica/BuscarPorCidade?cidade=${scheduleData.clinicCity}`)).data;
 
         let clinicsFormated = []
 
@@ -40,6 +38,10 @@ export default function ClinicSelectionScreen({ navigation, route }) {
         getClinicsByCity();
     }, [])
 
+    useEffect(() => {
+        console.log(scheduleData);
+    }, [scheduleData])
+
     return (
         <Container>
             <Title>Selecionar clínica</Title>
@@ -50,16 +52,18 @@ export default function ClinicSelectionScreen({ navigation, route }) {
                     contentContainerStyle={{ gap: 12}}
                     renderItem={({ item }) =>
                         <TouchableCard onPress={() => {
-                            console.log(item);
-                            setSelectedClinicId(item.clinicId)
-                            setSelectedClinicLocation(item.clinicLocation)
+                            setScheduleData({
+                                ...scheduleData,
+                                clinicId: item.clinicId,
+                                clinicCity: item.clinicLocation
+                            })
                         }}>
                             <ClinicCard
                                 clinicName={item.clinicName}
                                 clinicLocation={item.clinicLocation}
                                 clinicStarsNumber={item.clinicStars}
                                 clinicOpenedRange={item.clinicOpenedRange}
-                                isSelected={item.clinicId == selectedClinicId}
+                                isSelected={item.clinicId == scheduleData.clinicId}
                             />
                         </TouchableCard>
                     }
@@ -68,7 +72,7 @@ export default function ClinicSelectionScreen({ navigation, route }) {
             <ButtonLinkWrapper>
                 <UnsignedButton 
                     buttonText='Continuar'
-                    handleClickFn={() => navigation.navigate('doctorSelection', { consultationLocation: selectedClinicLocation, consultationType, clinicId: selectedClinicId })}
+                    handleClickFn={() => navigation.navigate('doctorSelection', { scheduleData })}
                 />
                 <UnsignedLink 
                     linkText='Cancelar'
