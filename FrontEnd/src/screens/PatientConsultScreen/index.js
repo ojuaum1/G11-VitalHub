@@ -39,6 +39,8 @@ export default function PatientConsultScreen({ navigation, route }) {
       const userId = token.id;
   
       const response = await BuscarConsultaPelaDataPaciente(userId, date);
+
+      console.log(JSON.stringify(response));
   
       const consultations = response.map(item => ({
         consultationId: item.id,
@@ -54,8 +56,6 @@ export default function PatientConsultScreen({ navigation, route }) {
         consultationTime: moment(item.dataConsulta).format('HH:mm'),
         consultationStatus: item.situacao.situacao
       }))
-  
-      console.log(consultations);
   
       setConsultationData(consultations);
       

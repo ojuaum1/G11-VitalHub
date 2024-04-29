@@ -9,11 +9,11 @@ import InternalInput from '../InternalInput'
 
 export function getConsultationLevelById(consultationId) {
   switch (consultationId) {
-    case 1:
+    case 0:
       return 'Rotina'; 
-    case 2:
+    case 1:
       return 'Exame';
-    case 3: 
+    case 2: 
       return 'Urgência';
     default:
       return 'Inválido';
