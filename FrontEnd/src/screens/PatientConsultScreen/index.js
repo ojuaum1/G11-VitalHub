@@ -39,23 +39,27 @@ export default function PatientConsultScreen({ navigation, route }) {
       const userId = token.id;
   
       const response = await BuscarConsultaPelaDataPaciente(userId, date);
-
-      console.log(JSON.stringify(response));
   
-      const consultations = response.map(item => ({
-        consultationId: item.id,
-        doctorName: item.medicoClinica.medico.usuario.nome,
-        doctorEmail: item.medicoClinica.medico.usuario.email,
-        doctorAge: item.medicoClinica.medico.crm,
-        doctorCRM: item.medicoClinica.medico.crm,
-        clinicId: item.medicoClinica.clinica.id,
-        longitude: item.medicoClinica.clinica.endereco.longitude,
-        latitude: item.medicoClinica.clinica.endereco.latitude,
-        selectedDoctorSpecialty: item.medicoClinica.medico.especialidade.especialidade1,
-        consultationType: getConsultationLevelById(item.prioridade.prioridade),
-        consultationTime: moment(item.dataConsulta).format('HH:mm'),
-        consultationStatus: item.situacao.situacao
-      }))
+      const consultations = response.map(item => {
+
+        console.log('====================================');
+        console.log(item);
+        console.log('====================================');
+        return {
+          consultationId: item.id,
+          doctorName: item.medicoClinica.medico.usuario.nome,
+          doctorEmail: item.medicoClinica.medico.usuario.email,
+          doctorAge: item.medicoClinica.medico.crm,
+          doctorCRM: item.medicoClinica.medico.crm,
+          clinicId: item.medicoClinica.clinica.id,
+          longitude: item.medicoClinica.clinica.endereco.longitude,
+          latitude: item.medicoClinica.clinica.endereco.latitude,
+          selectedDoctorSpecialty: item.medicoClinica.medico.especialidade.especialidade1,
+          consultationType: getConsultationLevelById(item.prioridade.prioridade),
+          consultationTime: moment(item.dataConsulta).format('HH:mm'),
+          consultationStatus: item.situacao.situacao
+        }
+      });
   
       setConsultationData(consultations);
       
