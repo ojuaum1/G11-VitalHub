@@ -11,7 +11,7 @@ import { FontAwesome6 } from '@expo/vector-icons';
 import ScheduleConsultationModal, { getConsultationLevelById } from '../../components/ScheduleConsultationModal';
 import ViewConsultationLocationModal from '../../components/ViewConsultationLocationModal';
 
-import {BuscarConsultaPelaDataPaciente } from '../../service/userService';
+import {BuscarConsultaPelaDataPaciente, BuscarMedicoPorId } from '../../service/userService';
 import { userDecodeToken } from '../../utils/Auth';
 import moment from 'moment'
 import { ScheduleConsultationButton } from '../PatientConsultScreen/style';
@@ -31,6 +31,8 @@ export default function PatientConsultScreen({ navigation, route }) {
   const [selectedConsultationId, setSelectedConsultationId] = useState();
 
   const [selectedDate, setSelectedDate] = useState(moment().format('YYYY-MM-DD'));
+
+  const [photoUrl, setPhotoUrl] = useState('');
 
   async function getConsultationFromDate(date) {
     try {
@@ -99,6 +101,17 @@ export default function PatientConsultScreen({ navigation, route }) {
     filterConsultationsByStatus();
   }, [selectedConsultationType, selectedDate]);
 
+  async function getUserPhoto() {
+      const token = await userDecodeToken();
+
+      const doctorData = await BuscarMedicoPorId(token.id);
+      setPhotoUrl(doctorData.usuario.foto);
+  }
+
+  useEffect(() => {
+    getUserPhoto();
+  }, []);
+
   return (
     <>
       <CancelConsultationModal 
@@ -127,7 +140,7 @@ export default function PatientConsultScreen({ navigation, route }) {
 
       />
       <ScreenContainer>
-          <HomeHeader navigation={navigation} userName='Richard Kosta' userImageUri='https://avatars.githubusercontent.com/u/125266412?v=4' />
+          <HomeHeader navigation={navigation} userName='Richard Kosta' userImageUri={photoUrl}/>
           <Calendar 
             setSelectedDate={setSelectedDate}
           />
