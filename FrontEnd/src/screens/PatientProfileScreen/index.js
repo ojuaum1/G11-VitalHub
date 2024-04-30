@@ -111,6 +111,7 @@ export default function PatientProfileScreen({ navigation, route }) {
   }, []);
 
   useEffect(() => {
+    
     if (params != null)
       if (params.newPhotoUri != null)
         AlterarFotoPerfil(params.newPhotoUri)
