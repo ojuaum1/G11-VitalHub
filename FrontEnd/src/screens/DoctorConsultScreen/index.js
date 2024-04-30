@@ -11,7 +11,7 @@ import { FontAwesome6 } from '@expo/vector-icons';
 import ScheduleConsultationModal, { getConsultationLevelById } from '../../components/ScheduleConsultationModal';
 import ViewConsultationLocationModal from '../../components/ViewConsultationLocationModal';
 
-import {BuscarConsultaPelaDataPaciente, BuscarMedicoPorId } from '../../service/userService';
+import {BuscarConsultaPelaDataMedico, BuscarMedicoPorId } from '../../service/userService';
 import { userDecodeToken } from '../../utils/Auth';
 import moment from 'moment'
 import { ScheduleConsultationButton } from '../PatientConsultScreen/style';
@@ -39,7 +39,9 @@ export default function PatientConsultScreen({ navigation, route }) {
       const token = await userDecodeToken();
       const userId = token.id;
   
-      const response = await BuscarConsultaPelaDataPaciente(userId, date);
+      const response = await BuscarConsultaPelaDataMedico(userId, date);
+
+      console.log(JSON.stringify(response));
   
       const consultations = response.map(item => ({
         consultationId: item.id,
@@ -55,8 +57,6 @@ export default function PatientConsultScreen({ navigation, route }) {
         consultationTime: moment(item.dataConsulta).format('HH:mm'),
         consultationStatus: item.situacao.situacao
       }))
-  
-      console.log(consultations);
   
       setConsultationData(consultations);
       
