@@ -41,10 +41,6 @@ export default function PatientConsultScreen({ navigation, route }) {
       const response = await BuscarConsultaPelaDataPaciente(userId, date);
   
       const consultations = response.map(item => {
-
-        console.log('====================================');
-        console.log(item);
-        console.log('====================================');
         return {
           consultationId: item.id,
           doctorName: item.medicoClinica.medico.usuario.nome,
@@ -62,7 +58,6 @@ export default function PatientConsultScreen({ navigation, route }) {
       });
   
       setConsultationData(consultations);
-      
     } catch (error) {
       console.log(error);
     }
