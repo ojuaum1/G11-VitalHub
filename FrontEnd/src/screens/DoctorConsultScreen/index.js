@@ -16,17 +16,18 @@ import { userDecodeToken } from '../../utils/Auth';
 import moment from 'moment'
 import { ScheduleConsultationButton } from '../PatientConsultScreen/style';
 
+import InsertMedicalRecordModal from '../../components/InsertMedicalRecordModal'
+
 export default function PatientConsultScreen({ navigation, route }) {
   const [isCancelConsultationModalActive, setIsCancelConsultationModalActive] = useState(false);
 
-  const [isSchedulingConsultationActive, setIsSchedulingConsultationActive] = useState(false);
-
-  const [isViewConsultationLocationActive, setIsViewConsultationLocationActive] = useState(false);
-  const [currentConsultationData, setCurrentConsultationData] = useState({});
+  const [isInsertMedicalRecordModalActive, setIsInsertMedicalRecordModalActive] = useState(false);
 
   const [selectedConsultationType, setSelectedConsultationType] = useState(0);
   const [selectedConsultationData, setSelectedConsultationData] = useState([]);
   const [consultationsData, setConsultationData] = useState([]);
+
+  const [selectedUserData, setSelectedUserData] = useState({})
 
   const [selectedConsultationId, setSelectedConsultationId] = useState();
 
@@ -41,22 +42,20 @@ export default function PatientConsultScreen({ navigation, route }) {
   
       const response = await BuscarConsultaPelaDataMedico(userId, date);
 
-      console.log(JSON.stringify(response));
+      //console.log(JSON.stringify(response));
   
       const consultations = response.map(item => ({
         consultationId: item.id,
-        doctorName: item.medicoClinica.medico.usuario.nome,
-        doctorEmail: item.medicoClinica.medico.usuario.email,
-        doctorAge: item.medicoClinica.medico.crm,
-        doctorCRM: item.medicoClinica.medico.crm,
+        patientName: item.paciente.usuario.nome,
+        patientEmail: item.paciente.usuario.email,
+        patientAge: moment().diff(item.paciente.dataNascimento, 'years') + ' Anos',
         clinicId: item.medicoClinica.clinica.id,
-        longitude: item.medicoClinica.clinica.endereco.longitude,
-        latitude: item.medicoClinica.clinica.endereco.latitude,
-        selectedDoctorSpecialty: item.medicoClinica.medico.especialidade.especialidade1,
         consultationType: getConsultationLevelById(item.prioridade.prioridade),
         consultationTime: moment(item.dataConsulta).format('HH:mm'),
         consultationStatus: item.situacao.situacao
       }))
+
+      console.log(consultations);
   
       setConsultationData(consultations);
       
@@ -120,24 +119,11 @@ export default function PatientConsultScreen({ navigation, route }) {
         consultationId={selectedConsultationId}
         updateConsultations={UpdateConsultations}
       />
-      <ScheduleConsultationModal 
-        active={isSchedulingConsultationActive}
-        disableModalFn={() => setIsSchedulingConsultationActive(false)}
+       <InsertMedicalRecordModal
+        active={isInsertMedicalRecordModalActive} 
+        disableModalFn={() => setIsInsertMedicalRecordModalActive(false)} 
+        userData={selectedUserData}
         navigation={navigation}
-      />
-      <ViewConsultationLocationModal 
-        active={isViewConsultationLocationActive}
-        disableModalFn={() => setIsViewConsultationLocationActive(false)}
-        doctorData={{ 
-          doctorName: currentConsultationData.doctorName,
-          doctorSpecialty: currentConsultationData.selectedDoctorSpecialty,
-          doctorCRM: currentConsultationData.doctorCRM,
-          clinicId: currentConsultationData.clinicId,
-          latitude: currentConsultationData.latitude,
-          longitude: currentConsultationData.longitude
-         }}
-         navigation={navigation}
-
       />
       <ScreenContainer>
           <HomeHeader navigation={navigation} userName='Richard Kosta' userImageUri={photoUrl}/>
@@ -155,9 +141,9 @@ export default function PatientConsultScreen({ navigation, route }) {
                 keyExtractor={item => item.consultationId}
                 renderItem={({ item }) => 
                   <ConsultationCard 
-                    userName={item.doctorName}
-                    userAge={item.doctorAge}
-                    userEmail={item.doctorEmail}
+                    userName={item.patientName}
+                    userAge={item.patientAge}
+                    userEmail={item.patientEmail}
                     consultationType={item.consultationType}
                     consultationTime={item.consultationTime}
                     cardType={item.consultationStatus}
@@ -165,20 +151,13 @@ export default function PatientConsultScreen({ navigation, route }) {
                       setSelectedConsultationId(item.consultationId)
                       setIsCancelConsultationModalActive(true)
                     }}
-                    activeInsertMedicalRecordModalFn={() => navigation.navigate('patientViewMedicalRecord')}
-                    setCurrentUserDataFn={() => {}}
+                    activeInsertMedicalRecordModalFn={() => setIsInsertMedicalRecordModalActive(true)}
+                    setCurrentUserDataFn={setSelectedUserData}
                     handleCardClick={() => {
-                      setCurrentConsultationData(item);
-                      if (item.consultationStatus === 'Pendentes') {
-                        setIsViewConsultationLocationActive(true);
-                      }
                     }}
                   />
                 }
               />
-              <ScheduleConsultationButton onPress={() => setIsSchedulingConsultationActive(true)}>
-                <FontAwesome6 name="stethoscope" size={32} color="#FBFBFB" />
-              </ScheduleConsultationButton>
           </Container>
       </ScreenContainer>
     </>
