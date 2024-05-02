@@ -50,6 +50,9 @@ export default function PatientConsultScreen({ navigation, route }) {
           clinicId: item.medicoClinica.clinica.id,
           longitude: item.medicoClinica.clinica.endereco.longitude,
           latitude: item.medicoClinica.clinica.endereco.latitude,
+          descricao: item.descricao,
+          diagnostico: item.diagnostico,
+          receita: item.receitas.medicamento,
           selectedDoctorSpecialty: item.medicoClinica.medico.especialidade.especialidade1,
           consultationType: getConsultationLevelById(item.prioridade.prioridade),
           consultationTime: moment(item.dataConsulta).format('HH:mm'),
@@ -163,7 +166,7 @@ export default function PatientConsultScreen({ navigation, route }) {
                       setSelectedConsultationId(item.consultationId)
                       setIsCancelConsultationModalActive(true)
                     }}
-                    activeInsertMedicalRecordModalFn={() => navigation.navigate('patientViewMedicalRecord', { consultationId: item.consultationId })}
+                    activeInsertMedicalRecordModalFn={() => navigation.navigate('patientViewMedicalRecord', { consultationId: item.consultationId, doctorName, doctorSpecialty, doctorCRM })}
                     setCurrentUserDataFn={() => {}}
                     handleCardClick={() => {
                       setCurrentConsultationData(item);
