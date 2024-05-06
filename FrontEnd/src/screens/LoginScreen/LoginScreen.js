@@ -62,6 +62,7 @@ export default function LoginScreen({ navigation }) {
           value={senha}
           placeholder= "senha"
           onChangeText={(txt) => setSenha(txt)}
+          secureTextEntry
         />
       </BasicInputWrapper>
       <UnsignedLink 
