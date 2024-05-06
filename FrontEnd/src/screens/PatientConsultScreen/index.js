@@ -39,6 +39,8 @@ export default function PatientConsultScreen({ navigation, route }) {
       const userId = token.id;
   
       const response = await BuscarConsultaPelaDataPaciente(userId, date);
+
+      console.log(JSON.stringify(response));
   
       const consultations = response.map(item => {
         return {
@@ -52,7 +54,7 @@ export default function PatientConsultScreen({ navigation, route }) {
           latitude: item.medicoClinica.clinica.endereco.latitude,
           descricao: item.descricao,
           diagnostico: item.diagnostico,
-          receita: item.receitas.medicamento,
+          receita: item.receita.medicamento || null,
           selectedDoctorSpecialty: item.medicoClinica.medico.especialidade.especialidade1,
           consultationType: getConsultationLevelById(item.prioridade.prioridade),
           consultationTime: moment(item.dataConsulta).format('HH:mm'),
@@ -166,7 +168,7 @@ export default function PatientConsultScreen({ navigation, route }) {
                       setSelectedConsultationId(item.consultationId)
                       setIsCancelConsultationModalActive(true)
                     }}
-                    activeInsertMedicalRecordModalFn={() => navigation.navigate('patientViewMedicalRecord', { consultationId: item.consultationId, doctorName, doctorSpecialty, doctorCRM })}
+                    activeInsertMedicalRecordModalFn={() => navigation.navigate('patientViewMedicalRecord', { consultationData: item })}
                     setCurrentUserDataFn={() => {}}
                     handleCardClick={() => {
                       setCurrentConsultationData(item);

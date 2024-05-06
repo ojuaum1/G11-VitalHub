@@ -15,11 +15,11 @@ export default function PatientViewMedicalRecord({ navigation, route }) {
     const [consultationIdSaved, setConsultationIdSaved] = useState();
     const [photosUri, setPhotosUri] = useState([]);
     const [ocrDescription, setOcrDescription] = useState("");
-    const {newPhotoUri, doctorName, doctorSpecialty, doctorCRM, descricao, diagnostico, receita, consultationId } = route.params;
+    const {newPhotoUri, consultationData } = route.params;
     
     useEffect(() => {
-        if (consultationId) 
-            setConsultationIdSaved(() => consultationId);
+        if (consultationData.consultationId) 
+            setConsultationIdSaved(() => consultationData.consultationId);
     
     }, [route.params])
 
@@ -73,17 +73,17 @@ export default function PatientViewMedicalRecord({ navigation, route }) {
             />
             <Container>
                 <UserMainInfo 
-                    username={doctorName}
+                    username={consultationData.doctorName}
                     infoArr={[
-                        {doctorSpecialty},
-                        {doctorCRM}
+                        consultationData.doctorSpecialty,
+                        consultationData.doctorCRM
                     ]}
                 />
 
                 <InternalInputsWrapper>
-                    <InternalTextArea labelText="Descrição da consulta" textArea={descricao} />
-                    <InternalTextArea labelText="Diagnóstico do paciente" textArea={diagnostico} />
-                    <InternalTextArea labelText="Prescrição médica" textArea={receita} />
+                    <InternalTextArea labelText="Descrição da consulta" textArea={consultationData.descricao} />
+                    <InternalTextArea labelText="Diagnóstico do paciente" textArea={consultationData.diagnostico} />
+                    <InternalTextArea labelText="Prescrição médica" textArea={consultationData.receita} />
                     
                 </InternalInputsWrapper>
 
