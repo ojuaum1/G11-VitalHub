@@ -170,13 +170,13 @@ export default function PatientProfileScreen({ navigation, route }) {
               <>
                 <InternalTextArea
                   labelText="Data de nascimento:"
-                  textArea={new Date(birthDate).toLocaleDateString()}
+                  textArea={birthDate ? new Date(birthDate).toLocaleDateString() : undefined}
                   handleChangeFn={setBirthDate}
                   isEditing={isEditing}
                 />
                 <InternalTextArea
                   labelText="CPF"
-                  textArea={cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")}
+                  textArea={cpf ? cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4") : undefined}
                   handleChangeFn={setCpf}
                   isEditing={false}
                   keyboardType='number-pad'
@@ -233,7 +233,7 @@ export default function PatientProfileScreen({ navigation, route }) {
               <InternalTextArea
                 widthPercentage={45}
                 labelText="Cep"
-                textArea={cep.replace(/(\d{5})(\d{3})/, '$1-$2')}
+                textArea={cep ? cep.replace(/(\d{5})(\d{3})/, '$1-$2') : undefined}
                 handleChangeFn={setCep}
                 isEditing={isEditing}
                 keyboardType='number-pad'
