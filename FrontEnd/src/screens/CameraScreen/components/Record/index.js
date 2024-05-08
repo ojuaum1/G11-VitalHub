@@ -1,26 +1,21 @@
 import React, { useRef, useState } from 'react';
 
-import { Camera } from 'expo-camera';
+import { CameraView } from 'expo-camera';
 import { StyleSheet } from 'react-native';
 import { CameraButton, CameraButtonsBar, LatestPhoto } from './style';
 import { FontAwesome, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 
 export default function RecordCamera({ setPhotoUri = null, openModalFn = null , gallery = null, latestPhoto = null}) {
-    const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
-    const [flashOn, setFlashOn] = useState(false);
+    const [cameraType, setCameraType] = useState('back');
     const cameraRef = useRef(null)
 
     function flipCamera() {
-        if (cameraType == Camera.Constants.Type.back) {
+        if (cameraType == Camera.Type.back) {
             setFlashOn(false);
-            setCameraType(Camera.Constants.Type.front);
+            setCameraType(Camera.Type.front);
         }
         else
-            setCameraType(Camera.Constants.Type.back);
-    }
-
-    function toggleFlash() {
-        setFlashOn(!flashOn);
+            setCameraType(Camera.Type.back);
     }
 
     async function capturePhoto() {
@@ -32,13 +27,11 @@ export default function RecordCamera({ setPhotoUri = null, openModalFn = null , 
     }
 
     return (
-        <Camera
-            type={cameraType}
+        <CameraView
+            facing={cameraType}
             style={styles.camera}
             ratio='16:9'
             ref={cameraRef}
-            flashMode={flashOn ? Camera.Constants.FlashMode.torch : Camera.Constants.FlashMode.off}
-            autoFocus={Camera.Constants.AutoFocus.on}
         >
             <CameraButtonsBar>
                 <CameraButton onPress={gallery}>
@@ -60,7 +53,7 @@ export default function RecordCamera({ setPhotoUri = null, openModalFn = null , 
                     <MaterialCommunityIcons name="camera-flip" size={48} color="#fff" />
                 </CameraButton>
             </CameraButtonsBar>
-        </Camera>
+        </CameraView>
     )
 }
 
