@@ -15,7 +15,7 @@ export default function LoginScreen({ navigation }) {
   // martin_ferreira@gmail.com
   // carlos.roque@gmail.com
   // lucas.portal@gmail.com
-  const [email, setEmail] =  useState('lucas.portal@gmail.com')
+  const [email, setEmail] =  useState('martin_ferreira@gmail.com')
   const [senha, setSenha] =  useState('12345')
 
 
@@ -62,6 +62,7 @@ export default function LoginScreen({ navigation }) {
           value={senha}
           placeholder= "senha"
           onChangeText={(txt) => setSenha(txt)}
+          secureTextEntry
         />
       </BasicInputWrapper>
       <UnsignedLink 

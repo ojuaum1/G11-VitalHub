@@ -25,7 +25,7 @@ export default function RecordCamera({ setPhotoUri = null, openModalFn = null , 
 
     async function capturePhoto() {
         if (cameraRef) {
-            const photo = await cameraRef.current.takePictureAsync();
+            const photo = await cameraRef.current.takePictureAsync({ quality: 1 });
             setPhotoUri(photo.uri);
             openModalFn(); 
         }

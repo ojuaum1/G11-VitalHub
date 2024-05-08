@@ -171,15 +171,16 @@ export default function PatientProfileScreen({ navigation, route }) {
               <>
                 <InternalTextArea
                   labelText="Data de nascimento:"
-                  textArea={birthDate}
+                  textArea={new Date(birthDate).toLocaleDateString()}
                   handleChangeFn={setBirthDate}
                   isEditing={isEditing}
                 />
                 <InternalTextArea
                   labelText="CPF"
-                  textArea={cpf}
+                  textArea={cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")}
                   handleChangeFn={setCpf}
-                  isEditing={isEditing}
+                  isEditing={false}
+                  keyboardType='number-pad'
                 />
               </>
             ) : (
@@ -208,7 +209,7 @@ export default function PatientProfileScreen({ navigation, route }) {
                   labelText="CRM"
                   textArea={crm}
                   handleChangeFn={setCrm}
-                  isEditing={isEditing}
+                  isEditing={false}
                 />
               </>
             )}
@@ -226,15 +227,17 @@ export default function PatientProfileScreen({ navigation, route }) {
                 widthPercentage={45}
                 handleChangeFn={setNumber}
                 isEditing={isEditing}
+                keyboardType='number-pad'
               />
             </SplitedTextAreasContainer>
             <SplitedTextAreasContainer>
               <InternalTextArea
                 widthPercentage={45}
                 labelText="Cep"
-                textArea={cep}
+                textArea={cep.replace(/(\d{5})(\d{3})/, '$1-$2')}
                 handleChangeFn={setCep}
                 isEditing={isEditing}
+                keyboardType='number-pad'
               />
               <InternalTextArea
                 widthPercentage={45}
@@ -255,10 +258,10 @@ export default function PatientProfileScreen({ navigation, route }) {
                   if (role == "Paciente") {
                     await AtualizarPerfilPaciente(
                       token,
-                      birthDate,
+                      new Date(birthDate).toISOString(),
                       neighborhood,
                       number,
-                      cep,
+                      cep.replace('-', ''),
                       city
                     );
                   } else if (role == "Medico") {
@@ -268,7 +271,7 @@ export default function PatientProfileScreen({ navigation, route }) {
                       crm,
                       neighborhood,
                       number,
-                      cep,
+                      cep.replace('-', ''),
                       city
                     );
                   }

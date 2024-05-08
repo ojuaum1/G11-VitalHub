@@ -3,7 +3,7 @@ import React from 'react';
 import { TextArea, TextAreaInput } from './style'
 import { InputContainer, InputText } from '../InternalInput/style'
 
-export default function InternalTextArea({ labelText = '', textArea = 'Não preenchido', widthPercentage, isEditing = false, handleChangeFn = null }) {
+export default function InternalTextArea({ labelText = '', textArea = 'Não preenchido', widthPercentage, isEditing = false, handleChangeFn = null, keyboardType}) {
     return (
         <InputContainer widthPercentage={widthPercentage}>
             <InputText fontSize={16}>{ labelText }</InputText>
@@ -12,6 +12,7 @@ export default function InternalTextArea({ labelText = '', textArea = 'Não pree
                     <TextAreaInput 
                         value={textArea.toString()}
                         onChangeText={handleChangeFn}
+                        keyboardType={keyboardType}
                     />
                 ) : (
                     <TextArea>
