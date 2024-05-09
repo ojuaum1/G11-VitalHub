@@ -52,8 +52,10 @@ export default function PatientConsultScreen({ navigation, route }) {
         clinicId: item.medicoClinica.clinica.id,
         consultationType: getConsultationLevelById(item.prioridade.prioridade),
         consultationTime: moment(item.dataConsulta).format('HH:mm'),
-        consultationStatus: item.situacao.situacao
-      }))
+        consultationStatus: item.situacao.situacao,
+        descricao : item.descricao,
+        diagnostico: item.diagnostico,
+        receita: item.receita && item.receita.medicamento ? item.receita.medicamento : null }))
 
       console.log(consultations);
   
@@ -124,6 +126,7 @@ export default function PatientConsultScreen({ navigation, route }) {
         disableModalFn={() => setIsInsertMedicalRecordModalActive(false)} 
         userData={selectedUserData}
         navigation={navigation}
+        
       />
       <ScreenContainer>
           <HomeHeader navigation={navigation} userName='Richard Kosta' userImageUri={photoUrl}/>
