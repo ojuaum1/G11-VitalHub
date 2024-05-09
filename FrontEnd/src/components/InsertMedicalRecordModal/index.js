@@ -22,7 +22,7 @@ export default function InsertMedicalRecordModal({
   function handleClose(route) {
     disableModalFn();
     navigation.navigate(route, {
-      patientName,
+      patientName, 
       patientEmail,
       patientAge,
     });

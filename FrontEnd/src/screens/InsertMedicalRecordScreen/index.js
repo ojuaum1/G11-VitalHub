@@ -1,29 +1,26 @@
-import { Container } from "../../components/Container/style";
+import React, { useEffect, useState } from 'react';
+import { Container } from '../../components/Container/style';
 import InternalInput from "../../components/InternalInput";
 import { InternalInputsWrapper } from "../../components/InternalInput/style";
 import UserMainInfo from "../../components/UserMainInfo";
 import { UnsignedButtonsWrapper } from "../../components/UnsignedButton/style";
 import UnsignedButton from "../../components/UnsignedButton";
 import UnsignedLink from "../../components/UnsignedLink";
-import { useEffect, useState } from "react";
 import InternalTextArea from "../../components/InternalTextArea";
 import { UserProfileImage } from "../../components/UserImage/style";
 import { ScrollContainer } from "../../components/ScrollContainer/style";
 
 export default function InsertMedicalRecordScreen({ route, navigation }) {
- 
-  
- 
   const [isEditing, setIsEditing] = useState(false);
-
+  const { patientName, patientAge, patientEmail } = route.params;
 
   useEffect(() => {
     console.log(route.params);
-  },[route.params])
+  },[route])
+
   function returnToHome() {
     navigation.navigate("Main"); 
   }
-
 
   return (
     <ScrollContainer>
@@ -33,10 +30,8 @@ export default function InsertMedicalRecordScreen({ route, navigation }) {
       />
       <Container>
         <UserMainInfo
-      
-          navigation={navigation}
-           username={patientName}
-           infoArr={[patientAge, patientEmail]}
+          username={patientName}
+          infoArr={[patientAge, patientEmail]}
         />
         
         <InternalInputsWrapper>
@@ -61,7 +56,7 @@ export default function InsertMedicalRecordScreen({ route, navigation }) {
             <>
               <InternalTextArea
                 inputText="Descrição da consulta"
-                textArea="O paciente possuí uma infecção no ouvido. Necessário repouse de 2 dias e acompanhamento médico constante"
+                textArea="O paciente possuí uma infecção no ouvido. Necessário repouso de 2 dias e acompanhamento médico constante"
               />
               <InternalTextArea
                 inputText="Descrição da consulta"
@@ -70,9 +65,9 @@ export default function InsertMedicalRecordScreen({ route, navigation }) {
               <InternalTextArea
                 inputText="Prescrição médica"
                 textArea="Medicamento: Advil
-                                            Dosagem: 50 mg
-                                            Frequência: 3 vezes ao dia
-                                            Duração: 3 dias"
+                          Dosagem: 50 mg
+                          Frequência: 3 vezes ao dia
+                          Duração: 3 dias"
               />
             </>
           )}
@@ -82,12 +77,12 @@ export default function InsertMedicalRecordScreen({ route, navigation }) {
             buttonText="Salvar"
             handleClickFn={() => setIsEditing(false)}
           />
-          {!isEditing ? (
+          {!isEditing && (
             <UnsignedButton
               buttonText="Editar"
               handleClickFn={() => setIsEditing(true)}
             />
-          ) : null}
+          )}
         </UnsignedButtonsWrapper>
         <UnsignedLink linkText="Cancelar" handleClickFn={returnToHome} />
       </Container>

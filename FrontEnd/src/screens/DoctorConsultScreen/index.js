@@ -126,6 +126,9 @@ export default function PatientConsultScreen({ navigation, route }) {
         disableModalFn={() => setIsInsertMedicalRecordModalActive(false)} 
         userData={selectedUserData}
         navigation={navigation}
+        patientAge={patientAge}
+        patientEmail={patientEmail0}
+        patientName={patientName}
         
       />
       <ScreenContainer>
