@@ -12,10 +12,15 @@ import { ScrollContainer } from "../../components/ScrollContainer/style";
 
 export default function InsertMedicalRecordScreen({ route, navigation }) {
   const [isEditing, setIsEditing] = useState(false);
-  const { patientName, patientAge, patientEmail } = route.params;
+  const { consultationData } = route.params;
+  const [descricao, setDescricao] = useState(consultationData.descricao);
+  const [diagnostico, setDiagnostico] = useState(consultationData.diagnostico);
+  const [prescricao, setPrescricao] = useState(consultationData.receita);
 
   useEffect(() => {
-    console.log(route.params);
+    setDescricao(consultationData.descricao) 
+    setDiagnostico(consultationData.diagnostico)
+    setPrescricao(consultationData.receita)
   },[route])
 
   function returnToHome() {
@@ -30,8 +35,8 @@ export default function InsertMedicalRecordScreen({ route, navigation }) {
       />
       <Container>
         <UserMainInfo
-          username={patientName}
-          infoArr={[patientAge, patientEmail]}
+          username={consultationData.patientName}
+          infoArr={[consultationData.patientAge, consultationData.patientEmail]}
         />
         
         <InternalInputsWrapper>
@@ -39,35 +44,38 @@ export default function InsertMedicalRecordScreen({ route, navigation }) {
             <>
               <InternalInput
                 inputText="Descrição da consulta"
-                placeholder="Descrição"
+                placeholder={consultationData.descricao}
+                value={descricao}
+                handleChangeText={setDescricao}
                 numberOfLines={4}
               />
               <InternalInput
                 inputText="Diagnóstico do paciente"
-                placeholder="Diagnóstico"
+                placeholder={consultationData.diagnostico}
+                value={diagnostico}
+                handleChangeText={setDiagnostico}
               />
               <InternalInput
                 inputText="Prescrição médica"
-                placeholder="Prescrição médica"
+                placeholder={consultationData.receita}
+                value={prescricao}
+                handleChangeText={setPrescricao}
                 numberOfLines={4}
               />
             </>
           ) : (
             <>
               <InternalTextArea
-                inputText="Descrição da consulta"
-                textArea="O paciente possuí uma infecção no ouvido. Necessário repouso de 2 dias e acompanhamento médico constante"
+                labelText="Descrição da consulta"
+                textArea={consultationData.descricao}
               />
               <InternalTextArea
-                inputText="Descrição da consulta"
-                textArea="Infecção no ouvido"
+                labelText="Descrição da consulta"
+                textArea={consultationData.diagnostico}
               />
               <InternalTextArea
-                inputText="Prescrição médica"
-                textArea="Medicamento: Advil
-                          Dosagem: 50 mg
-                          Frequência: 3 vezes ao dia
-                          Duração: 3 dias"
+                labelText="Prescrição médica"
+                textArea={consultationData.receita}
               />
             </>
           )}

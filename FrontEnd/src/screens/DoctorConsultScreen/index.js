@@ -158,7 +158,10 @@ export default function PatientConsultScreen({ navigation, route }) {
                       setSelectedConsultationData({
                         patientName: item.patientName,
                         patientAge: item.patientAge,
-                        patientEmail: item.patientEmail
+                        patientEmail: item.patientEmail,
+                        descricao : item.descricao,
+                        diagnostico: item.diagnostico,
+                        receita: item.receita
                       })
                       setIsInsertMedicalRecordModalActive(true)
                     }}
