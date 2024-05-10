@@ -33,6 +33,8 @@ import api, { apiUrlLocal } from "../../service/Service";
 
 import { Masks, useMaskedInputProps } from 'react-native-mask-input';
 
+import moment from 'moment';
+
 export default function PatientProfileScreen({ navigation, route }) {
   // User data
   const [userName, setUserName] = useState("");
@@ -72,7 +74,11 @@ export default function PatientProfileScreen({ navigation, route }) {
     mask: Masks.BRL_CPF
   })
 
-  console.log(maskedDate);
+  const maskedCEP = useMaskedInputProps({
+    value: cep,
+    onChangeText: setCep,
+    mask: Masks.ZIP_CODE
+  })
 
   const params = route.params;
 
@@ -89,7 +95,7 @@ export default function PatientProfileScreen({ navigation, route }) {
 
       setPhotoUrl(patientData.usuario.foto);
 
-      setBirthDate(patientData.dataNascimento);
+      setBirthDate(new Date(patientData.dataNascimento).toLocaleDateString());
       setCpf(patientData.cpf);
 
       setNeighborhood(patientData.endereco.logradouro);
@@ -134,6 +140,8 @@ export default function PatientProfileScreen({ navigation, route }) {
 
   async function AlterarFotoPerfil(newPhotoUri){
     try {
+      console.log('ID: ' + id);
+      console.log('URI: ' + newPhotoUri);
       const formData = new FormData();
       formData.append("Arquivo", {
         uri : newPhotoUri,
@@ -255,6 +263,7 @@ export default function PatientProfileScreen({ navigation, route }) {
                 handleChangeFn={setCep}
                 isEditing={isEditing}
                 keyboardType='number-pad'
+                maskedProps={maskedCEP}
               />
               <InternalTextArea
                 widthPercentage={45}
@@ -272,10 +281,9 @@ export default function PatientProfileScreen({ navigation, route }) {
                 handleClickFn={async (setIsLoading) => {
                   setIsEditing(false);
                   
+                  const sendedBirthDate = moment(birthDate, 'DD/MM/YYYY').format('YYYY-MM-DD');
+
                   if (role == "Paciente") {
-                    console.log(new Date(birthDate.toISOString()));
-                    const sendedBirthDate = birthDate ? new Date(birthDate).toISOString().slice(0,9) : null;
-                    
                     await AtualizarPerfilPaciente(
                       token,
                       sendedBirthDate,
