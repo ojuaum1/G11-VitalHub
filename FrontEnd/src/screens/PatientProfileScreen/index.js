@@ -108,6 +108,10 @@ export default function PatientProfileScreen({ navigation, route }) {
 
   useEffect(() => {
     loadData();
+
+    setBirthDate(birthDate ? new Date(birthDate).toLocaleDateString() : undefined);
+    setCpf(cpf ? cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4") : undefined);
+    setCep(cep ? cep.replace(/(\d{5})(\d{3})/, '$1-$2') : undefined);
   }, []);
 
   useEffect(() => {
@@ -116,6 +120,12 @@ export default function PatientProfileScreen({ navigation, route }) {
       if (params.newPhotoUri != null)
         AlterarFotoPerfil(params.newPhotoUri)
   }, [params])
+
+  useEffect(() => {
+    console.log(birthDate);
+                  const sendedBirthDate = birthDate ? new Date(birthDate).toISOString() : null;
+                   console.log(sendedBirthDate);
+  }, [birthDate])
 
   async function AlterarFotoPerfil(newPhotoUri){
     try {
@@ -171,15 +181,15 @@ export default function PatientProfileScreen({ navigation, route }) {
               <>
                 <InternalTextArea
                   labelText="Data de nascimento:"
-                  textArea={new Date(birthDate).toLocaleDateString()}
+                  textArea={birthDate}
                   handleChangeFn={setBirthDate}
                   isEditing={isEditing}
                 />
                 <InternalTextArea
                   labelText="CPF"
-                  textArea={cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")}
+                  textArea={cpf}
                   handleChangeFn={setCpf}
-                  isEditing={false}
+                  isEditing={isEditing}
                   keyboardType='number-pad'
                 />
               </>
@@ -234,7 +244,7 @@ export default function PatientProfileScreen({ navigation, route }) {
               <InternalTextArea
                 widthPercentage={45}
                 labelText="Cep"
-                textArea={cep.replace(/(\d{5})(\d{3})/, '$1-$2')}
+                textArea={cep}
                 handleChangeFn={setCep}
                 isEditing={isEditing}
                 keyboardType='number-pad'
@@ -255,14 +265,18 @@ export default function PatientProfileScreen({ navigation, route }) {
                 handleClickFn={async (setIsLoading) => {
                   setIsEditing(false);
 
+                  const sendedBirthDate = birthDate ? new Date(birthDate).toISOString().slice(0,9) : null;
+                   console.log(sendedBirthDate);
+
                   if (role == "Paciente") {
                     await AtualizarPerfilPaciente(
                       token,
-                      new Date(birthDate).toISOString(),
+                      sendedBirthDate,
                       neighborhood,
                       number,
-                      cep.replace('-', ''),
-                      city
+                      cep ? cep.replace('-', '') : null,
+                      city,
+                      cpf ? cpf.replace('.', '').replace('-', '') : null
                     );
                   } else if (role == "Medico") {
                     await AtualizarPerfilMedico(
@@ -271,7 +285,7 @@ export default function PatientProfileScreen({ navigation, route }) {
                       crm,
                       neighborhood,
                       number,
-                      cep.replace('-', ''),
+                      cep ? cep.replace('-', '') : null,
                       city
                     );
                   }

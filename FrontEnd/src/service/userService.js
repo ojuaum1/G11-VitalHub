@@ -47,7 +47,7 @@ export const BuscarConsultaPelaDataMedico = async (userId, date) => {
     return response;
 }
 
-export const AtualizarPerfilPaciente = async (userToken, birthDate, neighborhood, number, CEP, city) => {
+export const AtualizarPerfilPaciente = async (userToken, birthDate, neighborhood, number, CEP, city, CPF) => {
     const url = `${apiUrlLocal}/Pacientes/`
 
     const config = {
@@ -58,6 +58,7 @@ export const AtualizarPerfilPaciente = async (userToken, birthDate, neighborhood
         dataNascimento: birthDate,
         logradouro: neighborhood,
         numero: number,
+        cpf: CPF,
         cep: CEP,
         cidade: city
     }, config)
