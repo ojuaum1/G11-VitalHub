@@ -31,6 +31,8 @@ import { Camera } from "expo-camera";
 import * as MediaLibrary from 'expo-media-library'; 
 import api, { apiUrlLocal } from "../../service/Service";
 
+import { Masks, useMaskedInputProps } from 'react-native-mask-input';
+
 export default function PatientProfileScreen({ navigation, route }) {
   // User data
   const [userName, setUserName] = useState("");
@@ -57,6 +59,20 @@ export default function PatientProfileScreen({ navigation, route }) {
   const [token, setToken] = useState("");
 
   const [isEditing, setIsEditing] = useState(false);
+
+  const maskedDate = useMaskedInputProps({
+    value: birthDate,
+    onChangeText: setBirthDate,
+    mask: Masks.DATE_DDMMYYYY
+  });
+
+  const maskedCPF = useMaskedInputProps({
+    value: cpf,
+    onChangeText: setCpf,
+    mask: Masks.BRL_CPF
+  })
+
+  console.log(maskedDate);
 
   const params = route.params;
 
@@ -108,10 +124,6 @@ export default function PatientProfileScreen({ navigation, route }) {
 
   useEffect(() => {
     loadData();
-
-    setBirthDate(birthDate ? new Date(birthDate).toLocaleDateString() : undefined);
-    setCpf(cpf ? cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4") : undefined);
-    setCep(cep ? cep.replace(/(\d{5})(\d{3})/, '$1-$2') : undefined);
   }, []);
 
   useEffect(() => {
@@ -119,12 +131,6 @@ export default function PatientProfileScreen({ navigation, route }) {
       if (params.newPhotoUri != null)
         AlterarFotoPerfil(params.newPhotoUri)
   }, [params])
-
-  useEffect(() => {
-    console.log(birthDate);
-                  const sendedBirthDate = birthDate ? new Date(birthDate).toISOString() : null;
-                   console.log(sendedBirthDate);
-  }, [birthDate])
 
   async function AlterarFotoPerfil(newPhotoUri){
     try {
@@ -183,6 +189,7 @@ export default function PatientProfileScreen({ navigation, route }) {
                   textArea={birthDate}
                   handleChangeFn={setBirthDate}
                   isEditing={isEditing}
+                  maskedProps={maskedDate}
                 />
                 <InternalTextArea
                   labelText="CPF"
@@ -190,6 +197,7 @@ export default function PatientProfileScreen({ navigation, route }) {
                   handleChangeFn={setCpf}
                   isEditing={isEditing}
                   keyboardType='number-pad'
+                  maskedProps={maskedCPF}
                 />
               </>
             ) : (
@@ -263,19 +271,19 @@ export default function PatientProfileScreen({ navigation, route }) {
                 buttonText="Salvar"
                 handleClickFn={async (setIsLoading) => {
                   setIsEditing(false);
-
-                  const sendedBirthDate = birthDate ? new Date(birthDate).toISOString().slice(0,9) : null;
-                   console.log(sendedBirthDate);
-
+                  
                   if (role == "Paciente") {
+                    console.log(new Date(birthDate.toISOString()));
+                    const sendedBirthDate = birthDate ? new Date(birthDate).toISOString().slice(0,9) : null;
+                    
                     await AtualizarPerfilPaciente(
                       token,
                       sendedBirthDate,
                       neighborhood,
                       number,
-                      cep ? cep.replace('-', '') : null,
+                      cep,
                       city,
-                      cpf ? cpf.replace('.', '').replace('-', '') : null
+                      cpf
                     );
                   } else if (role == "Medico") {
                     await AtualizarPerfilMedico(
@@ -284,7 +292,7 @@ export default function PatientProfileScreen({ navigation, route }) {
                       crm,
                       neighborhood,
                       number,
-                      cep ? cep.replace('-', '') : null,
+                      cep,
                       city
                     );
                   }

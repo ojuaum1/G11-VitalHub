@@ -10,12 +10,11 @@ export default function RecordCamera({ setPhotoUri = null, openModalFn = null , 
     const cameraRef = useRef(null)
 
     function flipCamera() {
-        if (cameraType == Camera.Type.back) {
-            setFlashOn(false);
-            setCameraType(Camera.Type.front);
+        if (cameraType === 'back') {
+            setCameraType('front');
         }
         else
-            setCameraType(Camera.Type.back);
+            setCameraType('back');
     }
 
     async function capturePhoto() {

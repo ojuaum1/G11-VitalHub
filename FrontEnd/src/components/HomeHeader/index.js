@@ -30,7 +30,7 @@ export default function HomeHeader({ userImageUri, navigation}) {
                 <NameText>{ userName }</NameText>
             </UserInfoContainer>
         </UserContainer>
-        <Ionicons name="notifications" size={28} color="#fff" />
+        { /*<Ionicons name="notifications" size={28} color="#fff" />*/ }
     </Header>
   )
 }
