@@ -15,16 +15,16 @@ export default function InsertMedicalRecordModal({
     userAge: "x anos",
     userEmail: "useremail@email.com",
   },
-  patientName,
-  patientEmail,
-  patientAge,
+  consultationData = {
+    patientName: 'Não identeificado',
+    patientAge: 'Não identeificado',
+    patientEmail: 'Não identeificado'
+  }
 }) {
   function handleClose(route) {
     disableModalFn();
     navigation.navigate(route, {
-      patientName, 
-      patientEmail,
-      patientAge,
+      consultationData
     });
   }
 

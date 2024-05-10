@@ -24,10 +24,10 @@ export default function PatientConsultScreen({ navigation, route }) {
   const [isInsertMedicalRecordModalActive, setIsInsertMedicalRecordModalActive] = useState(false);
 
   const [selectedConsultationType, setSelectedConsultationType] = useState(0);
-  const [selectedConsultationData, setSelectedConsultationData] = useState([]);
   const [consultationsData, setConsultationData] = useState([]);
 
   const [selectedUserData, setSelectedUserData] = useState({})
+  const [selectedConsultationData, setSelectedConsultationData] = useState({});
 
   const [selectedConsultationId, setSelectedConsultationId] = useState();
 
@@ -126,10 +126,7 @@ export default function PatientConsultScreen({ navigation, route }) {
         disableModalFn={() => setIsInsertMedicalRecordModalActive(false)} 
         userData={selectedUserData}
         navigation={navigation}
-        patientAge={patientAge}
-        patientEmail={patientEmail0}
-        patientName={patientName}
-        
+        consultationData={selectedConsultationData}
       />
       <ScreenContainer>
           <HomeHeader navigation={navigation} userName='Richard Kosta' userImageUri={photoUrl}/>
@@ -157,7 +154,14 @@ export default function PatientConsultScreen({ navigation, route }) {
                       setSelectedConsultationId(item.consultationId)
                       setIsCancelConsultationModalActive(true)
                     }}
-                    activeInsertMedicalRecordModalFn={() => setIsInsertMedicalRecordModalActive(true)}
+                    activeInsertMedicalRecordModalFn={() => {
+                      setSelectedConsultationData({
+                        patientName: item.patientName,
+                        patientAge: item.patientAge,
+                        patientEmail: item.patientEmail
+                      })
+                      setIsInsertMedicalRecordModalActive(true)
+                    }}
                     setCurrentUserDataFn={setSelectedUserData}
                     handleCardClick={() => {
                     }}
