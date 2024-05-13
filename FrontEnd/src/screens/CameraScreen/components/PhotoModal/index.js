@@ -15,7 +15,6 @@ export default function PhotoModal({ photoUri, resetPhotoUriFn = null, isVisible
             return;
 
         await MediaLibrary.saveToLibraryAsync(photoUri);
-        Alert.alert('Foto salva com sucesso');
         goScreenBackFn();
     }
 
