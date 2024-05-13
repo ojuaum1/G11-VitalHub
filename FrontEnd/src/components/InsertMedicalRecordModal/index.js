@@ -32,7 +32,7 @@ export default function InsertMedicalRecordModal({
     <Modal active={active} modalHeighPercentage={60}>
       <ModalImage
         heightPercentage={50}
-        source={require("../../assets/patient-image-extended.png")}
+        source={{ uri: consultationData.foto }}
       />
       <UserMainInfo
         username={userData.userName}

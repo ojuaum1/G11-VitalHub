@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Container } from '../../components/Container/style';
+import React, { useEffect, useState } from "react";
+import { Container } from "../../components/Container/style";
 import InternalInput from "../../components/InternalInput";
 import { InternalInputsWrapper } from "../../components/InternalInput/style";
 import UserMainInfo from "../../components/UserMainInfo";
@@ -8,7 +8,8 @@ import UnsignedButton from "../../components/UnsignedButton";
 import UnsignedLink from "../../components/UnsignedLink";
 import InternalTextArea from "../../components/InternalTextArea";
 import { UserProfileImage } from "../../components/UserImage/style";
-import { ScrollContainer } from "../../components/ScrollContainer/style";
+import { ScrollContainer1 } from "../../components/ScrollContainer/style";
+import api,{ apiUrlLocal } from "../../service/Service";
 
 export default function InsertMedicalRecordScreen({ route, navigation }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -16,29 +17,45 @@ export default function InsertMedicalRecordScreen({ route, navigation }) {
   const [descricao, setDescricao] = useState(consultationData.descricao);
   const [diagnostico, setDiagnostico] = useState(consultationData.diagnostico);
   const [prescricao, setPrescricao] = useState(consultationData.receita);
+  const [foto, setFoto] = useState(consultationData.foto);
+  const [consultationId, setConsultationId] = useState(consultationData.id);
 
   useEffect(() => {
-    setDescricao(consultationData.descricao) 
-    setDiagnostico(consultationData.diagnostico)
-    setPrescricao(consultationData.receita)
-  },[route])
+    setFoto(consultationData.foto);
+    setDescricao(consultationData.descricao);
+    setDiagnostico(consultationData.diagnostico);
+    setPrescricao(consultationData.receita);
+    setConsultationId(consultationData.id);
+  }, [route]);
 
   function returnToHome() {
-    navigation.navigate("Main"); 
+    navigation.navigate("Main");
+  }
+
+  async function saveChanges() {
+    try {
+      
+      await api.put(`${apiUrlLocal}/Consultas/Prontuario`,{
+        consultaId: consultationId, 
+        medicamento: prescricao,
+        descricao: descricao,
+        diagnostico: diagnostico
+      });
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Erro ao salvar as alterações:', error);
+    }
   }
 
   return (
-    <ScrollContainer>
-      <UserProfileImage
-        resizeMode="cover"
-        source={require("../../assets/user-profile-image.png")}
-      />
+    <ScrollContainer1>
+      <UserProfileImage resizeMode="cover" source={{ uri: foto }} />
       <Container>
         <UserMainInfo
           username={consultationData.patientName}
           infoArr={[consultationData.patientAge, consultationData.patientEmail]}
         />
-        
+
         <InternalInputsWrapper>
           {isEditing ? (
             <>
@@ -83,7 +100,7 @@ export default function InsertMedicalRecordScreen({ route, navigation }) {
         <UnsignedButtonsWrapper>
           <UnsignedButton
             buttonText="Salvar"
-            handleClickFn={() => setIsEditing(false)}
+            handleClickFn={saveChanges}
           />
           {!isEditing && (
             <UnsignedButton
@@ -94,6 +111,6 @@ export default function InsertMedicalRecordScreen({ route, navigation }) {
         </UnsignedButtonsWrapper>
         <UnsignedLink linkText="Cancelar" handleClickFn={returnToHome} />
       </Container>
-    </ScrollContainer>
+    </ScrollContainer1>
   );
 }

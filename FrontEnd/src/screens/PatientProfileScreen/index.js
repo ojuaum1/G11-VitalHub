@@ -67,6 +67,7 @@ export default function PatientProfileScreen({ navigation, route }) {
     setId(token.id);
     setRole(token.role);
     setToken(token.token);
+    setPhotoUrl(token.photoUrl);
 
     if (token.role == "Paciente") {
       const patientData = await BuscarPacientePorId(token.id);
