@@ -23,7 +23,7 @@ export default function UnsignedButton({ buttonText, isGoogleButton = false, han
         return;
 
       setisLoading(true);
-      setTimeout(() => setisLoading(false), 4000);
+      setTimeout(() => setisLoading(false), 1000);
       handleClickFn(setisLoading);
     }}>
           {isLoading ? (
