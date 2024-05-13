@@ -26,7 +26,7 @@ import { SelectList } from "react-native-dropdown-select-list";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { ButtonCamera } from "./style";
-import { ScrollView } from "react-native";
+import { ActivityIndicator, ScrollView, View } from "react-native";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from 'expo-media-library'; 
 import api, { apiUrlLocal } from "../../service/Service";
@@ -149,6 +149,8 @@ export default function PatientProfileScreen({ navigation, route }) {
         type:  `image/${newPhotoUri.split(".").pop()}`
       })
 
+      setPhotoUrl(null);
+
       await api.put(`${apiUrlLocal}/Usuario/AlterarFotoPerfil?id=${id}`, formData, {
         headers: {
           "Content-Type" : "multipart/form-data"
@@ -165,12 +167,20 @@ export default function PatientProfileScreen({ navigation, route }) {
   return (
     <ScrollContainer>
       <ContainerImage>
-        <UserProfileImage
-          resizeMode="cover"
-          source={{
-            uri: photoUrl
-          }}
-        />
+        {
+          photoUrl ? (
+            <UserProfileImage
+              resizeMode="cover"
+              source={{
+                uri: photoUrl
+              }}
+            />
+          ) : (
+            <View style={{ height: 300, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <ActivityIndicator />
+            </View>
+          )
+        }
 
         <ButtonCamera
           onPress={async () => {

@@ -3,6 +3,7 @@ import { Header, NameText, UserContainer, UserImage, UserInfoContainer, WelcomeT
 import { Ionicons } from '@expo/vector-icons';
 
 import { userDecodeToken } from '../../utils/Auth';
+import { ActivityIndicator, View } from 'react-native';
 
 export default function HomeHeader({ userImageUri, navigation}) {
     const [userName, setUserName] = useState("");
@@ -22,9 +23,15 @@ export default function HomeHeader({ userImageUri, navigation}) {
         end={{x: 1, y: 0}}
     >
         <UserContainer onPress={() => navigation.navigate('PatientProfile')}>
-            <UserImage 
-                source={{ uri: userImageUri }}
-            />
+            { userImageUri ? (
+                <UserImage 
+                    source={{ uri: userImageUri }}
+                />
+            ) : (
+                <View style={{ height: 60, width: 60, borderRadius: 5, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <ActivityIndicator />
+                </View>
+            ) }
             <UserInfoContainer>
                 <WelcomeText>Bem vindo</WelcomeText>
                 <NameText>{ userName }</NameText>
