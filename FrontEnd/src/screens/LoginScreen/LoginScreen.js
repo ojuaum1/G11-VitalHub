@@ -70,7 +70,6 @@ export default function LoginScreen({ navigation }) {
 
  
   return (
-    <ScrollContainer1>
       <Container>
         <Logo />
         <Title>
@@ -117,6 +116,5 @@ export default function LoginScreen({ navigation }) {
           handleClickFn={createAccount}
         />
       </Container>
-    </ScrollContainer1>
   )
 }
