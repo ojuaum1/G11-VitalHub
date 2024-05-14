@@ -8,9 +8,7 @@ import UnsignedButton from '../../components/UnsignedButton'
 import { UnsignedButtonsWrapper } from '../../components/UnsignedButton/style'
 import AsyncStorage from'@react-native-async-storage/async-storage'
 import api, {apiUrlLocal} from '../../service/Service'
-import { token } from 'stylis'
 import { Text, View } from 'react-native'
-import { ScrollContainer1 } from '../../components/ScrollContainer/style'
 
 export default function LoginScreen({ navigation }) {
 
@@ -20,7 +18,6 @@ export default function LoginScreen({ navigation }) {
 
   const [email, setEmail] =  useState('martin_ferreira@gmail.com')
   const [password, setPassword] =  useState('12345')
-
 
   const [errors, setErrors] = useState({});
   const [haveSomeError, setHaveSomeError] = useState(false);
@@ -45,6 +42,9 @@ export default function LoginScreen({ navigation }) {
   }, [email, password])
 
   async function login() { 
+    if (haveSomeError)
+      return;
+
     try {
       const response = await api.post(apiUrlLocal + '/Login', {
         email: email, 
