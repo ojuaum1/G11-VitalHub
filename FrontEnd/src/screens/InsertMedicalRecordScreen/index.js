@@ -25,12 +25,14 @@ export default function InsertMedicalRecordScreen({ route, navigation }) {
     setDescricao(consultationData.descricao);
     setDiagnostico(consultationData.diagnostico);
     setPrescricao(consultationData.receita);
-    setConsultationId(consultationData.id);
+    setConsultationId(consultationData.consultationId);
   }, [route]);
 
   function returnToHome() {
     navigation.navigate("Main");
   }
+
+console.log(consultationId);
 
   async function saveChanges() {
     try {
@@ -74,7 +76,7 @@ export default function InsertMedicalRecordScreen({ route, navigation }) {
               />
               <InternalInput
                 inputText="Prescrição médica"
-                placeholder={consultationData.receita}
+                placeholder={prescricao}
                 value={prescricao}
                 handleChangeText={setPrescricao}
                 numberOfLines={4}
@@ -84,11 +86,11 @@ export default function InsertMedicalRecordScreen({ route, navigation }) {
             <>
               <InternalTextArea
                 labelText="Descrição da consulta"
-                textArea={consultationData.descricao}
+                textArea={descricao}
               />
               <InternalTextArea
-                labelText="Descrição da consulta"
-                textArea={consultationData.diagnostico}
+                labelText="Diagnostico"
+                textArea={diagnostico}
               />
               <InternalTextArea
                 labelText="Prescrição médica"
