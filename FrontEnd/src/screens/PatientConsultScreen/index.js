@@ -58,6 +58,7 @@ export default function PatientConsultScreen({ navigation, route }) {
           selectedDoctorSpecialty: item.medicoClinica.medico.especialidade.especialidade1,
           consultationType: getConsultationLevelById(item.prioridade.prioridade),
           consultationTime: moment(item.dataConsulta).format('HH:mm'),
+          consultationDate: moment(item.dataConsulta).format('DD/MM/YYYY'),
           consultationStatus: item.situacao.situacao
         }
       });
@@ -122,7 +123,7 @@ export default function PatientConsultScreen({ navigation, route }) {
         disableModalFn={() => setIsCancelConsultationModalActive(false)}
         consultationId={selectedConsultationId}
         updateConsultations={UpdateConsultations}
-        consultationData={selectedConsultationData}
+        consultationData={currentConsultationData}
         isDoctor={false}
       />
       <ScheduleConsultationModal 
@@ -168,7 +169,7 @@ export default function PatientConsultScreen({ navigation, route }) {
                     cardType={item.consultationStatus}
                     activeCancelingModalFn={() => {
                       setSelectedConsultationId(item.consultationId)
-                      setSelectedConsultationData(item);
+                      setCurrentConsultationData(item);
                       setIsCancelConsultationModalActive(true)
                     }}
                     activeInsertMedicalRecordModalFn={() => navigation.navigate('patientViewMedicalRecord', { consultationData: item })}

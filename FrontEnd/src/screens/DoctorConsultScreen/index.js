@@ -7,11 +7,9 @@ import ConsultationBar from "../../components/ConsultationBar";
 import { ConsultationCarList } from "../../components/ConsultationCardList/style";
 import ConsultationCard from "../../components/ConsultationCard";
 import CancelConsultationModal from "../../components/CancelConsultationModal";
-import { FontAwesome6 } from "@expo/vector-icons";
-import ScheduleConsultationModal, {
+import {
   getConsultationLevelById,
 } from "../../components/ScheduleConsultationModal";
-import ViewConsultationLocationModal from "../../components/ViewConsultationLocationModal";
 
 import {
   BuscarConsultaPelaDataMedico,
@@ -19,7 +17,6 @@ import {
 } from "../../service/userService";
 import { userDecodeToken } from "../../utils/Auth";
 import moment from "moment";
-import { ScheduleConsultationButton } from "../PatientConsultScreen/style";
 
 import InsertMedicalRecordModal from "../../components/InsertMedicalRecordModal";
 
@@ -34,6 +31,7 @@ export default function PatientConsultScreen({ navigation, route }) {
 
   const [selectedConsultationType, setSelectedConsultationType] = useState(0);
   const [consultationsData, setConsultationData] = useState([]);
+  const [currentConsultationData, setCurrentConsultationData] = useState()
 
   const [selectedUserData, setSelectedUserData] = useState({});
   const [selectedConsultationData, setSelectedConsultationData] = useState({});
@@ -64,6 +62,7 @@ export default function PatientConsultScreen({ navigation, route }) {
         clinicId: item.medicoClinica.clinica.id,
         consultationType: getConsultationLevelById(item.prioridade.prioridade),
         consultationTime: moment(item.dataConsulta).format("HH:mm"),
+        consultationDate: moment(item.dataConsulta).format('DD/MM/YYYY'),
         consultationStatus: item.situacao.situacao,
         descricao: item.descricao,
         diagnostico: item.diagnostico,
@@ -145,7 +144,7 @@ export default function PatientConsultScreen({ navigation, route }) {
         disableModalFn={() => setIsCancelConsultationModalActive(false)}
         consultationId={selectedConsultationId}
         updateConsultations={UpdateConsultations}
-        consultationData={selectedConsultationData}
+        consultationData={currentConsultationData}
         isDoctor={true}
       />
       <InsertMedicalRecordModal
@@ -153,7 +152,7 @@ export default function PatientConsultScreen({ navigation, route }) {
         disableModalFn={() => setIsInsertMedicalRecordModalActive(false)}
         userData={selectedUserData}
         navigation={navigation}
-        consultationData={selectedConsultationData}
+        consultationData={currentConsultationData}
       />
       <ScreenContainer>
         <HomeHeader
@@ -183,10 +182,11 @@ export default function PatientConsultScreen({ navigation, route }) {
                 foto={item.foto ? item.foto : null}
                 activeCancelingModalFn={() => {
                   setSelectedConsultationId(item.consultationId);
+                  setCurrentConsultationData(item);
                   setIsCancelConsultationModalActive(true);
                 }}
                 activeInsertMedicalRecordModalFn={() => {
-                  setSelectedConsultationData({
+                  setCurrentConsultationData({
                     consultationId: item.consultationId,
                     patientName: item.patientName,
                     patientAge: item.patientAge,

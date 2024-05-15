@@ -8,11 +8,6 @@ import { CancelConsultation } from '../../service/consultationService';
 import { DoctorCancelNotify, PatientCancelNotify } from '../../../utils/notifications';
 
 export default function CancelConsultationModal({ active, disableModalFn = null, consultationId, consultationData, updateConsultations = null, isDoctor }) {
-
-  useEffect(() => {
-    console.log(consultationData);
-  }, []);
-
   return (
     <Modal active={active}>
       <Title marginTop={0}>Cancelar consulta</Title>
@@ -25,11 +20,20 @@ export default function CancelConsultationModal({ active, disableModalFn = null,
           setIsLoading(false);
           disableModalFn();
 
-          /*if (isDoctor) {
-            await DoctorCancelNotify();
+          if (isDoctor) {
+            await DoctorCancelNotify(
+              consultationData.patientName,
+              consultationData.consultationDate,
+              consultationData.consultationTime
+            );
           } else {
-            await PatientCancelNotify();
-          }*/
+            await PatientCancelNotify(
+              consultationData.doctorName,
+              consultationData.selectedDoctorSpecialty,
+              consultationData.consultationDate,
+              consultationData.consultationTime
+            );
+          }
         }}
         buttonText='Confirmar'
       />
