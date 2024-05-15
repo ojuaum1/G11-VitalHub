@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Container } from '../../components/Container/style'
 import Logo from '../../components/Logo'
 import { Title } from '../../components/Title/style'
@@ -14,9 +14,36 @@ export default function RedefinePasswordScreen({ navigation, route }) {
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
+    const [errors, setErrors] = useState({});
+    const [haveSomeError, setHaveSomeError] = useState(false);
+
+  function validateForm() {
+    let errors = {};
+
+    if (!newPassword) {
+      errors.password = 'A senha é requirida.';
+    }
+
+    if (!confirmPassword) {
+      errors.confirmPassword = 'A confirmação da senha é requerida';
+    }
+
+    if (newPassword !== confirmPassword) {
+      errors.password = 'As senhas devem coincidir';
+    }
+
+    setErrors(errors);
+    setHaveSomeError(Object.keys(errors).length >= 1);
+  }
+
+  useEffect(() => {
+    validateForm();
+  }, [newPassword, confirmPassword])
+
+
     async function redefinePassword() {
-        if (newPassword !== confirmPassword)
-            alert('A senha e sua confirmação diferem');
+        if (haveSomeError)
+            return;
 
         await api.put(`${apiUrlLocal}/Usuario/AlterarSenha?email=${email}`, {
             senhaNova: newPassword
@@ -47,6 +74,13 @@ export default function RedefinePasswordScreen({ navigation, route }) {
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
             />
+          <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: 60 }}>
+            {Object.values(errors).map((error, index) => ( 
+                <Text key={index} style={{ color: 'red'}}> 
+                    *{error} 
+                </Text> 
+            ))} 
+          </View>
         </BasicInputWrapper>
         <UnsignedButtonsWrapper>
             <UnsignedButton 
