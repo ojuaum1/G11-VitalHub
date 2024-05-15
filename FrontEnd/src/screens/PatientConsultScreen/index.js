@@ -122,6 +122,8 @@ export default function PatientConsultScreen({ navigation, route }) {
         disableModalFn={() => setIsCancelConsultationModalActive(false)}
         consultationId={selectedConsultationId}
         updateConsultations={UpdateConsultations}
+        consultationData={selectedConsultationData}
+        isDoctor={false}
       />
       <ScheduleConsultationModal 
         active={isSchedulingConsultationActive}
@@ -166,6 +168,7 @@ export default function PatientConsultScreen({ navigation, route }) {
                     cardType={item.consultationStatus}
                     activeCancelingModalFn={() => {
                       setSelectedConsultationId(item.consultationId)
+                      setSelectedConsultationData(item);
                       setIsCancelConsultationModalActive(true)
                     }}
                     activeInsertMedicalRecordModalFn={() => navigation.navigate('patientViewMedicalRecord', { consultationData: item })}

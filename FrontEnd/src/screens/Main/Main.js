@@ -27,13 +27,7 @@ export const Main = ({ navigation, route }) => {
 
     useEffect(() => {
         getUserType();
-        notify();
     }, []);
-
-    async function notify() {
-    
-        PatientCancelNotify('Matheus Macedo', 'Ortopedia', '23/04/2024', '18:00');
-    }
 
     return (
         <Host>

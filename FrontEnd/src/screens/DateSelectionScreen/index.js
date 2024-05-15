@@ -12,6 +12,7 @@ import api, { apiUrlLocal } from "../../service/Service";
 import { userDecodeToken } from "../../utils/Auth";
 import moment from "moment";
 import { ActivityIndicator } from "react-native";
+import { PatientCreateScheduleNotify } from "../../../utils/notifications";
 
 export default function DateSelectionScreen({ navigation, route }) {
   const [scheduleData, setScheduleData] = useState(route.params.scheduleData);
@@ -46,6 +47,11 @@ export default function DateSelectionScreen({ navigation, route }) {
     setAvaliableTimesData(options);
   }
 
+  function formatDate(date) {
+    let formattedDate = moment(date).format('DD MMMM YYYY')
+    return formattedDate.replace(/\s/g, ' de ');
+  }
+
   useEffect(() => LoadOptions(), {});
   return (
     <Host>
@@ -68,6 +74,13 @@ export default function DateSelectionScreen({ navigation, route }) {
           );
 
           console.log(response);
+
+          await PatientCreateScheduleNotify(
+            scheduleData.doctorName, 
+            scheduleData.doctorSpecialtyName, 
+            formatDate(scheduleData.consultationDate), 
+            scheduleData.consultationTime
+          );
 
           setIsScheduleBriefActive(false);
           navigation.navigate("Main");

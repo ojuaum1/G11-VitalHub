@@ -145,6 +145,8 @@ export default function PatientConsultScreen({ navigation, route }) {
         disableModalFn={() => setIsCancelConsultationModalActive(false)}
         consultationId={selectedConsultationId}
         updateConsultations={UpdateConsultations}
+        consultationData={selectedConsultationData}
+        isDoctor={true}
       />
       <InsertMedicalRecordModal
         active={isInsertMedicalRecordModalActive}
