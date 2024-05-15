@@ -10,6 +10,7 @@ import InternalTextArea from "../../components/InternalTextArea";
 import { UserProfileImage } from "../../components/UserImage/style";
 import { ScrollContainer1 } from "../../components/ScrollContainer/style";
 import api,{ apiUrlLocal } from "../../service/Service";
+import { Text, View } from "react-native";
 
 export default function InsertMedicalRecordScreen({ route, navigation }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -19,6 +20,32 @@ export default function InsertMedicalRecordScreen({ route, navigation }) {
   const [prescricao, setPrescricao] = useState(consultationData.receita);
   const [foto, setFoto] = useState(consultationData.foto);
   const [consultationId, setConsultationId] = useState(consultationData.id);
+
+  const [errors, setErrors] = useState({});
+  const [haveSomeError, setHaveSomeError] = useState(false);
+
+  function validateForm() {
+    let errors = {};
+
+    if (!descricao) {
+      errors.description = 'A descrição é requirida.';
+    }
+
+    if (!diagnostico) {
+      errors.diagnosis = 'O diagnóstico é requirido.';
+    }
+
+    if (!prescricao) {
+      errors.prescription = 'A prescrição é requerida.';
+    }
+
+    setErrors(errors);
+    setHaveSomeError(Object.keys(errors).length >= 1);
+  }
+
+  useEffect(() => {
+    validateForm();
+  }, [descricao, diagnostico, prescricao])
 
   useEffect(() => {
     setFoto(consultationData.foto);
@@ -35,6 +62,10 @@ export default function InsertMedicalRecordScreen({ route, navigation }) {
 console.log(consultationId);
 
   async function saveChanges() {
+    if (haveSomeError) {
+      return;
+    }
+
     try {
       
       await api.put(`${apiUrlLocal}/Consultas/Prontuario`,{
@@ -81,6 +112,14 @@ console.log(consultationId);
                 handleChangeText={setPrescricao}
                 numberOfLines={4}
               />
+
+              <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: 10 }}>
+                {Object.values(errors).map((error, index) => ( 
+                    <Text key={index} style={{ color: 'red'}}> 
+                        *{error} 
+                    </Text> 
+                ))} 
+              </View>
             </>
           ) : (
             <>
