@@ -15,6 +15,7 @@ export default function DoctorSelectionScreen({ navigation, route }) {
   const [scheduleData, setScheduleData] = useState(route.params.scheduleData);
 
   const [medicosLista, setMedicosLista] = useState([{ usuario: { id: '', foto: '', nome: '' }, especialidade: {especialidade1: ''} }]);
+  const [someSelected, setSomeSelected] = useState(false);
 
   async function ListarMedicos() {
     const url = `${apiUrlLocal}/Medicos/BuscarPorIdClinica?id=${scheduleData.clinicId}`;
@@ -44,6 +45,7 @@ export default function DoctorSelectionScreen({ navigation, route }) {
             return (
               <TouchableOpacity
                 onPress={() => {
+                  setSomeSelected(true);
                   setScheduleData({
                     ...scheduleData,
                     clinicDoctorId: medico.id,
@@ -66,7 +68,12 @@ export default function DoctorSelectionScreen({ navigation, route }) {
       <ButtonLinkWrapper>
         <UnsignedButton
           buttonText="Continuar"
-          handleClickFn={() => navigation.navigate("dateSelection", { scheduleData })}
+          handleClickFn={() => {
+            if (!someSelected)
+                return;
+
+            navigation.navigate("dateSelection", { scheduleData })}
+          }
         />
         <UnsignedLink
           linkText="Cancelar"

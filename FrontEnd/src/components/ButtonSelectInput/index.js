@@ -9,21 +9,21 @@ export default function ButtonSelectInput({ selectedButtonId, handleChangeSelect
         <InputLabel>Qual o nível da consulta</InputLabel>
         <ButtonsWrapper>
             <ButtonSelect 
-                active={selectedButtonId == 0}
+                active={selectedButtonId === 0}
                 buttonText='Rotina'
                 buttonId={0}
                 priorityId='4CB57AFB-120C-4ACC-9C9E-1EE1DE9283FE'
                 handleClickFn={handleChangeSelectedFn}
             />
             <ButtonSelect 
-                active={selectedButtonId == 1}
+                active={selectedButtonId === 1}
                 buttonText='Exame'
                 buttonId={1}
                 priorityId='E2E3BDBB-5518-4E8F-96B4-26EB57F66350'
                 handleClickFn={handleChangeSelectedFn}
             />
             <ButtonSelect 
-                active={selectedButtonId == 2}
+                active={selectedButtonId === 2}
                 buttonText='Urgência'
                 buttonId={2}
                 priorityId='42072A4C-2B1C-4FD7-9BE9-1AEECAE4FF2F'

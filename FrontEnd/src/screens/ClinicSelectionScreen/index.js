@@ -14,6 +14,8 @@ export default function ClinicSelectionScreen({ navigation, route }) {
 
     const [clinicsData, setClinicsData] = useState([]);
 
+    const [someSelected, setSomeSelected] = useState(false);
+
     async function getClinicsByCity() {
         const response = (await api.get(`${apiUrlLocal}/Clinica/BuscarPorCidade?cidade=${scheduleData.clinicCity}`)).data;
 
@@ -57,6 +59,7 @@ export default function ClinicSelectionScreen({ navigation, route }) {
                                 clinicId: item.clinicId,
                                 clinicCity: item.clinicLocation
                             })
+                            setSomeSelected(true);
                         }}>
                             <ClinicCard
                                 clinicName={item.clinicName}
@@ -72,7 +75,12 @@ export default function ClinicSelectionScreen({ navigation, route }) {
             <ButtonLinkWrapper>
                 <UnsignedButton 
                     buttonText='Continuar'
-                    handleClickFn={() => navigation.navigate('doctorSelection', { scheduleData })}
+                    handleClickFn={() => {
+                        if (!someSelected)
+                            return;
+
+                        navigation.navigate('doctorSelection', { scheduleData })}
+                    } 
                 />
                 <UnsignedLink 
                     linkText='Cancelar'

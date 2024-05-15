@@ -118,7 +118,12 @@ export default function DateSelectionScreen({ navigation, route }) {
         <ButtonLinkWrapper>
           <UnsignedButton
             buttonText="Confirmar"
-            handleClickFn={() => setIsScheduleBriefActive(true)}
+            handleClickFn={() => {
+              if (!(scheduleData.consultationDate && scheduleData.consultationTime))
+                return;
+              
+              setIsScheduleBriefActive(true)}
+            }
           />
           <UnsignedLink
             linkText="Cancelar"
