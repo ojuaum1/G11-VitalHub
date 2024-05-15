@@ -82,6 +82,7 @@ export default function CreateAccountScreen({ navigation }) {
   }
 
   return (
+    <ScrollContainer1>
       <Container>
         <Logo />
         <Title>Criar conta</Title>
@@ -131,5 +132,6 @@ export default function CreateAccountScreen({ navigation }) {
         
         <UnsignedLink linkText="Cancelar" handleClickFn={returnToLogin} />
       </Container>
+    </ScrollContainer1>
   );
 }
