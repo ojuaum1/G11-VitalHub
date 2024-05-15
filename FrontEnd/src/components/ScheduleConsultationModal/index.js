@@ -5,7 +5,7 @@ import UnsignedButton from '../UnsignedButton'
 import UnsignedLink from '../UnsignedLink'
 import ButtonSelectInput from '../ButtonSelectInput'
 import InternalInput from '../InternalInput'
-import { KeyboardAvoidingView, Text, View } from 'react-native'
+import { KeyboardAvoidingView, Text, View, Platform, Modal } from 'react-native'
 
 export function getConsultationLevelById(consultationId) {
   switch (consultationId) {
@@ -56,7 +56,14 @@ export default function ScheduleConsultationModal({ active = true, disableModalF
   }, [scheduleData])
 
   return (
-    <BottomModal active={active} modalHeightPercentage={80}>
+    <BottomModal active={active} modalHeightPercentage={70}>
+      {/* <KeyboardAvoidingView
+        style={{ flex : 1 }}
+        behavior={"padding"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+      > */}
+        {/* <View style={{ flex : 1 }}> */}
+          
           <Title>Agendar consulta</Title>
 
           <ButtonSelectInput 
@@ -105,6 +112,8 @@ export default function ScheduleConsultationModal({ active = true, disableModalF
               linkText='Cancelar'
               handleClickFn={disableModalFn}
           />
+          {/* </View> */}
+        {/* </KeyboardAvoidingView> */}
       </BottomModal>
   )
 }
