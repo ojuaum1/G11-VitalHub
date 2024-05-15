@@ -1,1 +1,6 @@
-scripts vitalhub
+Problemas:
+2. Code input morrendo
+3. Nova senha validação
+5. Add use focus 
+6. Selecionar clinica: não deixar passar 
+7. doctor name não encontrado ao tirar foto de exâme

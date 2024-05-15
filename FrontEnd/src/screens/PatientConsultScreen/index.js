@@ -15,6 +15,8 @@ import { BuscarConsultaPelaDataPaciente, BuscarPacientePorId } from '../../servi
 import { userDecodeToken } from '../../utils/Auth';
 import moment from 'moment';
 
+import { useFocusEffect } from '@react-navigation/native';
+
 export default function PatientConsultScreen({ navigation, route }) {
   const [isCancelConsultationModalActive, setIsCancelConsultationModalActive] = useState(false);
 
@@ -114,7 +116,11 @@ export default function PatientConsultScreen({ navigation, route }) {
 
   useEffect(() => {
     getUserPhoto();
-  }, []);
+  }, [])
+
+  useFocusEffect(() => {
+    getUserPhoto();
+  });
 
   return (
     <>
