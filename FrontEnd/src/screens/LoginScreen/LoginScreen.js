@@ -8,16 +8,24 @@ import UnsignedButton from '../../components/UnsignedButton'
 import { UnsignedButtonsWrapper } from '../../components/UnsignedButton/style'
 import AsyncStorage from'@react-native-async-storage/async-storage'
 import api, {apiUrlLocal} from '../../service/Service'
+import { token } from 'stylis'
 import { Text, View } from 'react-native'
+import { ScrollContainer1 } from '../../components/ScrollContainer/style'
 
 export default function LoginScreen({ navigation }) {
-
+// henrique raimundo : joao.oliveiira.pda@gmail.com - senha:1234 
+//Vitória Yasmin Alícia Assunção  : vitoriayasminassuncao@habby-appe.com.br - senha 1234
+//Aparecida Rebeca da Conceição  : aparecida.rebeca.daconceicao@marcenariamagno.com.br - senha 1234
+// Fabiana Maria : fabiana.maria@gmail.com - senha 1234
+// Iago Cauê  : iago-freitas71@googlemail.com - senha 1234
+//sophie_josefa: sophie_josefa_daluz@br.rhodia.com
   // martin_ferreira@gmail.com
-  // carlos.roque@gmail.com
-  // lucas.portal@gmail.com
+  // carlos.roque@gmail.com 
+  // lucas.portal@gmail.com -12345
 
-  const [email, setEmail] =  useState('martin_ferreira@gmail.com')
+  const [email, setEmail] =  useState('lucas.portal@gmail.com')
   const [password, setPassword] =  useState('12345')
+
 
   const [errors, setErrors] = useState({});
   const [haveSomeError, setHaveSomeError] = useState(false);
@@ -42,9 +50,6 @@ export default function LoginScreen({ navigation }) {
   }, [email, password])
 
   async function login() { 
-    if (haveSomeError)
-      return;
-
     try {
       const response = await api.post(apiUrlLocal + '/Login', {
         email: email, 
