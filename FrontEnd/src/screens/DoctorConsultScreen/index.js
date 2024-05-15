@@ -19,10 +19,13 @@ import { userDecodeToken } from "../../utils/Auth";
 import moment from "moment";
 
 import InsertMedicalRecordModal from "../../components/InsertMedicalRecordModal";
+import MarkAsCompletedModal from "../../components/MarkAsCompletedModal";
 
 export default function PatientConsultScreen({ navigation, route }) {
   const [isCancelConsultationModalActive, setIsCancelConsultationModalActive] =
     useState(false);
+
+  const [isMarkAsCompletedModalActive, setIsMarkAsCompletedModalActive] = useState(false);
 
   const [
     isInsertMedicalRecordModalActive,
@@ -154,6 +157,13 @@ export default function PatientConsultScreen({ navigation, route }) {
         navigation={navigation}
         consultationData={currentConsultationData}
       />
+      <MarkAsCompletedModal 
+        active={isMarkAsCompletedModalActive}
+        disableModalFn={() => setIsMarkAsCompletedModalActive(false)}
+        userData={selectedUserData}
+        consultationData={selectedConsultationData}
+        updateConsultations={UpdateConsultations}
+      />
       <ScreenContainer>
         <HomeHeader
           navigation={navigation}
@@ -195,11 +205,25 @@ export default function PatientConsultScreen({ navigation, route }) {
                     diagnostico: item.diagnostico,
                     receita: item.receita,
                     foto: item.foto ? item.foto : null,
+                    selectedDate: selectedDate
                   });
                   setIsInsertMedicalRecordModalActive(true);
                 }}
                 setCurrentUserDataFn={setSelectedUserData}
-                handleCardClick={() => {}}
+                handleCardClick={() => {
+                  setSelectedConsultationData({
+                    consultationId: item.consultationId,
+                    patientName: item.patientName,
+                    patientAge: item.patientAge,
+                    patientEmail: item.patientEmail,
+                    descricao: item.descricao,
+                    diagnostico: item.diagnostico,
+                    receita: item.receita,
+                    foto: item.foto ? item.foto : null,
+                    selectedDate: selectedDate
+                  });
+                  setIsMarkAsCompletedModalActive(true);
+                }}
               />
             )}
           />
