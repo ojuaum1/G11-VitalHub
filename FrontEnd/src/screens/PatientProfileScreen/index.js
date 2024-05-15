@@ -206,7 +206,7 @@ export default function PatientProfileScreen({ navigation, route }) {
               <>
                 <InternalTextArea
                   labelText="Data de nascimento:"
-                  textArea={birthDate}
+                  textArea={birthDate == 'Invalid Date' ? 'Não preenchido ainda...' : birthDate}
                   handleChangeFn={setBirthDate}
                   isEditing={isEditing}
                   maskedProps={maskedDate}
