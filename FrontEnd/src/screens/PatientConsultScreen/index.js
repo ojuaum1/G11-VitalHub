@@ -54,6 +54,7 @@ export default function PatientConsultScreen({ navigation, route }) {
           clinicId: item.medicoClinica.clinica.id,
           longitude: item.medicoClinica.clinica.endereco.longitude,
           latitude: item.medicoClinica.clinica.endereco.latitude,
+          foto: item.medicoClinica.medico.usuario.foto,
           descricao: item.descricao,
           diagnostico: item.diagnostico,
           receita: item.receita.medicamento || null,
@@ -146,7 +147,8 @@ export default function PatientConsultScreen({ navigation, route }) {
           doctorCRM: currentConsultationData.doctorCRM,
           clinicId: currentConsultationData.clinicId,
           latitude: currentConsultationData.latitude,
-          longitude: currentConsultationData.longitude
+          longitude: currentConsultationData.longitude,
+          foto: currentConsultationData.foto
          }}
          navigation={navigation}
 
@@ -170,6 +172,7 @@ export default function PatientConsultScreen({ navigation, route }) {
                     userName={item.doctorName}
                     userAge={item.doctorAge}
                     userEmail={item.doctorEmail}
+                    foto={item.foto}
                     consultationType={item.consultationType}
                     consultationTime={item.consultationTime}
                     cardType={item.consultationStatus}

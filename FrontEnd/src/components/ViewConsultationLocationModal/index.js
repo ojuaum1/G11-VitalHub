@@ -15,7 +15,8 @@ export default function ViewConsultationLocationModal({
         doctorCRM: '',
         clinicId: '',
         latitude: '', 
-        longitude: ''
+        longitude: '',
+        foto: ''
     },
     navigation
 }) {
@@ -23,7 +24,7 @@ export default function ViewConsultationLocationModal({
         <Modal active={active} modalHeighPercentage={60}>
             <ModalImage 
                 heightPercentage={50}
-                source={require('../../assets/doctor-image-extended.png')}
+                source={{uri: doctorData.foto}}
             />
             <UserMainInfo
                 username={doctorData.doctorName}

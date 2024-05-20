@@ -23,8 +23,8 @@ export default function LoginScreen({ navigation }) {
   // carlos.roque@gmail.com 
   // lucas.portal@gmail.com -12345
 
-  const [email, setEmail] =  useState('martin_ferreira@gmail.com')
-  const [password, setPassword] =  useState('12345')
+  const [email, setEmail] =  useState('')
+  const [password, setPassword] =  useState('')
 
 
   const [errors, setErrors] = useState({});

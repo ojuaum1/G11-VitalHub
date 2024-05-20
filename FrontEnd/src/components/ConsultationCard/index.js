@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { CancelationLink, CardContainer, CardImage, CardInfoContainer, ConsultationTypeText, GreyTimeContainer, GreyTimeText, MedicalRecordLink, PatientAgeText, PatientNameText, SubtitleInfoWrapper, TimeContainer, TimeText } from './style';
 import { Entypo, FontAwesome } from '@expo/vector-icons';
 
-export default function ConsultationCard({ userName, userEmail, userAge, consultationType, consultationTime, cardType, activeCancelingModalFn = null, activeInsertMedicalRecordModalFn = null, setCurrentUserDataFn = null, handleCardClick = null }) {
+export default function ConsultationCard({ userName, userEmail, foto, userAge, consultationType, consultationTime, cardType, activeCancelingModalFn = null, activeInsertMedicalRecordModalFn = null, setCurrentUserDataFn = null, handleCardClick = null }) {
     const [profile, setProfile] = useState('patient');
 
     return (
         <CardContainer onPress={handleCardClick}>
             <CardImage 
-                source={require('../../assets/patient-image.png')}
+                source={{ uri: foto }}
             />
             <CardInfoContainer>
                 <PatientNameText>{ userName }</PatientNameText>

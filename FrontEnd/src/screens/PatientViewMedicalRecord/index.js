@@ -16,10 +16,15 @@ export default function PatientViewMedicalRecord({ navigation, route }) {
     const [photosUri, setPhotosUri] = useState([]);
     const [ocrDescription, setOcrDescription] = useState("");
     const {newPhotoUri, consultationData } = route.params;
+
+    const [savedConsultationData, setSavedConsultationData] = useState({ consultationId: '', doctorSpecialty: '',  doctorName: '', doctorCRM: '', descricao: '', prescricao: '', receita: '' });
     
     useEffect(() => {
-        if (consultationData.consultationId) 
+        if (consultationData && consultationData.consultationId) 
             setConsultationIdSaved(() => consultationData.consultationId);
+
+        if (consultationData) 
+            setSavedConsultationData(consultationData)
     
     }, [route.params])
 
@@ -69,21 +74,21 @@ export default function PatientViewMedicalRecord({ navigation, route }) {
     return (
         <ScrollContainer1>
             <UserProfileImage 
-                source={require('../../assets/doctor-image-extended.png')}
+                source={{uri: savedConsultationData.foto}}
             />
             <Container>
                 <UserMainInfo 
-                    username={consultationData.doctorName}
+                    username={savedConsultationData.doctorName}
                     infoArr={[
-                        consultationData.doctorSpecialty,
-                        consultationData.doctorCRM
+                        savedConsultationData.doctorSpecialty,
+                        savedConsultationData.doctorCRM
                     ]}
                 />
 
                 <InternalInputsWrapper>
-                    <InternalTextArea labelText="Descrição da consulta" textArea={consultationData.descricao} />
-                    <InternalTextArea labelText="Diagnóstico do paciente" textArea={consultationData.diagnostico} />
-                    <InternalTextArea labelText="Prescrição médica" textArea={consultationData.receita} />
+                    <InternalTextArea labelText="Descrição da consulta" textArea={savedConsultationData.descricao} />
+                    <InternalTextArea labelText="Diagnóstico do paciente" textArea={savedConsultationData.diagnostico} />
+                    <InternalTextArea labelText="Prescrição médica" textArea={savedConsultationData.receita} />
                     
                 </InternalInputsWrapper>
 

@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import StackNavigationScreen from './src/screens/StackNavigationScreen/StackNavigationScreen';
 import LoginScreen from './src/screens/LoginScreen/LoginScreen';
+import { LogBox } from 'react-native';
 
 import {
     MontserratAlternates_500Medium,
@@ -60,6 +61,9 @@ export default function App() {
     if (!fontsLoaded) {
         return null;
     }
+
+    LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+    LogBox.ignoreAllLogs();//Ignore all log notifications
 
     return (
         <NavigationContainer>
